@@ -1,5 +1,5 @@
 gymnasium
 mujoco
-stable-baselines3[extra]>=2.0.0
+stable-baselines3>=2.0.0
 imageio
 opencv-python<4
