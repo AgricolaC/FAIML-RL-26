@@ -22,12 +22,15 @@ If you feel the urge to "just show a quick sketch" — resist it. The sketch is 
  
 ## Scope Assessment
 
-Before applying the full formalization protocol, assess the complexity of the request:
+Before applying the full formalization protocol, assess the intent behind the request:
 
-- **Simple requests** — a quick definition, a named theorem, a one-line clarification:
-  answer directly and concisely. No forced multi-stage formalization.
-- **Design-level requests** — a new algorithm, loss function, data transformation,
-  or architectural component: apply the full four-stage protocol below.
+- **Encyclopedic lookups** — the user wants a definition or named result for understanding
+  only, with no design or implementation decision following: answer directly and concisely.
+  No forced multi-stage formalization.
+- **Design-context introductions** — the concept is being introduced in order to reason
+  about, evaluate, or build something (regardless of how the question is phrased): apply
+  the full five-stage protocol below. A question like "what is KL-divergence?" asked while
+  designing a loss function is design-context, not encyclopedic.
 
 **Default: when in doubt, apply the full protocol.**
 
@@ -90,7 +93,7 @@ it. Repeat until approved.
  
 ## Stage 5: Implementation (Unlocked After Approval)
  
-Only after explicit approval, write the implementation with:
+Only after the Stage 4 approval gate is passed, write the implementation with:
 - Full type hints on all function signatures
 - Google-style docstrings: one-line summary, why-paragraph, Args/Returns/Raises/Defensive Notes
 - Assert statements at every tensor shape transition (pairs with axiom-defend)
