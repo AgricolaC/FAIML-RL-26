@@ -68,7 +68,7 @@ def main():
                         help='Discount factor')
     parser.add_argument('--lr', type=float, default=None,
                         help='Actor learning rate (default: 3e-4 for ac_mc/ac_td, 1e-3 for REINFORCE variants)')
-    parser.add_argument('--critic-lr', type=float, default=1e-3,
+    parser.add_argument('--critic-lr', type=float, default=3e-3,
                         help='Critic learning rate (AC variants only)')
     parser.add_argument('--ema-alpha', type=float, default=0.05,
                         help='EMA smoothing factor for reinforce_ema baseline')

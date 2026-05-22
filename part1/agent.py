@@ -55,6 +55,9 @@ class Policy(torch.nn.Module):
             if type(m) is torch.nn.Linear:
                 torch.nn.init.normal_(m.weight)
                 torch.nn.init.zeros_(m.bias)
+        # Critic head: smaller init to prevent wild initial value predictions
+        torch.nn.init.normal_(self.fc3_critic.weight, std=0.1)
+        torch.nn.init.zeros_(self.fc3_critic.bias)
 
 
     def forward(self, x):
@@ -97,7 +100,7 @@ class Policy(torch.nn.Module):
 
 class Agent(object):
     def __init__(self, policy, algorithm='reinforce', device='cpu',
-                 lr=1e-3, critic_lr=1e-3, gamma=0.99, ema_alpha=0.05,
+                 lr=1e-3, critic_lr=3e-3, gamma=0.99, ema_alpha=0.05,
                  fixed_baseline=20.0):
         self.train_device = device
         self.policy = policy.to(self.train_device)
@@ -167,6 +170,7 @@ class Agent(object):
 
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.policy.actor_parameters(), max_norm=0.5)
         self.actor_optimizer.step()
 
         return {
@@ -188,6 +192,7 @@ class Agent(object):
 
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.policy.actor_parameters(), max_norm=0.5)
         self.actor_optimizer.step()
 
         return {
@@ -213,6 +218,7 @@ class Agent(object):
 
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.policy.actor_parameters(), max_norm=0.5)
         self.actor_optimizer.step()
 
         return {
@@ -232,6 +238,7 @@ class Agent(object):
 
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.policy.actor_parameters(), max_norm=0.5)
         self.actor_optimizer.step()
 
         return {
@@ -253,17 +260,21 @@ class Agent(object):
 
         # Advantage — detach so actor update only touches actor params
         advantage = (G - values).detach()
+        # Standardize advantage for actor loss only (critic target G stays raw)
+        advantage = (advantage - advantage.mean()) / (advantage.std() + 1e-8)
 
         # Critic update: push V(s) toward Monte-Carlo return G
         critic_loss = F.mse_loss(values, G)
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.policy.critic_parameters(), max_norm=0.5)
         self.critic_optimizer.step()
 
         # Actor update
         actor_loss = -(action_log_probs * advantage).mean()
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.policy.actor_parameters(), max_norm=0.5)
         self.actor_optimizer.step()
 
         return {
@@ -287,17 +298,21 @@ class Agent(object):
 
         # Advantage — detach so actor update only touches actor params
         advantage = (td_target - values).detach()
+        # Standardize advantage for actor loss only (critic target td_target stays raw)
+        advantage = (advantage - advantage.mean()) / (advantage.std() + 1e-8)
 
         # Critic update: push V(s) toward TD target
         critic_loss = F.mse_loss(values, td_target)
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.policy.critic_parameters(), max_norm=0.5)
         self.critic_optimizer.step()
 
         # Actor update
         actor_loss = -(action_log_probs * advantage).mean()
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.policy.actor_parameters(), max_norm=0.5)
         self.actor_optimizer.step()
 
         return {
