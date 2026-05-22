@@ -1,0 +1,88 @@
+Having described the task, we next describe the physical setup that we use to solve the block and the Rubik's cube in the real world. We focus on the differences that made it possible to solve the Rubik's cube since~\cite{openai2018learning} has already described our physical setup for solving the block reorientation task.
+
+\subsection{Robot Platform}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/setup-cage.jpg}
+        \caption{The cage.}
+        \label{fig:setup-cage}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/setup-hand.jpg}
+        \caption{The Shadow Dexterous Hand.}
+        \label{fig:setup-hand}
+    \end{subfigure}
+    \caption{The latest version of our cage (left) that houses the Shadow Dexterous Hand, RGB cameras, and the PhaseSpace motion capture system. We made some modifications to the Shadow Dexterous Hand (right) to improve reliability for our setup by moving the PhaseSpace LEDs and cables inside the fingers and by adding rubber to the fingertips.}
+    \label{fig:setup-overview}
+\end{figure}
+
+Our robot platform is based on the configuration described in~\cite{openai2018learning}.  We still use the Shadow Dexterous E Series Hand (E3M5R) \cite{shadow-robot} as a humanoid robot hand and the PhaseSpace motion capture system to track the Cartesian coordinates of all five fingertips. We use the same 3 RGB Basler cameras for vision pose estimation.
+
+However, a number of improvements have been made since our previous publication. \autoref{fig:setup-cage} depicts the latest iteration of our robot cage. The cage is now fully contained, i.e. all computers are housed within the system. The cage is also on coasters and can therefore be moved more easily. The larger dimensions of the new cage make calibration of the PhaseSpace motion capture system easier and help prevent disturbing calibration when taking the hand in and out of the cage.
+
+We have made a number of customizations to the E3M5R since our last publication (see also \autoref{fig:setup-hand}). We moved routing of the cables that connect the PhaseSpace LEDs on each fingertip to the PhaseSpace micro-driver within the hand, thus reducing the wear and tear on those cables. We worked with The Shadow Robot Company\footnote{\url{https://www.shadowrobot.com/}} to improve the robustness and reliability of some components for which we noticed breakages over time. We also modified the distal part of the fingers to extend the rubber area to cover a larger span to increase the grip of the hand when it interacts with an object. We increased the diameter of the wrist flexion/extension pulley in order to reduce tendon stress which has extended the life of the tendon to more than three times its typical mean time before failure (MTBF). Finally, the tendon tensioners in the hand have been upgraded and this has improved the MTBF of the finger tendons by approximately five to ten times. 
+
+We also made improvements to our software stack that interfaces with the E3M5R. For example, we found that manual tuning of the maximum torque that each motor can exercise was superior to our automated methods in avoiding physical breakage and ensuring consistent policy performance. More concretely, torque limits were minimized such that the hand can reliably achieve a series of commanded positions.
+
+We also invested in real-time system monitoring so that issues with the physical setup could be identified and resolved more quickly. We describe our monitoring system in greater detail in~\autoref{app:hardware-monitoring}.
+
+\subsection{Giiker Cube}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/giiker-internals.jpg}
+        \caption{The components of the Giiker cube.}
+        \label{fig:setup-giiker}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/setup-giiker2.jpg}
+        \caption{An assembled Giiker cube while charging.}
+        \label{fig:setup-giiker2}
+    \end{subfigure}
+    \caption{We use an off-the-shelf Giiker cube but modify its internals (subfigure a, right) to provider higher resolution for the 6 face angles. The components from left to right are (i) bottom center enclosure, (ii) lithium polymer battery, (iii) main PCBa with BLE, (iv) top center enclosure, (v) cubelet bottom, (vi) compression spring, (vii) contact brushes, (viii) absolute resistive rotary encoder, (ix) locking cap, (x) cubelet top. Once assembled, the Giiker cube can be charged with its ``headphones on'' (right).}
+    \label{fig:setup-giiker-overview}
+\end{figure}
+
+Sensing the state of a Rubik's cube from vision only is a challenging task. We therefore use a ``smart'' Rubik's cube with built-in sensors and a Bluetooth module as a stepping stone: We used this cube while face angle predictions from vision were not yet ready in order to continue work on the control policy. We also used the Giiker cube for some of our experiments to test the control policy without compounding errors made by the vision model's face angle predictions (we always use the vision model for pose estimation).
+
+Our hardware is based on the Xiaomi Giiker cube.\footnote{\url{https://www.xiaomitoday.com/xiaomi-giiker-m3-intelligent-rubik-cube-review/}} This cube is equipped with a Bluetooth module and allows us to sense the state of the Rubik's cube. However, it only has a face angle resolution of $90\degree$, which is not sufficient for state tracking purposes on the robot setup. We therefore replace some of the components of the original Giiker cube with custom ones in order to achieve a tracking accuracy of approximately $5\degree$. \autoref{fig:setup-giiker} shows the components of the unmodified Giiker cube and our custom replacements side by side, as well as the assembled modified Giiker cube. Since we only use our modified version, we henceforth refer to it as only ``Giiker cube''.
+
+\subsubsection{Design}
+
+We have redesigned all parts of the Giiker cube but the exterior cubelet elements. The central support was redesigned to move the parting line off of the central line of symmetry to facilitate a more friendly development platform because the off-the-shelf design would have required de-soldering in order to program the microcontroller. The main Bluetooth and signal processing board is based on the NRF52 integrated circuit \cite{nordic}. Six separately printed circuit boards (Figure \ref{fig:encoder}) were designed to improve the resolution from $90\degree$ to $5 \degree$ using an absolute resistive encoder layout. The position is read with a linearizing circuit shown in Figure \ref{fig:linearizer}. The linearized, analog signal is then read by an ADC pin on the microcontroller and sent as a face angle over the Bluetooth Low Energy (BLE) connection to the host.
+
+
+The custom firmware implements a protocol that is based on the Nordic UART service~(NUS) to emulate a serial port over BLE~\cite{nordic}. We then use a Node.js\footnote{\url{https://nodejs.org/en/}} based client application to periodically request angle readings from the UART module and to send calibration requests to reset angle references when needed. Starting from a solved Rubik's cube, the client is able to track face rotations performed on the cube in real time and thus is able to reconstruct the Rubik's cube state given periodic angle readings. 
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.5\textwidth]{figures/linearizing_circuit.pdf}
+        \caption{The linearizing circuit used to read the position of the faces.}
+        \label{fig:linearizer}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/encoder.jpg}
+        \caption{The absolute resistive encoders used to read the position of the faces.}
+        \label{fig:encoder}
+    \end{subfigure}
+\end{figure}
+
+\subsubsection{Data Accuracy and Timing}
+In order to ensure reliability of physical experiments, we performed regular accuracy tracking tests on integrated Giiker cubes. To assess accuracy, we considered all four right angle rotations as reference points on each cube face and estimated sensor accuracy based on measurements collected at each reference point. Across two custom cubes, the resistive encoders were subject to an absolute mean tracking error of $5.90\degree$ and the standard deviation of reference point readings was $7.61\degree$. 
+
+During our experiments, we used a $12.5$~Hz update frequency\footnote{We run the control policy at this frequency.} for the angle readings, which was sufficient to provide low-latency observations to the robot policy. 
+
+\subsubsection{Calibration}
+We perform a combination of firmware and software-side calibration of the sensors to ensure zero-positions can be dynamically set for each face angle sensor. On connecting to a cube for the first time, we record ADC offsets for each sensor in the firmware via a reset request. Furthermore, we add a software-side reset of the angle readings before starting each physical trial on the robot to ensure sensor errors do not accumulate across trials. 
+
+In order to track any physical degradation in the sensor accuracy of the fully custom hardware, we created a calibration procedure which instructs an operator to rotate each face a full $360 \degree$, stopping at each $90 \degree$ alignment of the cube. We then record the expected and actual angles to measure the accuracy over time.
+
+

@@ -1,0 +1,158 @@
+We believe that a sufficiently diverse set of environments combined with a memory-augmented policy like an LSTM leads to \emph{emergent meta-learning}.
+In this section, we systematically study our policies trained with ADR for signs of meta-learning.
+
+\subsection{Definition of Meta-Learning}
+Since we train each policy on only one specific task (i.e. the block reorientation task or solving the Rubik's cube), we define meta-learning in our context as learning about the dynamics of the underlying Markov decision process. More concretely, we are looking for signs where our policy updates its belief about the true transition probability $P(\vec{s}_{t+1} \mid \vec{s}_t, \vec{a}_t)$ as it observes data over time.
+
+In other words, when we say ``meta-learning'', what we really mean is learning to learn about the environment dynamics. Within other communities, this is also called on-line system identification. In our case though, this is an emergent property.
+
+\subsection{Response to Perturbations}
+We start by studying the behavior of our policy and how it responds to a variety of perturbations to the dynamics of the environment. We conduct all experiments in simulation and use the Rubik's cube task. In all our experiments, we fix the type of subgoal we consider to be either cube flips or cube rotations. We run the policy until it achieves the $10$\textsuperscript{th} flip (or rotation) and then apply a perturbation. We then continue until the $30$\textsuperscript{th} successful flip (or rotation) and apply another perturbation. We measure the time it took to achieve the $1$\textsuperscript{st}, $2$\textsuperscript{nd}, $\ldots$, $50$\textsuperscript{th} flip (or rotation) for each trial, which we call ``time to completion'' We also measure during which flip (or rotation) the policy failed. By averaging over multiple trials that we all run in simulation, we can compute the average time to completion and failure probability \emph{per flip} (or rotation).
+
+If our policy learns at test time, we'd expect the average time to completion to gradually decrease as the policy learns to identify the dynamics of its concrete environment and becomes more efficient as it accumulates more information over the course of a trial. Once we perturb the system, however, the policy needs to update its belief. We therefore expect to see a spike, i.e. achieving a flip (or rotation) should take longer after a perturbation but should again decrease as the policy readjusts its belief about the perturbed environment. Similarly, we expect to see the failure probability to be higher during the first few flips (or rotations) since the policy has had less time to learn about its environment. We also expect the failure probability to spike after each perturbation.
+
+We experiment with the following perturbations:
+\begin{itemize}
+    \item \textbf{Resetting the hidden state.} During a trial, we reset the hidden state of the policy. This leaves the environment dynamics unchanged but requires the policy to re-learn them since its memory has been wiped.
+    \item \textbf{Re-sampling environment dynamics.} This corresponds to an abrupt change of environment dynamics by resampling the parameters of all randomizations while leaving the simulation state\footnote{The simulation state is the current kinematic configuration of the cube, the hand, and the goal.} and hidden state intact.
+    \item \textbf{Breaking a random joint.} This corresponds to us disabling a randomly sampled joint of the robot hand by preventing it from moving. This is a more nuanced experiment since the overall environment dynamics are the same but the way in which the robot can interact with the environment has changed.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.47\textwidth]{figures/meta-flip-reset-time.pdf}
+        \hfill
+        \includegraphics[width=0.47\textwidth]{figures/meta-flip-reset-failure.pdf}
+        \caption{Resetting the hidden state.}
+        \label{fig:meta-reset-hidden}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.47\textwidth]{figures/meta-flip-env-dynamics-time.pdf}
+        \hfill
+        \includegraphics[width=0.47\textwidth]{figures/meta-flip-env-dynamics-failure.pdf}
+        \caption{Re-sampling environment dynamics.}
+        \label{fig:meta-reset-env}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.47\textwidth]{figures/meta-flip-broken-time.pdf}
+        \hfill
+        \includegraphics[width=0.47\textwidth]{figures/meta-flip-broken-failure.pdf}
+        \caption{Breaking a random joint.}
+        \label{fig:meta-reset-broken}
+    \end{subfigure}
+    \caption{We run $10\,000$ simulated trials with only cube flips until $50$ flips have been achieved. For each of the cube flips (i.e. the $1$\textsuperscript{st}, $2$\textsuperscript{nd}, $\ldots$, $50$\textsuperscript{th}), we measure the average time to completion (in seconds) and average failure probability over those $10$k trials. Error bars indicate the estimated standard error.  ``Baseline'' refers to a run without any perturbations applied. ``Broken joint baseline'' refers to trials where a joint was randomly disabled from the very beginning. We then compare against trials that start without any perturbations but are perturbed at the marked points after the $10$\textsuperscript{th} and $30$\textsuperscript{th} flip by (a) resetting the policy hidden state, (b) re-sampling environment dynamics, or (c) breaking a random joint.}
+    \label{fig:meta-exp-1}
+\end{figure}
+
+We show the results of our experiments for cube flips in \autoref{fig:meta-exp-1}. The same plot is available for cube face rotations in \autoref{app:full-results-meta}. For the average time to completion, we only include trials that achieved $50$~flips to avoid inflating our results.\footnote{To explain further: By only include trials with $50$~successes, we ensure that we measure performance over a \emph{fixed} distribution over environments, and thus only measure how the performance of the policy changes across this fixed set. If we would not restrict this, harder environments would be more likely to lead to failures within the first few successes after a perturbation and then would ``drop out''. The remaining ones would be easier and thus even a policy without the ability to adapt would appear to improve in performance. Failures are still important, of course, which is why we report them in the failure probability plots.}
+
+Our results show a very clear trend: for all runs, we observe a clear adjustment period over the first few cube flips. Achieving the first one takes the longest with subsequent flips being achieved more and more quickly. Eventually the policy converges to approximately $4$~seconds per flip on average, which is an improvement of roughly $1.6$~seconds compared to the first flip. This was exactly what we predicted: if the policy truly learns at test time by updating its recurrent state, we would expect it to become gradually more efficient. The same holds true for failure probabilities: the policy is much more likely to fail early.
+
+When we reset the hidden state of our policy (compare \autoref{fig:meta-reset-hidden}), we can see the time to completion spike up significantly immediately after. This is because the policy again needs to identify the environment since all its memory has been wiped. Note that the spike in time to completion is much less than the initial time to completion. This is the case because we randomize the initial cube position and configuration. In contrast, when we reset the hidden state, the hand had manipulated the cube before so it is in a more beneficial position for the hand to continue after the hidden state is reset. This is also visible in the failure probability, which is close to zero even after the perturbation is applied, again because the cube is already in a beneficial position which makes it less likely to be dropped.
+
+The second experiment perturbs the environment by resetting its environment dynamics but keeping the simulation state itself intact (see \autoref{fig:meta-reset-env}). We see a similar effect as before: after the perturbation is applied, the time to completion spikes up and then decreases again as the policy adjusts. Interestingly this time the policy is more likely to fail compared to resetting the hidden state. This is likely the case because the policy is ``surprised'' by the sudden change and performed actions that would have been appropriate for the old environment dynamics but led to failure in the new ones.
+
+An especially interesting experiment is the broken joint one (see \autoref{fig:meta-reset-broken}): for the ``broken joint baseline'', we can see how the policy adjusts over long time horizons, with improvements clearly visible over the course of all $50$~flips in both time to completion and failure probability. In contrast, ``broken joint perturbation'' starts with all joints intact. After the perturbation, which breaks a random joint, we see a significant jump in the failure probability, which then gradually decreases again as the policy learns about this limitation. We also find that the ``broken joint perturbation'' performance never quite catches up to the ``Broken joint baseline''. We hypothesize that this could be because the policy has already ``locked-in'' some information in its recurrent state and therefore is not as adjustable anymore. Alternatively, maybe it just has not accumulated enough information yet and the baseline policy is in the lead because it has an ``information advantage'' of at least 10 achieved flips. We found it very interesting that our policy can learn to adapt internally to broken joints. This is in contrast to prior work that explicitly searched over a set of policies until it found one that works for a broken robot~\cite{cully2015robots}. Note however that the ``Broken joint baseline'' never fully matches the performance of the ``Baseline'', suggesting that the policy can not fully recover performance.
+
+In summary, we find clear evidence of our policy learning about environment dynamics and adjusting its behavior accordingly to become more efficient at \emph{test time}. All of this learning is emergent and only happens by updating the policy's recurrent state.
+
+\subsection{Recurrent State Analysis}
+
+We conducted experiments to study whether the policy has learned to infer and store useful information about the environment in its recurrent state. We consider such information to be strong evidence of meta-learning, since no explicit information regarding the environment parameters was provided during training time.
+
+The main method that we use to probe the amount of useful environment information is to predict environment parameters, such as cube size or the gravitational constant, from the policy LSTM hidden and cell states. Given a policy with an LSTM with hidden states $\vec{h}$ and cell states $\vec{c}$, we use $\vec{z} = \vec{h} + \vec{c}$ as the prediction model input. 
+For environment parameter $p$, we trained a simple prediction model $f_p(\vec{z})$ containing one hidden layer with $64$~units and ReLU activation, followed by a sigmoid output. The outputs correspond to the probability that the value of $p$ for the environment is greater or smaller than the average randomized value.
+
+The prediction model was trained on hidden states collected from policy rollouts at time step $t$ in a set of environments $\mathcal{E}_t$. Each environment $e \in \mathcal{E}_t$ contains a different value of the parameter $p$, sampled according to its randomization range. To observe the change in the stored information over time, we collected data from times steps $t \in \{1, 30, 60, 120\}$ where each time step is equal to $\Delta t = \SI{0.08}{\second}$ in simulation. We used the cross-entropy loss and trained the model until convergence. The model was tested on a new set of environments $\mathcal{F}_t$ with newly sampled values of $p$.
+\subsubsection{Prediction Accuracy over Time}
+
+We studied four different environment parameters, listed in \autoref{table:prediction_parameters} along with their randomization ranges. The randomization ranges were used to generate the training and test environment sets $\mathcal{E}_{t, p}$, $\mathcal{F}_{t, p}$. Each parameter is sampled using a uniform distribution over the given range. Randomization ranges were taken from the end of ADR training.
+
+\begin{table}[h]
+    \caption{Prediction environment parameters and their randomization ranges in physical units. We predict whether or not the parameter is larger or smaller than the given average.}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}lrrrr@{}}
+        \toprule
+        \multirow{2}{*}{\textbf{Parameter}} & \multicolumn{2}{c}{\textbf{Block Reorientation}} & \multicolumn{2}{c}{\textbf{Rubik's Cube}} \\
+        & \multicolumn{1}{c}{\textbf{Average}}
+        & \multicolumn{1}{c}{\textbf{Range}}
+        & \multicolumn{1}{c}{\textbf{Average}}
+        & \multicolumn{1}{c}{\textbf{Range}} \\
+        \midrule
+        Cube size [\si{\meter}] & $0.055$ & $[0.046, 0.064]$ & $0.057$ & $[0.049, 0.066]$ \\
+        Time step [\si{\second}] & $0.1$ & $[0.05, 0.15]$ & $0.09$ & $[0.05, 0.13]$ \\
+        Gravity [\si{\meter\per\square\second}] & $9.80$ & $[6.00, 14.0]$ & $9.80$ & $[6.00, 14.0]$ \\
+        Cube mass [\si{\kilogram}] & $0.0780$ & $[0.0230, 0.179]$ & $0.0902$ & $[0.0360, 0.158]$\\
+        \bottomrule
+    \end{tabular}
+    \label{table:prediction_parameters}
+\end{table}
+
+\autoref{fig:meta-hidden} shows the test accuracy of the trained prediction models for block reorientation and Rubik's cube policies. Observe that prediction accuracy at the start of a rollout is near random guessing, since no useful information is stored in the hidden states. 
+
+As rollouts progress further and the policy interacts with the environment, prediction accuracy rapidly improves to over $80\%$ for certain parameters. This is evidence that the policy is successfully inferring and storing useful information regarding the environment parameters in its LSTM hidden and cell states. Note that we do not train the policy explicitly to store information about those semantically meaningful physical parameters.
+
+There exists some variability in the prediction accuracy over different parameters and between block reorientation  and Rubik's cube policies. For example, note that the prediction accuracy for cube size (over $80\%$) is consistently higher than that of cube mass ($50-60\%$). This may be due to the relative importance of cube size and mass to policy performance; i.e., a heavier cube changes the difficulty of Rubik's cube face rotation less than a larger cube. There also exist differences for the same parameter between tasks: For the cube mass, the block reorientation policy stores more information about it then the Rubik's cube policy. We hypothesize that this is because the block reorientation policy uses a dynamic approach that tosses the block around to flip it. In contrast, the Rubik's cube policy flips the cube much more deliberately in order to avoid unintentional misalignments of the cube faces. For the former, knowing the cube mass is therefore more important since the policy needs to be careful to not apply too much force. We believe the variations in prediction accuracy for the other parameters and the two policies also reflect the relative importance of each parameter to the policy and the given task.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/meta-learning-hidden-prediction-locked.pdf}
+        \caption{Block reorientation policy}
+        \label{fig:meta-hidden-locked}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/meta-learning-hidden-prediction-full.pdf}
+        \caption{Rubik's cube policy}
+        \label{fig:meta-hidden-full}
+    \end{subfigure}
+    \caption{Test accuracy of environment parameter prediction model based on the hidden states of (a) block reorientation and (b) Rubik's cube policies. Error bars denote the standard error.}
+    \label{fig:meta-hidden}
+\end{figure}
+
+\subsubsection{Information Gain over Time}
+
+To further study the information contained in a policy hidden state and how it evolves during a rollout, we expanded the prediction model in the above experiments to predict a set of 8 equally-spaced discretized values (``bins'') within a parameter's randomization range. We consider the output probability distribution of the predictor to be an approximate representation of the posterior distribution over the environment parameter, as inferred by the policy. 
+
+In \autoref{fig:meta-entropy}, we plot the entropy of the predictor output distribution in test environments over rollout time. The parameter being predicted is cube size. The results clearly show that the posterior distribution over the environment parameters converges to a certain final distribution as a rollout progresses. The convergence speed is rather fast at below $5.0$~seconds. Notice that this is consistent with our perturbation experiments (compare \autoref{fig:meta-hidden}): the first flip roughly takes $5-6$ seconds and we see a significant speed-up after. Within this time, the information gain for the cube size parameter is approximately $0.9$~bits. Interestingly, the entropy eventually seems to converge to $2.0$~bits and then stops decreasing. This again highlights that our policies only store the amount of information they need to act optimally.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/meta-learning-hidden-prediction-entropy.pdf}
+    \caption{Mean prediction entropy over rollout time for an 8-bin output predictor. Error bars denote the standard error. The predictor was trained at a fixed $4.8$ seconds during rollouts. Parameter being predicted is cube size. Note the information gain of $0.9$ bits in less than $5.0$ seconds. For reference, the entropy for random guessing (i.e. uniform probability mass over all $8$~bins) is $3$~bits.}
+    \label{fig:meta-entropy}
+\end{figure}
+
+\subsubsection{Prediction Accuracy and ADR Entropy}
+
+We performed the hidden state prediction experiments for block reorientation policies trained using ADR with different values of ADR entropy. Since we believe that the ability of the policy to infer and store (i.e., meta-learn) useful information regarding environment parameters is correlated with the diversity of the environments used during training, we expect the prediction accuracy to be positively correlated with the policy's ADR entropy. 
+
+Four block reorientation policies corresponding to increasing ADR entropy were used in the following experiments. We seek to predict the cube size parameter at $60$ rollout time steps, which corresponds to $4.8$~seconds of simulated time. The test accuracies are shown in \autoref{table:prediction_volume_locked}. The results indicate that prediction accuracy (hence information stored in hidden states) is strongly correlated with ADR entropy. 
+
+\begin{table}[h]
+    \caption{Block reorientation policy hidden state prediction over ADR entropy. The environment parameter predicted is cube size. ADR entropy is defined to be nats per environment parameterization dimension or npd. All predictions were performed at rollout time step $t=60$ (which corresponds to $4.8$~seconds of simulated time). We report mean prediction accuracy $\pm$ standard error.}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}lrrc@{}}
+        \toprule
+        \textbf{Policy} & \textbf{Training Time} & \textbf{ADR Entropy} & \textbf{Prediction Accuracy} \\
+	\midrule
+	ADR (Small) & 0.64 days & $-0.881$ npd & $0.68 \pm 0.021$ \\
+	ADR (Medium) & 4.37 days & $-0.135$ npd & $0.75 \pm 0.027$ \\
+	ADR (Large) & 13.76 days & $0.126$ npd & $0.79 \pm 0.022$ \\
+	ADR (XL) & --- & $0.305$ npd & $\mathbf{0.83 \pm 0.014}$ \\
+        \bottomrule
+    \end{tabular}
+    \label{table:prediction_volume_locked}
+\end{table}
+
+\subsubsection{Recurrent state visualization}
+We used neural network interpretability techniques~\cite{carter2016experiments, olah2018the} to visualize policy recurrent states during a rollout. We found distinctive activation patterns that correspond to high-level skills exhibited by the robotic hand. See~\autoref{app:policy_visualizations} for details.

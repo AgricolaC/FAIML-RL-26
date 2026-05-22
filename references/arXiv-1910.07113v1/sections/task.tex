@@ -1,0 +1,32 @@
+In this work, we consider two different tasks that both use the Shadow Dexterous Hand~\cite{shadow-robot}: the block reorientation task from our previous work~\cite{openai2018learning, plappert2018multi} and the task of solving a Rubik's cube. Both tasks are visualized in \autoref{fig:task}. We briefly describe the details of each task in this section.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/task-block.jpg}
+        \caption{Block reorientation}
+        \label{fig:task-block}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/task-cube.jpg}
+        \caption{Rubik's cube}
+        \label{fig:task-cube}
+    \end{subfigure}
+    \caption{Visualization of the block reorientation task (left) and the Rubik's cube task (right). In both cases, we use a single Shadow Dexterous Hand to solve the task. We also depict the goal that the policy is asked to achieve in the upper left corner.}
+    \label{fig:task}
+\end{figure}
+
+\subsection{Block Reorientation}
+The block reorientation task was previously proposed in~\cite{plappert2018multi} and solved on a physical robot hand in~\cite{openai2018learning}. We briefly review it here; please refer to the aforementioned citations for additional details.
+
+The goal of the block reorientation task is to rotate a block into a desired goal orientation. For example, in \autoref{fig:task-block}, the desired orientation is shown next to the hand with the red face facing up, the blue face facing to the left and the green face facing forward. A goal is considered achieved if the block's rotation matches the goal rotation within $0.4$~radians. After a goal is achieved, a new random goal is generated.
+
+\subsection{Rubik's Cube}
+We introduce a new and significantly more difficult problem in this work: solving a Rubik's cube\footnote{\url{https://en.wikipedia.org/wiki/Rubik's_Cube}} with the same Shadow Dexterous Hand. In brief, a Rubik's cube is a puzzle with 6 internal degrees of freedom. It consists of $26$~\emph{cubelets} that are connected via a system of joints and springs. Each of the 6 \emph{faces} of the cube can be rotated, allowing the Rubik's cube to be \emph{scrambled}. A Rubik's cube is considered solved if all 6 faces have been returned to a single color each. \autoref{fig:task-cube} depicts a Rubik's cube that is a single $90$~degree rotation of the top face away from being solved.
+
+We consider two types of \emph{subgoals}: A \emph{rotation} corresponds to rotating a single face of the Rubik's cube by $90$~degrees in the clockwise or counter-clockwise direction. A \emph{flip} corresponds to moving a different face of the Rubik's cube to the top. We found rotating the top face to be far simpler than rotating other faces. Thus, instead of rotating arbitrary faces, we combine together a flip and a top face rotation in order to perform the desired operation. These subgoals can then be performed sequentially to eventually solve the Rubik's cube.
+
+The difficulty of solving a Rubik's cube obviously depends on how much it has been scrambled before. We use the official scrambling method used by the World Cube Association\footnote{\url{https://www.worldcubeassociation.org/regulations/scrambles/}} to obtain what they refer to as a \emph{fair scramble}. A fair scramble typically consists of around $20$ moves that are applied to a solved Rubik's cube to scramble it.
+
+When it comes to solving the Rubik's cube, computing a solution sequence can easily be done with existing software libraries like the Kociemba solver~\cite{kociemba}. We use this solver to produce a solution sequence of subgoals for the hand to perform. In this work, the key problem is thus about sensing and control, \emph{not} finding the solution sequence. More concretely, we need to obtain the state of the Rubik's cube (i.e. its pose as well as its 6 face angles) and use that information to control the robot hand such that each subgoal is successfully achieved.

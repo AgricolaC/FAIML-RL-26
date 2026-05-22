@@ -1,0 +1,98 @@
+\section{Key Directions Forward}
+
+%showed both that there exist mature Sim2Real techniques to be exploited for practical, and that there are many open questions about how to improve these techniques further. 
+% We summarize the learning for both practitioners and researchers in the following section. 
+%to make progress in solving these problems.
+
+The workshop debates and contributed papers provide a view on the state-of-the-art in Sim2Real techniques and open problems in this area. This section summarizes the findings and conclusions from the workshop, which we classify as belonging to either a practitioner's or a researcher's perspective. For the practitioner's perspective, we aim to give concrete advice on applying existing Sim2Real techniques, their capabilities and their limitations\footnote{We mainly focus on established techniques that have relevance for the workshop. For a recent, more complete survey see e.g. \cite{zhao2020simtoreal}.}. For the researcher's perspective, we state fundamental research problems identified during the workshop, hoping to inspire future research endeavors. 
+
+% We begin by summarizing under what requirements and circumstances an application can benefit from embracing Sim2Real techniques:
+
+\subsection{Practitioner’s View: What Can Sim2Real Already Achieve?}
+
+The first question that practitioners should ask themselves is whether their problem setting would benefit from Sim2Real techniques. The following list of requirements constitute criteria that can provide guidance in answering this question:
+\begin{itemize}
+%Often simulation is  easier to set up than real hardware, which is
+% In a carefully tuned simulator, it is likely that the chances of any success in real world are diminished if the simulation experiments aren't successful.
+\item {\bf Bootstrapping:} Is it possible to obtain a proof of concepts relevant to the real-world problem in simulation? Simulators can be extremely helpful for scoping the problem and initial hypothesis testing. 
+For learning and adaptive systems, learning in a carefully tuned simulator is an effective way to bootstrap learning in the real world.
+\item {\bf Long-term data starvation:} Is the effort in collecting real world data, especially labeled data, considerably higher, more dangerous or even infeasible relative to the effort of developing a simulator? Simulators can be a valuable and endless source of labeled synthetic data, in particular if data is and remains hard to collect due to cost or safety constraints. However, real data should be preferred if available in sufficient quantities.
+%Sim2Real is a great investment when data scarcity is not merely a problem at the beginning of a project, but also when it will last throughout the project. Examples for such cases are scenarios where data collection is very expensive or highly dangerous, or where the cost of acquiring labels from real world is extremely high (e.g. exact poses and configurations of deformable items in clutter). Otherwise, Sim2Real efforts could be time-boxed as they might become a throw-away investment once sufficient quantities of real data become available.
+\item {\bf Hardware-in-the-loop optimization:} Is the goal to co-design hardware and software? In such scenarios there may be no alternative to simulation. Sim2Real techniques can be useful for learning and exploring the hardware design space, which may be impractical without a simulator. %In case both hardware and algorithms should be optimized (a concept termed co-design, [https://arxiv.org/pdf/1512.08055, https://ieeexplore.ieee.org/abstract/document/8202294/] ), there is almost no alternative to using simulation. 
+
+%%%KB: not sure that I fully agree with this, it is easier for exclusively visual problems to get real data than for robot-in-the-loop problems
+\item {\bf Common computer vision problems:} Is the problem mainly a computer vision task? Object detection, image segmentation and geometry estimation have received significant attention in the last decade, with the role of synthetic data becoming more prominent as part of their solutions.
+\end{itemize}
+ %and performance of models trained on synthetic data is slowly catching up.
+%, from data augmentation to image-to-image translation,
+
+% In case the practitioner decides to consider Sim2Real for their project, the following techniques have shown to work well in practice.
+To address the requirements from the previous list, we summarize some of the {\bf techniques} that have been shown to work well in practice.
+
+%\subsubsection{Techniques}$ $\\ \vspace{-.15in}
+
+{\bf Domain randomization (DR)} is a simple yet powerful technique to augment the training set, and particularly well suited for training deep neural networks. The main challenges, however, correspond to finding the right set of parameters to randomize. The cost of applying DR grows exponentially with the number of parameters.% \cite{Tobin:etal:2017IROS, Sadeghi:etal:2017RSS}.
+
+{\bf Explicit transferable abstractions} A powerful alternative to DR is identifying explicit features or state abstractions, which transfer easily between simulated and real data. For example, pre-processing images into segmented images, edges, depth maps or using off-the-shelf image-to-image translation methods circumvents the problem of generating realistic images in simulation, but it still requires careful tuning. %This technique has for example been successfully employed for autonomous flight \cite{Kaufmann:etal:2020RSS} or autonomous driving \cite{Muller:etal:2018}.
+
+{\bf Combining analytical modeling with system identification (SysID)} In some settings we can identify challenging problem aspects, which can be modeled analytically and apply SysID/ML for them. This approach has been successfully used for grasping and locomotion, and is commonplace in model-based control. Nevertheless, finding appropriate models is a challenging task. 
+%(DexNet, Kris Hausers)
+%Sim2Real techniques enhance SysID.
+% with state-of-the-art learning algorithms.
+%(https://robotics.sciencemag.org/content/4/26/eaau5872).
+%Related to using analytical models, simulators can be used for probabilistic inference~\cite{Brehmer2020, Ramos2019}. While fast inference for simulator parameters remains an open problem, recent work~\cite{asenov2020correction} has shown that it is possible to use such inference models for model-based control.
+
+{\bf Meta-Learning and Curriculum Learning:} A common limitation of Sim2Real is its application to situations where the robot dynamics are hard to simulate, \emph{e.g.} simulating the transformation from control signals to motor torques. While learning SysID modules is a possible way of exploiting simulated data, meta-learning provides an alternative for directly learning systems that adapt to changing environments or erroneous models. DR techniques can be used to provide a task distribution for meta-learning. Furthermore, controlling DR simulators can be an effective way of controlling the difficulty of learning. 
+
+%\subsubsection{Vision-based techniques}$ $\\ \vspace{-.15in}
+
+% JCGH: This part seems to have a lot of overlap with the  text in the previous sections. Do we need to be this specific?
+
+%%%KB: remove/merge the first two vision-based techniques in the above sections, keep the third one
+{\bf Depth \& RGB rendering} % While sensors can be modeled explicitly in simulation to  sidestep
+Depth sensors including their noise models can be effectively simulated and transfer smoothly to the real world 
+%(Depth MaskRCNN, DexNet, ?).
+RGB rendering is also catching up, and recent work has shown increasingly better Sim2Real generalization~\cite{mahler_learning_2019}. %(Stillleben, BlenderProc, Instance Detection) are generalizing better and better.
+These approaches, however, generally require high-quality CAD models to be available.
+
+% {\bf Cut \& paste rendering} In case no CAD models are available, an alternative simple technique is cut \& paste image generation. This technique can be used to quickly perform data augmentation and generate initial results. %\cite{?}
+
+{\bf Domain adaption via GANs} A complementary technique is to enhance the quality of synthetically generated images using domain adaption techniques~\cite{zhu2020unpaired}. One challenge here is to make sure the labels are not distorted.
+
+As a final remark, it is important to be aware of the fact that Sim2Real techniques are not yet Plug-\&-Play nor completely automated. Their application still requires careful human attention for understanding the problem and for tuning the parameters of the chosen approach.
+
+\subsection{Researcher’s View: What Are the Open Questions?}
+
+While the current Sim2Real methods have shown promising results for real world problems, there remain important open questions and unsolved problems. 
+
+{\bf Systematic and Efficient Domain Randomization (DR)} Existing DR methods are computationally wasteful, even after careful selection of the randomization distributions. Furthermore, selecting the appropriate randomization distribution may be as hard as the problems we would like to address with DR. What methods can help us automate the selection of a DR distribution? What are the data requirements of these methods? Can we establish how hard finding a DR distribution is? Can we accelerate learning using a DR schedule or curriculum?
+
+%The current DR methods involve a considerable effort on manual tuning, tend to be heuristic and lack a systematic approach on the whole. This often leads to generating and training on a lot of redundant and unnecessary data. It remains unclear how to identify the right variables for the problem at hand and figure out a more structured and systematic way to randomise and learn from them. 
+
+%%%KB: what about on the visual side of things photo-realistic rendering? do we believe that this is done?
+%%%KB: i am not sure the problem is just NP-hard, i think it is harder
+{\bf Contact-Rich Tasks} Many simulators struggle to simulate physically realistic contacts. Contacts with friction is in general an NP-hard problem and many simulators implement contacts with isotropic Coulomb friction, which is an inaccurate approximation of real contacts. What level of accuracy is necessary for applying Sim2Real techniques to these important aspects for manipulation and locomotion?
+
+{\bf Differentiable Simulators} There is growing interest in creating simulation pipelines, which allows differentiating the stack of operations involved in simulating dynamics and rendering. This is a promising direction as that could allow rapid testing and learning of the simulation parameters. Is differentiability a requirement for successful Sim2Real? Do the benefits of differentiable simulation outweigh the cost of replacing existing black-box simulators? Are there fundamental limits to closing the reality gap with differentiable simulation?
+
+%%%KB: what is the relationship of this to contact-rich tasks and photo-realistic rendering
+{\bf Highly Accurate Simulations} As time goes on, the capabilities for high-fidelity simulation and rendering keep improving in accuracy and speed. Will this trend continue to a point where high fidelity simulation becomes an easily accessible commodity for most robotics tasks? How can we improve the simulation accuracy and speed for fabrics, deformable materials as well as contact-rich tasks? Are there any fundamental limits to simulation?
+
+%Many scenarios in the real world can be difficult to simulate due to the high precision and accuracy demands. This remains an active area of research.
+
+%%%KB: Is this a challenge for researchers or for practitioners?
+{\bf Production-level Sim2Real} How can we push task performance using Sim2Real to production level (99.99\% success rates)?
+
+% \subsection{Orthogonal Research Trends}
+
+% {\bf Meta learning} Meta learning can be regarded 
+
+% {\bf Self- and weakly supervised learning} (Xie et al. 2019) - Continuously pushing state-of the art, in particular on vision benchmarks
+
+% {\bf Data efficient learning on hardware}  https://arxiv.org/abs/1909.11652
+
+
+
+\section{Conclusion}
+
+The workshop highlighted the fact that Sim2Real is a “hot topic”, with many academic and industrial institutions putting significant resources into  investigating the applying and developing Sim2Real approaches. While there was no agreement in the debates as to how far Sim2Real will take us in the future and whether it is the right approach in general, there was consensus on what Sim2Real can do for robotics applications today. A community is forming around the problem with a steadily increasing number of submissions. This may require the introduction of this keyword as a separate category during submission to the main robotics venues, if not potentially devoted meetings in this area. While the future will tell how Sim2Real will evolve and what impact it may have on the next breakthroughs in robotics, it is an exciting area to explore from many different perspectives. 

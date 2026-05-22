@@ -1,0 +1,567 @@
+% \DeclareDocumentCommand{\foocmd}{ O{default1} O{default2} m }{#1~#2~#3}
+%                                     ⤷ #1        ⤷ #2     ⤷ #3
+% usage: \foocmd[nondefault2][notfoo2]{foo}
+
+% -------------------------------------------------- %
+% Load the required packages if not loaded
+% -------------------------------------------------- %
+\makeatletter
+\@ifpackageloaded{xparse}{}{\usepackage{xparse}}
+\@ifpackageloaded{tabularx}{}{\usepackage{tabularx}} % for L R column type
+\@ifpackageloaded{xifthen}{}{\usepackage{xifthen}}
+\@ifpackageloaded{xspace}{}{\usepackage{xspace}} % for smart spaces
+\@ifpackageloaded{amsopn}{}{\usepackage{amsopn}} % for \DeclareMathOperator
+\@ifpackageloaded{amssymb}{}{\usepackage{amssymb}} % for \mathbb
+\@ifpackageloaded{mathtools}{}{\usepackage{mathtools}} % for \ceil
+\@ifpackageloaded{bm}{}{\usepackage{bm}} % for bold math
+%\@ifpackageloaded{algorithm2e}{}{\usepackage[lined,linesnumbered,ruled]{algorithm2e}} % for pseudo code
+\@ifpackageloaded{siunitx}{}{%
+\usepackage[detect-all,scientific-notation=false,separate-uncertainty=true]{siunitx} % for proper handling of units
+\sisetup{%
+    retain-explicit-plus=true,% show Xe+2 instead of Xe2
+    detect-weight=true,
+    detect-family=true,
+	output-exponent-marker=\ensuremath{\mathrm{e}},% usage: \num{1e-10}
+	per-mode=symbol,% reciprocal (default) or symbol
+	range-phrase={,}\ ,% Value intervals / ranges
+    range-units=brackets,
+    open-bracket={[},
+    close-bracket=],
+}%
+}
+\makeatother
+
+% -------------------------------------------------- %
+% Colors
+% -------------------------------------------------- %
+\definecolor{fMRTblack}{HTML}{2B2E34}
+\definecolor{fMRTwhite}{HTML}{F3EEE1}
+\definecolor{fMRTyellow}{HTML}{FFD564}
+\definecolor{fMRTorange}{HTML}{FF5500}
+\colorlet{fMRTlightGray}{white!80!fMRTblack}
+\colorlet{fMRTgray}{white!35!fMRTblack}
+\colorlet{fMRTdarkGray}{white!20!fMRTblack}
+\colorlet{fMRTlightOrange}{fMRTorange!60!fMRTwhite}
+\definecolor{fMRTblue}{HTML}{3333B3}
+\colorlet{fMRTlightBlue}{fMRTblue!30!white}
+\definecolor{fMRTverylightRed}{HTML}{FF8E6B}
+\colorlet{fMRTlightRed}{red!60!fMRTwhite}
+\colorlet{fMRTdarkRed}{red!70!fMRTgray} % red!60!fMRTgray
+\definecolor{fMRTlightGreen}{HTML}{8CDD81} % green soap	
+\definecolor{fMRTborwn}{HTML}{8B4513} % saddle brown
+\colorlet{fMRTlightBorwn}{fMRTborwn!60!fMRTwhite}
+
+% -------------------------------------------------- %
+% Beamer Related
+% -------------------------------------------------- %
+% Background gradients
+\colorlet{fMRTdark@backgroundInner}{fMRTblack}
+\colorlet{fMRTdark@backgroundOuter}{fMRTblack}
+\colorlet{fMRTlight@backgroundInner}{fMRTwhite}
+\colorlet{fMRTlight@backgroundOuter}{fMRTwhite}
+
+% Colorized emph commads
+\newcommand{\emphred}[1]{\textcolor{fMRTlightRed}{#1}}
+\newcommand{\emphgreen}[1]{\textcolor{fMRTlightGreen}{#1}}
+\newcommand{\emphblue}[1]{\textcolor{fMRTblue}{#1}}
+\newcommand{\emphyellow}[1]{\textcolor{fMRTyellow}{#1}}
+\newcommand{\emphorange}[1]{\textcolor{fMRTorange}{#1}}
+%\DeclareTextFontCommand{\emphred}{\itshape\color{fMRTdarkRed}} % https://tex.stackexchange.com/questions/47259/why-use-declaretextfontcommand-vs-just-newcommand
+
+% Headings
+\newcommand{\beamerheading}[1]{\par\bigskip{\Large\bfseries#1}\par\smallskip}
+
+% -------------------------------------------------- %
+% Tables
+% -------------------------------------------------- %
+% In combination with the tabularx environment
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}} % align left with fixed width
+% For line breaks in cells (the optinal arg is t, c, or b to force the desired vertical alignment)
+\newcommand{\breakeccell}[2][c]{\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+\newcommand{\breakelcell}[2][c]{\begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+\newcommand{\breakercell}[2][c]{\begin{tabular}[#1]{@{}r@{}}#2\end{tabular}}
+
+% -------------------------------------------------- %
+% PGF
+% -------------------------------------------------- %
+%\newcommand\inputpgf[2]{{
+%\let\pgfimageWithoutPath\pgfimage
+%\renewcommand{\pgfimage}[2][]{\pgfimageWithoutPath[##1]{#1/##2}}
+%\input{#1/#2}
+%}}
+
+% -------------------------------------------------- %
+% Just for Editing
+% -------------------------------------------------- %
+% The following require the xcolor package; https://www.namsu.de/Extra/pakete/Xcolor.html
+\newcommand{\predicted}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\alter}[1]{\textcolor{Blue}{#1}}
+\newcommand{\unsure}[1]{\textcolor{BrickRed}{#1}}
+\newcommand{\refneeded}[1]{\textcolor{BrickRed}{\textbf{[add ref: #1]}}}
+
+% -------------------------------------------------- %
+% Flags
+% -------------------------------------------------- %
+\newcommand{\Next}{^\prime} % e.g. next state
+\newcommand{\optsym}{\star} % symbol to indicate optimality
+\newcommand{\opt}{^\optsym}
+\newcommand{\obssym}{\text{obs}}
+\newcommand{\obs}{^\obssym} % observations in the context of LFI
+\newcommand{\initsym}{\text{init}}
+\newcommand{\init}{_\initsym}
+\newcommand{\simusym}{\text{sim}}
+\newcommand{\simu}{^\simusym}
+\newcommand{\realsym}{\text{real}}
+\newcommand{\real}{^\realsym}
+
+% -------------------------------------------------- %
+% Math Related
+% -------------------------------------------------- %
+\newcommand{\RR}{\mathbb{R}} % the set of real numbers to the power of #1
+\newcommand{\onehalf}{\frac{1}{2}}
+\newcommand{\onethird}{\frac{1}{3}}
+\newcommand{\onefourth}{\frac{1}{4}}
+\newcommand{\alphad}{\dot{\alpha}} % not bold
+\newcommand{\betad}{\dot{\beta}} % not bold
+% A set is a collection of items that is unordered and does not allow duplicates
+\DeclareDocumentCommand{\set}{O{} O{} m}{\{#3\}_{#1}^{#2}} % #1 = subscript, #2 = superscipt, #3 = content
+% A tuple is an ordered sequence of items that allows duplicates
+\DeclareDocumentCommand{\tuple}{O{} O{} m}{\left\langle#3\right\rangle_{#1}^{#2}} %  #1 = subscript, #2 = superscipt, #3 = content
+\newcommand{\data}{{\cal D}} % data
+\newcommand{\order}[1]{\mathcal{O}\!\left( #1\right) }
+
+% MDP --------------------------------------------- %
+\newcommand{\model}{\mathcal{M}}%
+\newcommand{\stateset}[1][]{\mathcal{S}_{#1}} % set of states in a MDP; Note: using \stateset as a subscript requires curly brackets, i.e. _{\stateset}
+\newcommand{\obsset}[1][]{\mathcal{O}_{#1}} % set of observations in a MDP
+\newcommand{\actionset}[1][]{\mathcal{A}_{#1}} % set of actions in a MDP
+\newcommand{\transprobsym}{\mathcal{P}}
+\makeatletter
+\DeclareDocumentCommand{\@transprob}{O{} O{} m}{\transprobsym_{#1}^{#2}\left( #3\right) }  % starred version
+\DeclareDocumentCommand{\@@transprob}{O{} O{} m}{\transprobsym_{#1}^{#2}\!\left( #3\right) }
+\newcommand{\transprob}{\@ifstar\@transprob\@@transprob}
+\makeatother
+\newcommand{\initstatedistrsym}{\mu}
+\makeatletter
+\DeclareDocumentCommand{\@initstatedistr}{O{} O{} m}{\initstatedistrsym_{#1}^{#2}\left( #3\right) }  % starred version
+\DeclareDocumentCommand{\@@initstatedistr}{O{} O{} m}{\initstatedistrsym_{#1}^{#2}\!\left( #3\right) }
+\newcommand{\initstatedistr}{\@ifstar\@initstatedistr\@@initstatedistr}
+\makeatother
+\newcommand{\mdp}[1][]{\mathcal{M}_{#1}} % initial state distribution in MDP
+\newcommand{\dimstate}{{n_s}} % d
+\newcommand{\dimobs}{{n_o}} % q
+\newcommand{\dimact}{{n_a}} % p
+%\newcommand{\dimmdlparam}{m}
+\newcommand{\dimpolparam}{{n_{\polparam}}} % n
+\newcommand{\dimdomparam}{{n_{\domparam}}} % m
+
+\newcommand{\estopt}{_{\text{est}}\opt} % optimizer of the etimator
+\newcommand{\trueopt}{_{\text{true}}\opt} % optimmzer of the true function
+\newcommand{\candsym}{{n_c}}
+\newcommand{\refsym}{{n_r}}
+\newcommand{\Hinfty}{\mathcal{H}_\infty} % H infinity robust control
+
+% -------------------------------------------------- %
+% Abbreviations for Text
+% -------------------------------------------------- %
+\newcommand{\etal}{et al.~}
+\newcommand{\eg}{e.g.\xspace}
+\newcommand{\ie}{i.e.\xspace}
+\newcommand{\cf}{cf.\xspace}
+\newcommand{\iid}{i.i.d.\xspace}
+\newcommand{\st}{s.t.\xspace}
+\newcommand{\wrt}{w.r.t.\xspace}
+\newcommand{\aka}{a.k.a.\xspace}
+\newcommand{\suppmat}{Supplementary Material}
+\newcommand{\SimtoSim}{{Sim-to-Sim}\xspace}
+\newcommand{\Simtosim}{{Sim-to-sim}\xspace}
+\newcommand{\simtosim}{{sim-to-sim}\xspace}
+\newcommand{\SimtoReal}{{Sim-to-Real}\xspace}
+\newcommand{\Simtoreal}{{Sim-to-real}\xspace}
+\newcommand{\simtoreal}{{sim-to-real}\xspace}
+\newcommand{\sota}{{state-of-the-art}\xspace}
+\newcommand{\Sota}{{State-of-the-art}\xspace}
+
+\newcommand{\ballbalancersym}{\textrm{bb}}
+\newcommand{\cartpolesym}{\textrm{cp}}
+\newcommand{\futuapendulumsym}{\textrm{fp}}
+\newcommand{\sub}{swing-up and balance\xspace}
+\newcommand{\Sub}{Swing-up and balance\xspace}
+\newcommand{\bic}{ball-in-a-cup\xspace}
+\newcommand{\Bic}{Ball-in-a-cup\xspace}
+
+% -------------------------------------------------- %
+% Symbols for Operators
+% -------------------------------------------------- %
+% https://tex.stackexchange.com/questions/67506/newcommand-vs-declaremathoperator
+% \DeclareMathOperator can only be used in the preamble while \newcommand has no such restriction.
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\distr}[3]{#1\left( #2 \big| #3\right) } % probability distribution: #1 symbol, #2 random variable, 3# parameters
+\newcommand{\distrnormal}[2]{\distr{\mathcal{N}}{#1}{#2}} % normal distribution: #1 random variable, #2 parameters, e.g. mean, covar
+\newcommand{\distruniform}[2]{\distr{\mathcal{U}}{#1}{#2}} % uniform distribution: #1 random variable, #2 parameters, e.g. min, max
+\newcommand{\distrbinom}[2]{\distr{\mathcal{B}}{#1}{#2}} % binomial distribution: #1 random variable, #2 parameters, e.g. n, p
+\newcommand{\distrbern}[2]{\distr{\mathcal{B}}{#1}{#2}} % Bernoulli distribution: #1 random variable, #2 parameters, e.g. p
+\newcommand{\p}[1]{p\left( #1\right) } % probability
+\newcommand{\E}[1]{\mathbb{E}\! \left[ #1\right] } % expected value of a random variable or a function of a random variable
+\newcommand{\Esub}[2]{\mathbb{E}_{#1} \! \left[ #2\right] } % expected value with subscript
+\newcommand{\Esubbig}[2]{\mathbb{E}_{#1} \! \big[ #2\big] } % expected value with subscript (enforce big brackets)
+\newcommand{\EsubBig}[2]{\mathbb{E}_{#1} \! \Big[ #2\Big] } % expected value with subscript (enforce Big brackets)
+\newcommand{\V}[1]{\mathbb{V} \! \left[ #1\right] } % variance of a random variable or a function of a random variable
+\newcommand{\Vsub}[2]{\mathbb{V}_{#1} \! \left[ #2\right] } % variance with subscript
+\newcommand{\Cov}[1]{\mathrm{Cov}\left( #1\right) } % covariance between two random variables or two functions of random variables
+\renewcommand{\Pr}[1]{\mathbb{P}\left( {#1}\right) } % probability of an event
+
+\makeatletter
+\newcommand{\@KL}[2]{\mathrm{KL}(#1 \Vert #2)} % starred version; #1 and #2 are probability distribution
+\newcommand{\@@KL}[3][]{\mathrm{KL}\!\left( #2 #1\Vert #3\right)} % #1(optional) = size of dilimiter, 1 and #2 are probability distribution e.g. \KL*{\small}{a}{b}
+\newcommand{\KL}{\@ifstar\@KL\@@KL}
+\makeatother
+\newcommand{\KLlosssym}{\mathcal{L}_{\textrm{KL}}}
+\newcommand{\quantilesym}{Q} % or \mathrm{Q} or \mathbb{Q}
+\newcommand{\quantile}[2]{\quantilesym_{#1} \! \left[ #2\right] } % quantile of a set: #1 level, #2 set
+\newcommand{\bias}[1]{\mathrm{b}[#1] } % bias | former \left[#1 \right]
+\newcommand{\logb}[2]{\mathrm{log}_{#1}(#2)} % logarithm to a specific base (#1)
+\newcommand{\entropy}[1]{\mathrm{H}\!\left( #1\right) }
+\renewcommand{\ln}[1]{\mathrm{ln}\left( #1\right) } % logarithm
+\renewcommand{\log}[1]{\mathrm{log}\left( #1\right) } % logarithm
+\renewcommand{\exp}[1]{\mathrm{exp}\left( #1\right) } % exponential function
+\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial #2}}
+%\newcommand{\diff}[1]{\ensuremath{\operatorname{d}\!{#1}}}
+\newcommand{\diff}{\mathrm{d}}
+\renewcommand{\sin}[1]{\mathrm{sin}\!\left( #1\right) }
+\newcommand{\sinsq}[1]{\mathrm{sin}^2\!\left( #1\right) }
+\renewcommand{\cos}[1]{\mathrm{cos}\!\left( #1\right) }
+\newcommand{\cossq}[1]{\mathrm{cos}^2\!\left( #1\right) }
+%https://tex.stackexchange.com/questions/448/how-to-automatically-resize-the-vertical-bar-in-a-set-comprehension
+\makeatletter
+\newcommand{\@given}[2]{\left. #1\right| #2} % starred version; #1 = random variable, #2 = condition
+\newcommand{\@@given}[3][]{#2 #1| #3} % #1(optional) = size of dilimiter, #2 = random variable, #3 = condition, e.g. \given*{\small}{a}{b}
+\newcommand{\given}{\@ifstar\@given\@@given}
+\makeatother
+
+% Measurements
+\newcommand{\mean}[1]{\mu\!\left( #1\right)}
+\newcommand{\estmean}[1]{m\!\left( #1\right)}
+\newcommand{\std}[1]{\sigma\!\left( #1\right)}
+\newcommand{\eststd}[1]{s\!\left( #1\right)}
+\newcommand{\halfspan}[1]{h\!\left( #1\right)}
+
+\DeclareDocumentCommand{\distmeas}{O{} O{} m}{\text{D}_{#1}^{#2} \!\left( #3\right)} % 2 optional args
+
+% Just for convenience
+\newcommand{\agivens}{\fa | \fs}
+\newcommand{\ninit}{n_{\text{init}}}
+\newcommand{\tholdsucc}{\edrsym^{\text{succ}}}
+\newcommand{\tholdsuccQQ}{375}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil} % larger integer
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor} % samller integer
+
+% -------------------------------------------------- %
+% Matrix Related
+% -------------------------------------------------- %
+\newcommand{\matele}[3]{\left[ #1 \right]_{#2#3}} % element of a matrix
+\newcommand{\matwsz}[3]{\underset{(#2 \times #3)}{#1}} % matrix with size beneath
+\newcommand{\tran}{^\textsf{\upshape T}} % transposed
+\newcommand{\inv}{^{-1}} % inverse
+\newcommand{\invtran}{^{-\textsf{\upshape T}}} % inverse and transposed
+\newcommand{\pinv}{^{+}} % pseudo-inverse
+\newcommand{\rank}[1]{\mathrm{rank}\left( #1\right) } % rank operator, perhaps \mathup{rank} is better
+%%%\renewcommand{\det}[1]{\left| {#1} \right|} % determinant
+\newcommand{\trace}[1]{\operatorname{tr}\left( #1\right) }
+\newcommand{\adj}[1]{\mathrm{adj}\left( #1\right) } % adjungate
+\newcommand{\diag}[1]{\mathrm{diag}\left( #1\right) } % diagonal matrix
+
+% Reward Function ---------------------------------- %
+\newcommand{\rewsym}{r}
+\DeclareDocumentCommand{\rewfcn}{O{} O{} m}{\rewsym_{#1}^{#2}\!\left( #3\right) }
+
+% Trajectory --------------------------------------- %
+\newcommand{\trajsym}{\tau}
+\newcommand{\trajssym}{\bm{\tau}}
+\newcommand{\trajspace}{\mathcal{T}}
+\newcommand{\trajsetsym}{\mathcal{T}}
+\DeclareDocumentCommand{\traj}{O{} O{}}{\trajssym_{#1}^{#2}} % 2 optional args
+\newcommand{\statedistrsym}{\mu}
+\DeclareDocumentCommand{\statedistr}{O{} O{} m}{\statedistrsym_{#1}^{#2}\!\left( #3\right) } % steady state distribution
+
+% Domain Parameters -------------------------------- %
+\newcommand{\domparam}{\xi}
+\newcommand{\domparams}{\bm{\xi}}
+\newcommand{\domparamspace}{\Xi}
+\newcommand{\domparamsnom}{\bar{\bm{\xi}}}
+\newcommand{\domparamdistrsym}{p} % prob dist for the physics params
+\makeatletter
+\DeclareDocumentCommand{\@domparamdistr}{O{} O{} m}{\domparamdistrsym_{#1}^{#2}\left( #3\right) }  % starred version
+\DeclareDocumentCommand{\@@domparamdistr}{O{} O{} m}{\domparamdistrsym_{#1}^{#2}\!\left( #3\right) }
+\newcommand{\domparamdistr}{\@ifstar\@domparamdistr\@@domparamdistr}
+\makeatother
+
+% Domain Parameter Distributions ------------------- %
+\newcommand{\domdistrparam}{\phi}
+\newcommand{\domdistrparams}{\bm{\phi}} % parameters of the distribution of the domain params
+\newcommand{\domdistrparamspace}{\Phi}
+\newcommand{\densestsym}{q}
+\DeclareDocumentCommand{\densest}{O{} O{} m}{\densestsym_{#1}^{#2}\!\left( #3\right)} % 2 optional args; usage: \densest[1][2]{3}
+\newcommand{\densestparam}{\phi}
+\newcommand{\densestparams}{\bm{\phi}} % parameters of the density estimator of the domain params
+\newcommand{\densestparamspace}{\Phi}
+\DeclareDocumentCommand{\domparamprior}{O{} O{} m}{\domparamdistrsym_{#1}^{#2}\!\left( #3\right) } % e.g. p(xi)
+\DeclareDocumentCommand{\domparamproposal}{O{} O{} m}{\tilde{\domparamdistrsym}_{#1}^{#2}\!\left( #3\right) } % e.g. p_tilde(xi)
+\DeclareDocumentCommand{\domparamlikelihood}{O{} O{} m}{\domparamdistrsym_{#1}^{#2}\!\left( #3\right) } % e.g. p(x | xi)
+\DeclareDocumentCommand{\domparamposterior}{O{} O{} m}{\domparamdistrsym_{#1}^{#2}\!\left( #3\right) } % e.g. p(xi | x)
+\DeclareDocumentCommand{\estdomparamposterior}{O{} O{} m}{\hat{\domparamdistrsym}_{#1}^{#2}\!\left( #3\right) } % e.g. p_hat(xi | x)
+
+% SBI related -------------------------------------- %
+\newcommand{\genmodelsym}{g}
+\DeclareDocumentCommand{\genmodel}{O{} O{} m}{\genmodelsym{#1}^{#2}\!\left( #3\right) }
+\newcommand{\sbidata}{\bm{x}}
+\newcommand{\sbidataspace}{\mathcal{X}}
+\newcommand{\summstatsym}{f}
+\newcommand{\summstatparam}{\psi}
+\newcommand{\summstatparams}{\bm{\psi}}
+\newcommand{\summstatparamspace}{\Psi}
+\DeclareDocumentCommand{\summstatfcn}{O{} O{} m}{\summstatsym_{#1}^{#2}\!\left( #3\right) }
+
+% Policy and its Parameters ------------------------ %
+\newcommand{\polsym}{\pi}
+\DeclareDocumentCommand{\pol}{O{} O{} m}{\polsym_{#1}^{#2}\!\left( #3\right) } % policy; optional arg for dependency on physics params
+\newcommand{\polparam}{\theta}
+\newcommand{\polparamspace}{\Theta}
+\DeclareDocumentCommand{\polparams}{O{} O{}}{\ftheta_{#1}^{#2}} % 2 optional args; NOTE: max_\polparams yields an error, but max_{\polparams} is fine
+\newcommand{\solcandi}{\polparams[][c]} % solution candidate
+\DeclareDocumentCommand{\polparamsopt}{O{} O{}}{\ftheta_{#1}^{#2 \optsym}} % optimal policy parameters indicated by star superscript
+\DeclareDocumentCommand{\polparamopt}{O{} O{}}{\polparam_{#1}^{#2 \optsym}} % optional arg is the index (not perfect - it would be better to define a new \DeclareDocumentCommand)
+%\DeclareDocumentCommand{\polparamsopt}{O{} O{}}{\polparams[#1][#2 \optsym]} % optional arg is the index (not perfect - it would be better to define a new \DeclareDocumentCommand)
+\newcommand{\polparamsoptcand}{\polparams[\candsym][\optsym]} % opt cand sol
+\newcommand{\polparamsoptref}{\polparams[\refsym][\optsym]} % opt ref sol
+
+% Gaussian Process --------------------------------- %
+\newcommand{\GPsym}{\mathcal{GP}}
+\newcommand{\GPmean}{m}
+\newcommand{\GPcovar}{k}
+\newcommand{\GP}[2]{\GPsym\!\left( #1,#2\right)}
+\newcommand{\acqfcnsym}{a}
+\DeclareDocumentCommand{\acqfcn}{O{} O{} m}{\acqfcnsym_{#1}^{#2}\!\left( #3\right) }
+\newcommand{\boinputspace}[1][]{\mathcal{X}_{#1}} % input space for Bayesian optimization
+
+% Optimality Gap ----------------------------------- %
+\newcommand{\optgapsym}{G}
+\DeclareDocumentCommand{\optgap}{O{} O{} m}{\optgapsym_{#1}^{#2}\!\left( #3\right) } % optimality gap of the policy #3; e.g. \optgap[1][2]{3}
+\newcommand{\estoptgapsym}{\hat{G}}
+\DeclareDocumentCommand{\estoptgap}{O{} O{} m}{\estoptgapsym_{#1}^{#2}\!\left( #3\right) } %  estimator of the optimality gap of the policy #3 calculated from #1 samples; e.g. \optgap[1][2]{3}
+\newcommand{\meanoptgapsym}{\bar{G}}
+\DeclareDocumentCommand{\optgapmean}{O{} O{} m}{\meanoptgapsym_{#1}^{#2}\!\left( #3\right) } % sample mean of the optimality gap from n_G calculations of G_n
+\newcommand{\optgapsampsetsym}{\mathcal{G}}
+\DeclareDocumentCommand{\optgapsampset}{O{} O{}}{\optgapsampsetsym_{#1}^{#2}} % set of optimality gap samples
+
+% Simulation Optimization Bias --------------------- %
+\newcommand{\sob}[1]{\mathrm{b}\!\left[#1 \right]}
+\newcommand{\sobBig}[1]{\mathrm{b}\!\Big[#1 \Big]}
+\newcommand{\sobNormal}[1]{\mathrm{b} [#1]}
+
+% Lagrange function -------------------------------- %
+\newcommand{\lagrangefcn}[1]{\mathcal{L}\left( #1\right) }
+
+% Bootstrapped optimality gap ---------------------- %
+\newcommand{\numbssamples}{{n_b}}
+\iffalse
+% old notation
+\newcommand{\bootsym}{*}
+\DeclareDocumentCommand{\bootestoptgap}{O{} O{} m}{{}^{\bootsym}\estoptgapsym_{#1}^{#2}\!\left( #3\right) }
+\DeclareDocumentCommand{\bootmeanoptgap}{O{} O{} m}{{}^{\bootsym}\meanoptgapsym_{#1}^{#2}\!\left( #3\right) }
+\DeclareDocumentCommand{\bootoptgapsampset}{O{} O{}}{{}^{\bootsym}\optgapsampsetsym_{#1}^{#2}}
+\fi
+\iftrue
+% new notation
+\newcommand{\bootsym}{B}
+\DeclareDocumentCommand{\bootestoptgap}{O{} O{} m}{\estoptgapsym_{#1}^{\bootsym #2}\!\left( #3\right) }
+\DeclareDocumentCommand{\bootmeanoptgap}{O{} O{} m}{\meanoptgapsym_{#1}^{\bootsym #2}\!\left( #3\right) }
+\DeclareDocumentCommand{\bootoptgapsampset}{O{} O{}}{\optgapsampsetsym_{#1}^{\bootsym #2}}
+\fi
+
+% Return ------------------------------------------- %
+\newcommand{\edrsym}{J}
+\DeclareDocumentCommand{\edr}{O{} O{} m}{\edrsym_{#1}^{#2}\!\left( #3\right)} % expected discounted return
+\newcommand{\optedrval}{j\opt}
+\newcommand{\estedrsym}{\hat{J}}
+\DeclareDocumentCommand{\estedr}{O{}  O{} m}{\estedrsym_{#1}^{#2}\!\left( #3\right)} % estimator of the expected (trajs) discounted return
+\newcommand{\eedrsym}{J} % former \bar{J}
+\DeclareDocumentCommand{\eedr}{O{} O{} m}{\eedrsym_{#1}^{#2}\!\left( #3\right)} % expected (domains) expected (trajs) discounted return
+\DeclareDocumentCommand{\esteedr}{O{} O{} m}{\estedrsym_{#1}^{#2}\!\left( #3\right)} % estimator of the expected (domains) expected (trajs) discounted return
+\newcommand{\objfunsym}{f}
+\DeclareDocumentCommand{\objfun}{O{} m}{\objfunsym_{#1}\!\left( #2\right)} % objective function
+\newcommand{\optfunval}{z\opt}
+
+% Dynamical Systems & Potentials ------------------- %
+\newcommand{\nummps}{n_{M}} % \numds = \nummps
+\newcommand{\dsdynparams}{\fpsi}
+\newcommand{\dsdynsym}{f}
+\DeclareDocumentCommand{\dsdyn}{O{} m}{\dsdynsym_{#1}\!\left( #2\right)} % 1 optional arg (subscript)
+\newcommand{\acti}{a}
+\newcommand{\actis}{\fa}
+\newcommand{\pot}{p}
+\newcommand{\pots}{\fp}
+\newcommand{\potdynparam}{\chi}
+\newcommand{\potdynparams}{\fchi}
+\newcommand{\potdynsym}{f}
+\newcommand{\potsdynsym}{\ff}
+\DeclareDocumentCommand{\potdyn}{O{} m}{\potdynsym_{#1}\!\left( #2\right)} % 1 optional arg (subscript)
+\DeclareDocumentCommand{\potsdyn}{O{} m}{\potsdynsym_{#1}\!\left( #2\right)} % 1 optional arg (subscript)
+\newcommand{\stim}{s}
+\newcommand{\stims}{\fs}
+\newcommand{\capacity}{C}
+\newcommand{\sigmoid}[1]{\sigma\!\left( #1\right)}
+
+% Robot related ------------------------------------ %
+\newcommand{\jointpos}{q}
+\newcommand{\jointvel}{\dot{q}}
+\newcommand{\jointspos}{\bm{q}}
+\newcommand{\jointsvel}{\dot{\jointposs}}
+\newcommand{\taskpos}{x}
+\newcommand{\taskvel}{\dot{\taskpos}}
+\newcommand{\taskposs}{\bm{x}}
+\newcommand{\taskvels}{\dot{\taskposs}}
+\newcommand{\tasksposs}{\bm{X}}
+\newcommand{\tasksvels}{\dot{\tasksposs}}
+
+% Reference multiple equations --------------------- %
+\ExplSyntaxOn
+\NewDocumentCommand{\eqsref}{m}{\quinn_eqsref:n {#1}}
+\seq_new:N \l_quinn_eqsref_seq
+\cs_new:Npn \quinn_eqsref:n #1
+{
+	\seq_set_split:Nnn \l_quinn_eqsref_seq { , } { #1 }
+	\seq_pop_right:NN \l_quinn_eqsref_seq \l_tmpa_tl
+	( % print the left parenthesis
+	\seq_map_inline:Nn \l_quinn_eqsref_seq
+	{ \ref{##1},\nobreakspace } % print the first references
+	\exp_args:NV \ref \l_tmpa_tl % print the last or only one
+	) % print the right parenthesis
+}
+\ExplSyntaxOff
+
+% -------------------------------------------------- %
+% Pseudocode
+% -------------------------------------------------- %
+% see https://tex.stackexchange.com/questions/229355/algorithm-algorithmic-algorithmicx-algorithm2e-algpseudocode-confused
+% and https://tex.stackexchange.com/questions/174631/using-algorithm2e-package-in-beamer
+% https://tex.stackexchange.com/questions/200730/how-to-have-the-algorithmicx-comment-symbol-in-algorithm2e/200736
+\SetKw{kwNot}{not}
+\SetKw{kwAnd}{and}
+\SetKw{kwBreak}{break}
+\SetKwInOut{Input}{input}
+\SetKwInOut{Output}{output}
+\SetKwInOut{Initialization}{init}
+\SetKwComment{Comment}{$\triangleright$\ }{}
+\newcommand\famuracommfont[1]{\rmfamily\textcolor{darkgray}{#1}}
+\SetCommentSty{famuracommfont}
+\SetKwRepeat{Do}{do}{while} % do ... while ... loop
+\SetKwBlock{With}{with}{end} % usage: \With(condition){code}; see p.12 in https://mlg.ulb.ac.be/files/algorithm2e.pdf
+% inline if/else blocks without newline at the end
+\newcommand{\llIf}[2]{{\let\par\relax\lIf{#1}{#2}}}
+\newcommand{\llElse}[1]{{\let\par\relax\lElse{#1}}}
+\newcommand{\llFor}[2]{{\let\par\relax\lFor{#1}{#2}}}
+
+% Pseudocode: Subroutines -------------------------- %
+\newcommand{\PolOptsym}{\textsc{PolOpt}}
+\newcommand{\DistrOptsym}{\textsc{DistrOpt}}
+\newcommand{\Infersym}{\textsc{Infer}}
+\newcommand{\PolOpt}[1]{\PolOptsym\!\left[ #1\right]}
+\newcommand{\DistrOpt}[1]{\DistrOptsym\!\left[ #1\right]}
+\newcommand{\Infer}[1]{\Infersym\!\left[ #1\right]}
+
+% -------------------------------------------------- %
+% Bold Math Symbols
+% -------------------------------------------------- %
+% Latin Symbols ------------------------------------ %
+\DeclareBoldMathCommand{\fnull}{0}
+\DeclareBoldMathCommand{\fO}{0}
+\DeclareBoldMathCommand{\fA}{A}
+\DeclareBoldMathCommand{\fa}{a}
+\DeclareBoldMathCommand{\fB}{B}
+\DeclareBoldMathCommand{\fb}{b}
+\DeclareBoldMathCommand{\fC}{C}
+\DeclareBoldMathCommand{\fc}{c}
+\DeclareBoldMathCommand{\fD}{D}
+\DeclareBoldMathCommand{\fd}{d}
+\DeclareBoldMathCommand{\fE}{E}
+\DeclareBoldMathCommand{\fe}{e}
+\DeclareBoldMathCommand{\fF}{F}
+\DeclareBoldMathCommand{\ff}{f}
+\DeclareBoldMathCommand{\fG}{G}
+\DeclareBoldMathCommand{\fg}{g}
+\DeclareBoldMathCommand{\fH}{H}
+\DeclareBoldMathCommand{\fh}{h}
+\DeclareBoldMathCommand{\fI}{I}
+\DeclareBoldMathCommand{\fJ}{J}
+\DeclareBoldMathCommand{\fK}{K}
+\DeclareBoldMathCommand{\fM}{M}
+\DeclareBoldMathCommand{\fm}{m}
+\DeclareBoldMathCommand{\fN}{N}
+\DeclareBoldMathCommand{\fn}{n}
+\DeclareBoldMathCommand{\fo}{o}
+\DeclareBoldMathCommand{\fP}{P}
+\DeclareBoldMathCommand{\fp}{p}
+\DeclareBoldMathCommand{\fQ}{Q}
+\DeclareBoldMathCommand{\fq}{q}
+\DeclareBoldMathCommand{\fq}{q}
+\newcommand{\fqd}{\dot{\fq}}
+\newcommand{\fqdd}{\ddot{\fq}}
+\DeclareBoldMathCommand{\fR}{R}
+\DeclareBoldMathCommand{\fr}{r}
+\newcommand{\frd}{\dot{\fr}}
+\DeclareBoldMathCommand{\fS}{S}
+\DeclareBoldMathCommand{\fs}{s}
+\newcommand{\fstilde}{\tilde{\fs}}
+\DeclareBoldMathCommand{\ft}{t}
+\DeclareBoldMathCommand{\fT}{T}
+\DeclareBoldMathCommand{\fU}{U}
+\DeclareBoldMathCommand{\fu}{u}
+\DeclareBoldMathCommand{\fV}{V}
+\DeclareBoldMathCommand{\fv}{v}
+\DeclareBoldMathCommand{\fW}{W}
+\DeclareBoldMathCommand{\fw}{w}
+\DeclareBoldMathCommand{\fx}{x}
+\DeclareBoldMathCommand{\fz}{z}
+\newcommand{\fxd}{\dot{\fx}}
+\newcommand{\fxdd}{\ddot{\fx}}
+\newcommand{\fxbar}{\bar{\fx}}
+\newcommand{\fxbard}{\dot{\fxbar}}
+\newcommand{\fxbardd}{\ddot{\fxbar}}
+\DeclareBoldMathCommand{\fY}{Y}
+\DeclareBoldMathCommand{\fy}{y}
+\DeclareBoldMathCommand{\fZ}{Z}
+% Greek Symbols ------------------------------------ %
+\DeclareBoldMathCommand{\falpha}{\alpha}
+\newcommand{\falphad}{\dot{\falpha}}
+\DeclareBoldMathCommand{\fbeta}{\beta}
+\DeclareBoldMathCommand{\fchi}{\chi}
+\DeclareBoldMathCommand{\fepsilon}{\epsilon}
+\DeclareBoldMathCommand{\fvarepsilon}{\varepsilon}
+\DeclareBoldMathCommand{\fgamma}{\gamma}
+\DeclareBoldMathCommand{\fGamma}{\Gamma}
+\DeclareBoldMathCommand{\flambda}{\lambda}
+\DeclareBoldMathCommand{\fLambda}{\Lambda}
+\DeclareBoldMathCommand{\fmu}{\mu}
+\DeclareBoldMathCommand{\fnu}{\nu}
+\DeclareBoldMathCommand{\fomega}{\omega}
+\DeclareBoldMathCommand{\fpi}{\pi}
+\DeclareBoldMathCommand{\fphi}{\phi}
+\DeclareBoldMathCommand{\fPhi}{\Phi}
+\DeclareBoldMathCommand{\fpsi}{\psi}
+\DeclareBoldMathCommand{\fsigma}{\sigma}
+\DeclareBoldMathCommand{\fSigma}{\Sigma}
+\DeclareBoldMathCommand{\ftau}{\tau}
+\DeclareBoldMathCommand{\ftheta}{\theta}
+\DeclareBoldMathCommand{\fTheta}{\Theta}
+\newcommand{\fhtheta}{\hat{\ftheta}}
+\newcommand{\fthetad}{\dot{\ftheta}}
+\newcommand{\fthetadd}{\ddot{\ftheta}}
+\DeclareBoldMathCommand{\fxi}{\xi}

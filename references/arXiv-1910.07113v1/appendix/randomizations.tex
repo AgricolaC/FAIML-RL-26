@@ -1,0 +1,223 @@
+\section{Randomizations}
+\label{app:randomizations}
+
+Detailed listings of the randomizations used in policy and vision training are given in Tables~\ref{table:manipulation_randomizations} and~\ref{table:vision_randomizations}. Below, we describe how the randomizations are parameterized in ADR.
+
+\begin{table}[h]
+    \caption{Randomizations used to train manipulation policies with ADR. For simulator physics randomizations with generic randomizers, values in the parenthesis denote (noise mode, $\alpha$). Generic randomizers without parenthesis used default values (MG, $1.0$).}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}l|l|l|l@{}}
+        \toprule
+        \textbf{Category} & \textbf{All policies} & \textbf{Reorientation policy} & \textbf{Rubik's cube policy} \\
+        \midrule
+	\multirow{16}{2cm}{Simulator physics (generic)} 	
+       			& Actuator force range & Dof armature & Body position (AG, 0.02) \\
+       			& Actuator gain prm & Dof damping & Dof armature cube \\
+			& Body inertia & Dof friction loss & Dof armature robot \\
+			& Geom size robot spatial & Geom friction	 & Dof damping cube	 \\
+			& Tendon length spring (M, 0.75) & Geom gap (M, 0.03) & Dof damping robot \\
+			& Tendon stiffness (M, 0.75) & & Dof friction loss cube \\
+			& & & Dof friction loss robot \\
+			& & & Geom gap cube (AU, 0.01) \\
+			& & & Geom gap robot (AU, 0.01) \\
+			& & & Geom pos cube (AG, 0.002) \\
+			& & & Geom pos robot (AG, 0.002) \\
+			& & & Geom margin cube (AG, 0.0005) \\
+			& & & Geom margin robot (AG, 0.0005) \\
+			& & & Geom solimp (M, 1.0) \\
+			& & & Geom solref (M, 1.0) \\
+			& &  & Joint stiffness robot (UAG, 0.005) \\
+	\midrule
+	\multirow{3}{2cm}{Simulator physics (custom)}
+			& Body mass &  & Friction robot \\
+			& Cube size &  & Friction cube	\\
+			& Tendon range &  & \\
+	\midrule
+	\multirow{5}{2cm}{Custom physics}
+			& Action latency &  & Action noise \\
+			& Backlash &  & Time step variance \\
+			& Joint margin &  & \\
+			& Joint range &  & \\
+			& Time step & & \\
+	\midrule
+	Adversary & Adversary & \\
+	\midrule
+	Observation & & & Observation \\
+        \bottomrule
+    \end{tabular}
+    \label{table:manipulation_randomizations}
+\end{table}
+
+A simple randomization for environment parameter $\lambda_i$, such as gravity, is parameterized by two ADR parameters corresponding to the boundaries of its randomization range: $\phi_{L, i}$ and $\phi_{H, i}$. Most randomizations that we used were simple. A more complex randomization such as observation noise is parameterized by several ADR parameters.
+
+In the following, we denote default (non-randomized) values by using the subscript $(\cdot)_0$. We use $\lambda_i, \lambda_j, \dots$ to denote randomized environment parameters, which are parameterized in ADR by boundary values $\phi{L, i}, \phi{H, i}$, $\phi{L, j}, \phi{H, j}$, etc. Lastly, define $g(x) \triangleq \exp(x - 1.0)$.
+
+\subsection{Simulator Physics Randomizations}\label{sec:physics_randomizations}
+
+Simulator physics parameters are randomized by using either \emph{generic} or \emph{custom} randomizers.
+
+\subsubsection{Generic randomizers}
+A generic randomizer is specified by a \emph{noise mode} and a scaling factor $\alpha$. The noise modes used in this work are listed in Table~\ref{table:noise_modes}. The variable $x$ denotes a simulator physics parameter being randomized.
+
+\begin{table}[h]
+	\caption{Generic randomizer noise modes and their abbreviations. $x$ denotes a simulator parameter being randomized and $x_0$ its default value.}
+	\centering
+	\renewcommand{\arraystretch}{1.3}
+    	\begin{tabular}{@{}lll@{}}
+        \toprule
+        \textbf{Noise Mode} & \textbf{Abbreviation} & \textbf{Expression} \\
+    \midrule
+	Additive Gaussian & AG & $x_0 + |N| \textrm{ for } N \sim \mathcal{N}(g(\alpha\lambda_i), g(|\alpha\lambda_j|)^2)$ \\
+	Unbiased Additive Gaussian & UAG & $x_0 + N \textrm{ for } N \sim \mathcal{N}(0, g(|\alpha\lambda_i|)^2)$ \\
+	Multiplicative & M & $x_0 e^{N} \textrm{ for } N \sim \mathcal{N}(\alpha\lambda_i, |\alpha\lambda_j|^2)$ \\
+	\bottomrule
+	\end{tabular}
+	\label{table:noise_modes}
+\end{table}
+
+\subsubsection{Custom randomizers}
+We also used several custom randomizers that perform slightly different randomization methods than generic randomizers. Again, $x$ denotes a simulator physics parameter being randomized.
+
+\paragraph{Cube and robot friction.} The slide, spin, or roll friction of a cube or robot body is randomized by
+\[
+x = x_0 e^{w\lambda_i},
+\]
+where $w$ is a fixed weight specific for the type of friction. The weights for robot friction are 1.0 for all types. The weights for cube friction is $w=1.0$ for slide and $w=2.0$ for spin and roll.
+
+\paragraph{Cube size.} Cube size is randomized by
+\[
+x = x_0 e^{0.15\lambda_i}
+\]
+
+\paragraph{Joint and tendon limits.} Both the lower and upper limits on joint and tendon ranges are randomized by 
+\[
+x = x_0 + n \textrm{ for } n \sim \mathcal{N}(0, 0.1g(|\lambda_i|)).
+\]
+
+\subsection{Custom Physics Randomizations}\label{sec:custom_physics}
+Custom physics models were used to capture physical effects that are not modelled by the simulator. These models range from simple time delays to motor backlash.
+
+\paragraph{Action delay.} Action delay $d$ in milliseconds is modelled and randomized by
+\[
+d = |\lambda_i| n_0 n_1 \textrm{ for } N_0 \sim \mathcal{N}(1, |\lambda_j|^2), N_1 \sim \mathcal{N}(1, |\lambda_k|^2),
+\]
+where $n_0$ is sampled once per episode, $n_1$ is sampled once per step.
+
+\paragraph{Action latency.} Action latency $l$ in time steps is randomized by
+\[
+l \sim C[\lambda_i],
+\]
+where $C[n]$ is the uniform categorical distribution over $n$ elements.
+
+\paragraph{Action noise.} Action noise $a$ is randomized by 
+\[
+a = a_0n_0 + n_1 + n_2 \textrm{ for } n_0 \sim \mathcal{N}(1, g(|\lambda_i|)^2), n_1 \sim \mathcal{N}(0, g(|\lambda_j|)^2), n_2 \sim \mathcal{N}(0, g(|\lambda_k|)^2),
+\]
+where $n_0,\, n_1$ are sampled once per episode, $n_2$ is sampled once per step.
+
+\paragraph{Motor Backlash.} As described in ~\citep[C.2]{openai2018learning} our motor backlash implementation contains two parameters $\delta_{\pm 1}$. They are randomized by 
+\[
+\delta_{\pm1} = e^{n\delta_{\pm1, 0}} \textrm{ for } n \sim \mathcal{N}(1, \lambda_i^2).
+\]
+
+\paragraph{Gravity.} Gravity vector $g$ is randomized by
+\[
+g = g_0 + ug(\lambda_i)
+\]
+for $u \in \R^3$ a random vector uniformly distributed over the unit sphere.
+
+\paragraph{Joint margin.} Joint margin $m$ is randomized by
+\[
+m = m_0n \textrm{ for } n \sim U[0, 0.15g(\lambda_i)].
+\]
+
+\paragraph{Time step.} Simulation time step $t$ is randomized by
+\[
+t = e^{0.6 \lambda_i}(t_0 + ne^{\lambda_j}) \textrm{ for } n \sim \textrm{Exp}(1/\kappa), \kappa \sim U[1250, 10000].
+\]
+The \emph{time step variance} randomization is equivalent to the time step randomization with $\lambda_i=0$.
+
+\subsection{Random Network Adversary (RNA)}\label{sec:random_network_adversary}
+ADR allows us to automatically choose randomization ranges and allows us to train on an ever-growing distribution over environments. However, one problem that ADR faces is that there might be unmodeled effects in the target domain. Since they are not modeled, ADR cannot randomize them.
+
+To resolve this, we use an adversarial approach similar to~\cite{pinto2017supervision, pinto2017robust}. However, instead of training the adversary in a zero-sum fashion, we use networks with randomly sampled weights. We re-sample these weights at the beginning of every episode and keep them fixed throughout the episode. Our adversarial approach has two different means of perturbing the policy:
+\begin{itemize}
+    \item \emph{Action perturbations}. Let $\pi_{\text{adv}}$ denote an adversarial policy with the same action space as the policy controlling the robot (usually denoted just as $\pi$ but denoted as $\pi_{\text{robot}}$ in this section for clarity). We then use the following simple convex combination to obtain the action we execute in simulation: $\vec{a}_t = (1-\alpha) \vec{a}_{\text{robot}} + \alpha  \vec{a}_{\text{adv}}$, where $\alpha \in [0,1]$, $\vec{a}_{\text{robot}} \sim \pi_{\text{robot}}(\vec{o}_t)$ and $\vec{a}_{\text{adv}} \sim \pi_{\text{adv}}(\vec{o}_t)$. $\alpha$ controls the influence of the adversary, with $\alpha=0$ meaning no adversarial perturbation and $\alpha=1$ meaning only adversarial perturbations. Given a sufficiently powerful adversarial policy, action perturbations allow us to model arbitrary effects in the actuation system of the robot.
+    \item \emph{Force/torque perturbations}. Similar to action perturbations, we apply force/torque perturbations to all bodies of the object being manipulated.\footnote{For the block reorientation task this is just a single body but for the Rubik's cube we apply perturbations to each cublet.}. More concretely, we generate a $6D$ vector for each body where the first $3$ dimensions define a force vector and the last $3$ dimensions define a torque vector for the same body. We scale the force vector by the body's mass and the torques by the body's corresponding inertia (we use a diagonal inertia matrix and scale each element of the torque vector by the corresponding diagonal entry) to normalize the effect each force/torque has. We then scale all force/torque perturbations by a scalar $\beta \in \R_{\geq0}$, thus allowing us to control how much influence force/torque perturbations have.
+\end{itemize}
+Given this formulation, we can use ADR to automatically adjust $\alpha$ and $\beta$ over time without the need for hand-tuning (which would be exceedingly difficult). Furthermore, we can sample $\alpha$ and $\beta$ iid per coordinate (i.e. per joint and per body, respectively), this having simulations in which some joints or bodies are ``more adversarial'' than others.
+
+However, one question still remains: How do we obtain the perturbations, i.e. how do we implement the adversarial policy? We experimented with sampling random perturbations, using a zero-sum self-play setup where we train an adversarial policy directly using either feed-forward or recurrent networks. Surprisingly we found that a very simple method outperforms them in terms of sim2sim transfer: Random networks.
+
+More concretely, we use a simple feed-forward network with $3$~hidden layers of $265$~units each. After each hidden layer we use a ReLU non-linearity. We use a discretized action space with $31$ bins per dimensions. We do this to ensure that randomly initializing the network leads uniform probability of selecting one of the $31$ bins (if we would use a continuous space and a $\tanh$ non-linearity, actions would always be close to $0$). We re-initialize the adversarial network at the beginning of each episode and keep it fixed after. The inputs of the adversarial network are the noisy fingertip positions as well as cube position, orientation, and face angle configuration. This idea is also related to random network distillation, where a randomly initialized CNN is used to help with exploration~\citep{burda2018exploration}.
+
+We found that this approach works very well, outperforming more sophisticated methods like adversarial training. We believe this is because diversity is what ultimately aids in transfer. Even though a trained adversary is a stronger opponent, random networks provide the maximum amount of diversity.
+
+\subsection{Observation Randomizations}\label{sec:observation_randomizations}
+We add both correlated and uncorrelated noise to observations. Correlated noise is sampled once per episode and uncorrelated noise is sampled once per step. Given default noise standard deviations $a_0, b_0, c_0$, fixed for each observation element $o$, we randomize each observation by 
+\[
+o = o_0 n_0 + n_1 + n_2 \textrm{ for } n_0 \sim \mathcal{N}(1, (a_0e^{\lambda_i})^2), n_1 \sim \mathcal{N}(0, (b_0 e^{\lambda_i})^2), n_2 \sim \mathcal{N}(0, (c_0e^{\lambda_j})^2),
+\]
+where $n_0, n_1$ are sampled once per episode, $n_2$ is sampled once per step.
+
+\subsection{Visual Randomizations}
+\label{app:visual_randomizations}
+
+There are two categories of randomizations for vision training, (a) variations in the scenes that are rendered by ORRB~\citep{chociej2019orrb} and (b) TensorFlow distortion operations applied on the images. ADR controls to what extent each category of randomizations affect the appearance of final images that are fed into the model with different ADR parameters. See the full list in \autoref{table:vision_randomizations}.
+
+
+\begin{table}[h]
+    \caption{Parameter randomizations used in vision model ADR training.}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}l|l|l@{}}
+        \toprule
+        \textbf{Category} & \textbf{Randomizer} & \textbf{Parameter} \\
+        \midrule
+        \multirow{26}{*}{ORRB~\cite{chociej2019orrb}}
+        & \multirow{3}{*}{Camera Randomizer} & Position perturbation distance \\
+        & & Rotation perturbation magnitude \\
+        & & Field of view (fov) perturbation \\
+        \cmidrule{2-3}
+        & \multirow{3}{*}{Light Randomizer} & Individual light intensity \\
+        & & Total intensity of lights in the scene \\
+        & & Spotlight angle \\
+        \cmidrule{2-3}
+        & \multirow{3}{*}{Lighting Rig} & Number of lights \\
+        & & Light distance \\
+        & & Light height \\
+        \cmidrule{2-3}
+        & \multirow{7}{*}{Material Fixed Hue Randomizer} & Hue perturbation radius \\
+        & & Saturation perturbation radius \\
+        & & Value perturbation radius \\
+        & & Range of saturation \\
+        & & Range of value \\
+        & & Range of glossiness \\
+        & & Range of metallic \\
+        \cmidrule{2-3}
+        & \multirow{11}{*}{Post Processing Randomizer} & Hue shift of all colors \\
+        & & Saturation of all colors \\
+        & & Contrast of all colors \\
+        & & Brightness of all colors \\
+        & & Color temperature to set the white balance to \\
+        & & Range of tint \\
+        & & Strength of bloom filter\footnote{\url{https://docs.unity3d.com/Packages/com.unity.postprocessing@2.1/manual/Bloom.html}} \\
+        & & Extent of veiling effects \\
+        & & Degree of darkness added by ambient occlusion\footnote{\url{https://docs.unity3d.com/Packages/com.unity.postprocessing@2.1/manual/Ambient-Occlusion.html}} \\
+        & & Grain strength \\
+        & & Grain article size \\
+        \midrule
+        \multirow{6}{*}{TensorFlow} 
+            & \multirow{6}{*}{---} & \texttt{tf.image.adjust\textunderscore hue} \\
+            & & \texttt{tf.image.adjust{\textunderscore}saturation} \\
+            & & \texttt{tf.image.adjust{\textunderscore}brightness} \\
+            & & \texttt{tf.image.adjust{\textunderscore}contrast} \\
+            & & Add random Gaussian noise \\
+            & & Add random Gaussian noise that is same across channels \\
+        \bottomrule
+    \end{tabular}
+    \label{table:vision_randomizations}
+\end{table}
+
+\FloatBarrier

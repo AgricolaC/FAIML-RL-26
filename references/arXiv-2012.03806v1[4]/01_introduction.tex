@@ -1,0 +1,68 @@
+\section{Introduction}
+
+Simulation is an important tool for developing robotic agents. While simulation has been well-established for robotics education and integrated robot software testing for years, there is an ongoing debate in the research community about the ability to transfer robotics skills learned in simulation to reality, a concept termed \emph{Sim2Real transfer}.
+
+The appeal of learning in simulation stems from the fact that it can be faster than real-time, cheaper, safer, and more informative (\textit{e.g.} providing perfect ground truth labels) than real-world experimentation. Recent work in Sim2Real has studied difficult real-world robotic problems related to autonomous driving, grasping, or in-hand manipulation with policies trained in simulation only. Fig. \ref{fig:sim-to-real-2020} highlights some of the work carried out this year. However, Sim2Real still faces significant challenges, and it remains an open question to which extent and in which problem domains Sim2Real can compete with or outperform techniques based on real-world experimentation.
+
+To shed light on these questions, we organized a scientific workshop on the topic of Sim2Real transfer, which was held at the \emph{Robotics: Science and Systems (R:SS) 2020}\footnote{All debate videos and abstracts have been made available at\\ \url{https://sim2real.github.io}} conference. We invited subject matter experts to debate the state of the art and future of the field. The highlight of the workshop were three debates with the following topics and corresponding controversial key statements:
+
+\begin{itemize}
+	\item \textbf{\emph{Why} should we invest in Sim2Real?} - ``Sim2Real is a waste of time and money.''
+	\item \textbf{\emph{What} is Sim2Real? }- ``Sim2Real is old news. It is just [model-based reinforcement learning $\vert$ domain randomization $\vert$ system identification $\vert$ $\ldots$].”
+	\item \textbf{\emph{How} should we apply Sim2Real?} - ``For successful sim2real transfer, there is no alternative to accurate simulation.“ 
+\end{itemize}
+
+In order to ensure that a wide range of arguments were considered during the debates, we divided the debate participants equally into proponents and opponents (two debaters for each side in each debate) and asked them to adhere to their assigned role throughout the debate.
+
+The workshop also featured contributed work in the form of 18 peer-reviewed two-page abstracts and was concluded with a panel discussion including all debate participants.
+
+% \begin{figure*}[t]
+% \centering
+%   \includegraphics[width=0.95\linewidth]{figures/sim-to-real-2020.png}
+% \caption{Seminal work on sim2real for robotics (Note: Permission to reproduce the figures from all authors and publishers have been collected.)}
+% \label{fig:sim-to-real-2020}
+% \end{figure*}
+
+
+\begin{figure*}
+	\centerline{
+		\includegraphics[width=0.5\linewidth]{figures/locomotion_rss2020.png}
+		\includegraphics[height=1.2in]{figures/rlcycleGAN.png}
+	}
+	\centerline{
+		\hfill
+		\makebox[0.50\linewidth][c] { \footnotesize{(a) Learning locomotion skills by imitating animals \cite{Peng:etal2020} }}
+		\hfill
+		\makebox[0.50\linewidth][c] { \footnotesize{(b) RL-CycleGAN \cite{Rao:etal2020:RLCyclegan}}}
+	}
+	\vspace{5mm}
+	\centerline{
+		% \includegraphics[width=0.5\linewidth]{figures/simgrain.png}
+		\includegraphics[width=\linewidth]{figures/deep-drone-acrobatics.png}
+	}
+	\centerline{
+		\hfill
+		\makebox[\linewidth][c] { \footnotesize{(c) Deep Drone Acrobatics \cite{Kaufmann:etal:2020RSS}}}
+	}
+	\vspace{5mm}
+	\centerline{
+		\includegraphics[width=0.5\linewidth]{figures/simgrain.png}
+		\includegraphics[height=1.4in]{figures/openai_rubiks_cube.jpg}
+	}
+	\centerline{
+		\hfill
+		\makebox[0.50\linewidth][c] { \footnotesize{(d) Sim to real on granular media \cite{Matl:etal:ICRA2020} }}
+		\hfill
+		\makebox[0.50\linewidth][c] { \footnotesize{(e) Manipulating Rubik's cube with dexterous hand \cite{openai:etal:2019}}}
+	}
+	
+	
+	\caption{\small
+		Various state-of-the-art applications of Sim2Real in robotics published in 2019-2020.} \vspace{1mm}
+	\label{fig:sim-to-real-2020}
+\end{figure*}
+
+
+The goal of this article is to summarize the workshop and draw conclusions about Sim2Real for robotics from both from a practitioner’s as well as a researcher’s perspective. In the first part, we summarize the three debates and the concluding panel discussion, highlighting the main arguments brought forward during the debates\footnote{In general, we avoid highlighting the debaters' names since they were assigned fixed positions which might not reflect their actual beliefs.} and the panel. The second part gives an overview of the contributed work, highlighting the main themes and summarizing individual contributions. In the last section, we draw lessons from the workshop to give concrete recommendations to practitioners on how to apply Sim2Real to their robotic applications, and to gather fundamental open questions in Sim2Real that require the attention of future research.
+
+

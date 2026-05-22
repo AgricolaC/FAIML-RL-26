@@ -1,0 +1,98 @@
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
+\IEEEoverridecommandlockouts
+
+\overrideIEEEmargins
+
+\usepackage{amsmath,amsfonts,amssymb,mathrsfs}
+\usepackage{graphicx}
+\usepackage{psfrag,graphicx,epsfig,epsf}
+\usepackage[ruled,linesnumbered, noend]{algorithm2e}
+\usepackage{fancyhdr}
+\usepackage{wrapfig}
+%\usepackage{subfigure}
+\usepackage{mathtools}
+\usepackage[permil]{overpic}
+\usepackage{url}
+\usepackage{color}
+\usepackage{verbatim}
+\usepackage{xspace}
+\usepackage{cite} 
+\usepackage[export]{adjustbox}
+\usepackage{graphicx}
+\usepackage{multirow}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{url}
+\usepackage{breakurl}
+\usepackage[breaklinks]{hyperref}
+\def\UrlBreaks{\do\/\do-}
+\makeatletter
+\newcommand{\removelatexerror}{\let\@latex@error\@gobble}
+\makeatother
+
+% \usepackage{draftwatermark}
+% \SetWatermarkText{Draft}
+% \SetWatermarkScale{2}
+
+% \title{\LARGE \bf The State of Sim2Real: 2020 Edition}
+\title{\LARGE \bf Perspectives on Sim2Real Transfer for Robotics:\\A Summary of the R:SS 2020 Workshop}
+
+\author{Sebastian Höfer$^{*,1}$, Kostas Bekris$^{1,2}$, Ankur Handa$^3$, Juan Camilo Gamboa$^{4}$, Florian Golemo$^{5,6}$, \\
+Melissa Mozifian$^{4}$,
+Chris Atkeson$^{7}$, Dieter Fox$^{3,8}$, Ken Goldberg$^{9}$, John Leonard$^{10}$, C. Karen Liu$^{11}$, \\
+Jan Peters$^{12,13}$, Shuran Song$^{14}$, Peter Welinder$^{15}$, Martha White$^{16}$
+\thanks{
+$^{*}$Corresponding author: \href{mailto:mail@sebastianhoefer.de}{\texttt{mail@sebastianhoefer.de}}
+}
+\thanks{
+$^1$Amazon Robotics AI
+$^2$Rutgers University
+$^3$NVIDIA Robotics
+$^4$McGill University
+$^5$Mila
+$^6$ElementAI
+${^7}$CMU
+${^8}$University of Washington 
+${^9}$UC Berkeley
+$^{10}$MIT
+$^{11}$Georgia Tech
+$^{12}$Technische Universität Darmstadt
+$^{13}$MPI for Intelligent Systems
+$^{14}$Columbia University
+$^{15}$OpenAI
+$^{16}$University of Alberta
+}
+}
+
+
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\input{00_abstract}
+
+\setcounter{footnote}{16}
+
+\input{01_introduction}
+
+\input{02_00_debates}
+
+\input{03_panel}
+
+\input{04_abstracts}
+
+\input{05_conclusion}
+
+\section*{Acknowledgements}
+The authors would like to thank Anca Dragan, Gregory Dudek and Abhinav Gupta for their contributions to the debates and panel discussion as well as the R:SS 2020 organizers for hosting our workshop.
+{
+\bibliographystyle{plain}
+\bibliography{main}
+}
+
+\end{document}

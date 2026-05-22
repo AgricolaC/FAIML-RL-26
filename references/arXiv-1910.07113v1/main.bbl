@@ -1,0 +1,744 @@
+\begin{thebibliography}{100}
+
+\bibitem{DBLP:conf/iros/AbellE95}
+T.~Abell and M.~A. Erdmann.
+\newblock Stably supported rotations of a planar polygon with two frictionless
+  contacts.
+\newblock In {\em Proceedings of {IEEE/RSJ} International Conference on
+  Intelligent Robots and Systems, {IROS} 1995, August 5 - 9, 1995, Pittsburgh,
+  PA, {USA}}, pages 411--418, 1995.
+
+\bibitem{DBLP:conf/iros/AiyamaII93}
+Y.~Aiyama, M.~Inaba, and H.~Inoue.
+\newblock Pivoting: {A} new method of graspless manipulation of object by robot
+  fingers.
+\newblock In {\em Proceedings of 1993 {IEEE/RSJ} International Conference on
+  Intelligent Robots and Systems, {IROS} 1993, Tokyo, Japan, July 26 - 30,
+  1993}, pages 136--143, 1993.
+
+\bibitem{DBLP:journals/corr/AntonovaCSK17}
+R.~Antonova, S.~Cruciani, C.~Smith, and D.~Kragic.
+\newblock Reinforcement learning for pivoting task.
+\newblock {\em CoRR}, abs/1703.00472, 2017.
+
+\bibitem{DBLP:journals/corr/abs-1810-01845}
+D.~Antotsiou, G.~Garcia{-}Hernando, and T.~Kim.
+\newblock Task-oriented hand motion retargeting for dexterous manipulation
+  imitation.
+\newblock {\em CoRR}, abs/1810.01845, 2018.
+
+\bibitem{asfour2013armar}
+T.~Asfour, J.~Schill, H.~Peters, C.~Klas, J.~B{\"u}cker, C.~Sander, S.~Schulz,
+  A.~Kargov, T.~Werner, and V.~Bartenbach.
+\newblock Armar-4: A 63 dof torque controlled humanoid robot.
+\newblock In {\em 2013 13th IEEE-RAS International Conference on Humanoid
+  Robots (Humanoids)}, pages 390--396. IEEE, 2013.
+
+\bibitem{DBLP:conf/icra/BaiL14}
+Y.~Bai and C.~K. Liu.
+\newblock Dexterous manipulation using both palm and fingers.
+\newblock In {\em 2014 {IEEE} International Conference on Robotics and
+  Automation, {ICRA} 2014, Hong Kong, China, May 31 - June 7, 2014}, pages
+  1560--1565, 2014.
+
+\bibitem{DBLP:journals/corr/abs-1804-08617}
+G.~Barth{-}Maron, M.~W. Hoffman, D.~Budden, W.~Dabney, D.~Horgan, D.~TB,
+  A.~Muldal, N.~Heess, and T.~P. Lillicrap.
+\newblock Distributed distributional deterministic policy gradients.
+\newblock {\em CoRR}, abs/1804.08617, 2018.
+
+\bibitem{rubikguinnes}
+A.~Beer.
+\newblock {Fastest robot to solve a Rubik's Cube}.
+\newblock
+  \url{https://www.guinnessworldrecords.com/world-records/fastest-robot-to-solve-a-rubiks-cube},
+  2016.
+
+\bibitem{DBLP:journals/trob/Bicchi00}
+A.~Bicchi.
+\newblock Hands for dexterous manipulation and robust grasping: a difficult
+  road toward simplicity.
+\newblock {\em {IEEE} Trans. Robotics and Automation}, 16(6):652--662, 2000.
+
+\bibitem{DBLP:conf/icra/BicchiS95}
+A.~Bicchi and R.~Sorrentino.
+\newblock Dexterous manipulation through rolling.
+\newblock In {\em Proceedings of the 1995 International Conference on Robotics
+  and Automation, Nagoya, Aichi, Japan, May 21-27, 1995}, pages 452--457, 1995.
+
+\bibitem{botvinick2019reinforcement}
+M.~Botvinick, S.~Ritter, J.~X. Wang, Z.~Kurth-Nelson, C.~Blundell, and
+  D.~Hassabis.
+\newblock Reinforcement learning, fast and slow.
+\newblock {\em Trends in cognitive sciences}, 2019.
+
+\bibitem{burda2018exploration}
+Y.~Burda, H.~Edwards, A.~Storkey, and O.~Klimov.
+\newblock Exploration by random network distillation.
+\newblock {\em arXiv preprint arXiv:1810.12894}, 2018.
+
+\bibitem{carter2016experiments}
+S.~Carter, D.~Ha, I.~Johnson, and C.~Olah.
+\newblock Experiments in handwriting with a neural network.
+\newblock {\em Distill}, 2016.
+
+\bibitem{Chebotar2018}
+Y.~Chebotar, A.~Handa, V.~Makoviychuk, M.~Macklin, J.~Issac, N.~Ratliff, and
+  D.~Fox.
+\newblock {Closing the Sim-to-Real Loop: Adapting Simulation Randomization with
+  Real World Experience}.
+\newblock {\em arXiv preprint 1810.05687}, 2018.
+
+\bibitem{DBLP:journals/trob/CherifG99}
+M.~Cherif and K.~K. Gupta.
+\newblock Planning quasi-static fingertip manipulations for reconfiguring
+  objects.
+\newblock {\em {IEEE} Trans. Robotics and Automation}, 15(5):837--848, 1999.
+
+\bibitem{chociej2019orrb}
+M.~Chociej, P.~Welinder, and L.~Weng.
+\newblock Orrb -- openai remote rendering backend.
+\newblock {\em arXiv preprint 1906.11633}, 2019.
+
+\bibitem{DBLP:journals/corr/abs-1906-11695}
+S.~Christen, S.~Stevsic, and O.~Hilliges.
+\newblock Demonstration-guided deep reinforcement learning of control policies
+  for dexterous human-robot interaction.
+\newblock {\em CoRR}, abs/1906.11695, 2019.
+
+\bibitem{DBLP:journals/corr/ChristianoSMSBT16}
+P.~F. Christiano, Z.~Shah, I.~Mordatch, J.~Schneider, T.~Blackwell, J.~Tobin,
+  P.~Abbeel, and W.~Zaremba.
+\newblock Transfer from simulation to real world through learning deep inverse
+  dynamics model.
+\newblock {\em CoRR}, abs/1610.03518, 2016.
+
+\bibitem{DBLP:journals/corr/abs-1803-11347}
+I.~Clavera, A.~Nagabandi, R.~S. Fearing, P.~Abbeel, S.~Levine, and C.~Finn.
+\newblock Learning to adapt: Meta-learning for model-based control.
+\newblock {\em CoRR}, abs/1803.11347, 2018.
+
+\bibitem{clune2019ai}
+J.~Clune.
+\newblock Ai-gas: Ai-generating algorithms, an alternate paradigm for producing
+  general artificial intelligence.
+\newblock {\em arXiv preprint arXiv:1905.10985}, 2019.
+
+\bibitem{Cubuk2018}
+E.~D. Cubuk, B.~Zoph, D.~Mane, V.~Vasudevan, and Q.~V. Le.
+\newblock {AutoAugment: Learning Augmentation Policies from Data}.
+\newblock {\em arXiv preprint 1805.09501}, may 2018.
+
+\bibitem{cully2015robots}
+A.~Cully, J.~Clune, D.~Tarapore, and J.-B. Mouret.
+\newblock Robots that can adapt like animals.
+\newblock {\em Nature}, 521(7553):503, 2015.
+
+\bibitem{Czarnecki2019DistillingPD}
+W.~Czarnecki, R.~Pascanu, S.~Osindero, S.~M. Jayakumar, G.~Swirszcz, and
+  M.~Jaderberg.
+\newblock Distilling policy distillation.
+\newblock {\em ArXiv}, abs/1902.02186, 2019.
+
+\bibitem{DBLP:journals/corr/DafleR17}
+N.~C. Dafle and A.~Rodriguez.
+\newblock Sampling-based planning of in-hand manipulation with external pushes.
+\newblock {\em CoRR}, abs/1707.00318, 2017.
+
+\bibitem{DBLP:conf/icra/DafleRPTSEMLSF14}
+N.~C. Dafle, A.~Rodriguez, R.~Paolini, B.~Tang, S.~S. Srinivasa, M.~A. Erdmann,
+  M.~T. Mason, I.~Lundberg, H.~Staab, and T.~A. Fuhlbrigge.
+\newblock Extrinsic dexterity: In-hand manipulation with external forces.
+\newblock In {\em 2014 {IEEE} International Conference on Robotics and
+  Automation, {ICRA} 2014, Hong Kong, China, May 31 - June 7, 2014}, pages
+  1578--1585, 2014.
+
+\bibitem{DBLP:conf/icra/DoulgeriD13}
+Z.~Doulgeri and L.~Droukas.
+\newblock On rolling contact motion by robotic fingers via prescribed
+  performance control.
+\newblock In {\em 2013 {IEEE} International Conference on Robotics and
+  Automation, Karlsruhe, Germany, May 6-10, 2013}, pages 3976--3981, 2013.
+
+\bibitem{DBLP:journals/corr/DuanSCBSA16}
+Y.~Duan, J.~Schulman, X.~Chen, P.~L. Bartlett, I.~Sutskever, and P.~Abbeel.
+\newblock {RL}$^2$: Fast reinforcement learning via slow reinforcement
+  learning.
+\newblock {\em CoRR}, abs/1611.02779, 2016.
+
+\bibitem{bostondynamicsatlas}
+B.~Dynamics.
+\newblock {Atlas}.
+\newblock \url{https://www.bostondynamics.com/atlas}, 2013.
+
+\bibitem{DBLP:journals/ijrr/Erdmann98}
+M.~A. Erdmann.
+\newblock An exploration of nonprehensile two-palm manipulation.
+\newblock {\em I. J. Robotics Res.}, 17(5):485--503, 1998.
+
+\bibitem{DBLP:journals/trob/ErdmannM88}
+M.~A. Erdmann and M.~T. Mason.
+\newblock An exploration of sensorless manipulation.
+\newblock {\em {IEEE} J. Robotics and Automation}, 4(4):369--379, 1988.
+
+\bibitem{falco2018policy}
+P.~Falco, A.~Attawia, M.~Saveriano, and D.~Lee.
+\newblock On policy learning robust to irreversible events: An application to
+  robotic in-hand manipulation.
+\newblock {\em IEEE Robotics and Automation Letters}, 3(3):1482--1489, 2018.
+
+\bibitem{DBLP:conf/icra/Fearing86}
+R.~S. Fearing.
+\newblock Implementing a force strategy for object re-orientation.
+\newblock In {\em Proceedings of the 1986 {IEEE} International Conference on
+  Robotics and Automation, San Francisco, California, USA, April 7-10, 1986},
+  pages 96--102, 1986.
+
+\bibitem{DBLP:journals/corr/FinnAL17}
+C.~Finn, P.~Abbeel, and S.~Levine.
+\newblock Model-agnostic meta-learning for fast adaptation of deep networks.
+\newblock {\em CoRR}, abs/1703.03400, 2017.
+
+\bibitem{mindcuber}
+D.~Gilday.
+\newblock {MindCuber}.
+\newblock \url{https://mindcuber.com/}, 2013.
+
+\bibitem{graves2017curriculum}
+A.~Graves, M.~G. Bellemare, J.~Menick, R.~Munos, and K.~Kavukcuoglu.
+\newblock Automated curriculum learning for neural networks.
+\newblock In {\em Proceedings of the 34th International Conference on Machine
+  Learning - Volume 70}, ICML'17, pages 1311--1320. JMLR.org, 2017.
+
+\bibitem{DBLP:conf/icra/GuHLL17}
+S.~Gu, E.~Holly, T.~P. Lillicrap, and S.~Levine.
+\newblock Deep reinforcement learning for robotic manipulation with
+  asynchronous off-policy updates.
+\newblock In {\em 2017 {IEEE} International Conference on Robotics and
+  Automation, {ICRA} 2017, Singapore, Singapore, May 29 - June 3, 2017}, pages
+  3389--3396, 2017.
+
+\bibitem{guo2018dynamic}
+M.~Guo, A.~Haque, D.-A. Huang, S.~Yeung, and L.~Fei-Fei.
+\newblock Dynamic task prioritization for multitask learning.
+\newblock In {\em Proceedings of the European Conference on Computer Vision
+  (ECCV)}, pages 270--287, 2018.
+
+\bibitem{DBLP:journals/corr/GuptaDLAL17}
+A.~Gupta, C.~Devin, Y.~Liu, P.~Abbeel, and S.~Levine.
+\newblock Learning invariant feature spaces to transfer skills with
+  reinforcement learning.
+\newblock {\em CoRR}, abs/1703.02949, 2017.
+
+\bibitem{DBLP:journals/corr/abs-1806-04640}
+A.~Gupta, B.~Eysenbach, C.~Finn, and S.~Levine.
+\newblock Unsupervised meta-learning for reinforcement learning.
+\newblock {\em CoRR}, abs/1806.04640, 2018.
+
+\bibitem{DBLP:journals/corr/abs-1812-05905}
+T.~Haarnoja, A.~Zhou, K.~Hartikainen, G.~Tucker, S.~Ha, J.~Tan, V.~Kumar,
+  H.~Zhu, A.~Gupta, P.~Abbeel, and S.~Levine.
+\newblock Soft actor-critic algorithms and applications.
+\newblock {\em CoRR}, abs/1812.05905, 2018.
+
+\bibitem{DBLP:conf/icra/HanGLQT97}
+L.~Han, Y.~Guan, Z.~X. Li, S.~Qi, and J.~C. Trinkle.
+\newblock Dextrous manipulation with rolling contacts.
+\newblock In {\em Proceedings of the 1997 {IEEE} International Conference on
+  Robotics and Automation, Albuquerque, New Mexico, USA, April 20-25, 1997},
+  pages 992--997, 1997.
+
+\bibitem{DBLP:conf/icra/HanT98}
+L.~Han and J.~C. Trinkle.
+\newblock Dextrous manipulation by rolling and finger gaiting.
+\newblock In {\em Proceedings of the {IEEE} International Conference on
+  Robotics and Automation, ICRA-98, Leuven, Belgium, May 16-20, 1998}, pages
+  730--735, 1998.
+
+\bibitem{He2016DeepRL}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun.
+\newblock Deep residual learning for image recognition.
+\newblock {\em 2016 IEEE Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, pages 770--778, 2016.
+
+\bibitem{higo2018rubik}
+R.~Higo, Y.~Yamakawa, T.~Senoo, and M.~Ishikawa.
+\newblock Rubik's cube handling using a high-speed multi-fingered hand and a
+  high-speed vision system.
+\newblock In {\em 2018 IEEE/RSJ International Conference on Intelligent Robots
+  and Systems (IROS)}, pages 6609--6614. IEEE, 2018.
+
+\bibitem{lstm}
+S.~Hochreiter and J.~Schmidhuber.
+\newblock Long short-term memory.
+\newblock {\em Neural computation}, 9(8):1735--1780, 1997.
+
+\bibitem{DBLP:journals/ijrr/HuangM00}
+W.~H. Huang and M.~T. Mason.
+\newblock Mechanics, planning, and control for tapping.
+\newblock {\em I. J. Robotics Res.}, 19(10):883--894, 2000.
+
+\bibitem{DBLP:journals/corr/abs-1905-06424}
+J.~Humplik, A.~Galashov, L.~Hasenclever, P.~A. Ortega, Y.~W. Teh, and N.~Heess.
+\newblock Meta reinforcement learning as task inference.
+\newblock {\em CoRR}, abs/1905.06424, 2019.
+
+\bibitem{hwangbo2019learning}
+J.~Hwangbo, J.~Lee, A.~Dosovitskiy, D.~Bellicoso, V.~Tsounis, V.~Koltun, and
+  M.~Hutter.
+\newblock Learning agile and dynamic motor skills for legged robots.
+\newblock {\em Science Robotics}, 4(26):eaau5872, 2019.
+
+\bibitem{2018arXiv180610293K}
+D.~{Kalashnikov}, A.~{Irpan}, P.~{Pastor}, J.~{Ibarz}, A.~{Herzog}, E.~{Jang},
+  D.~{Quillen}, E.~{Holly}, M.~{Kalakrishnan}, V.~{Vanhoucke}, and S.~{Levine}.
+\newblock {QT-Opt: Scalable Deep Reinforcement Learning for Vision-Based
+  Robotic Manipulation}.
+\newblock {\em ArXiv e-prints}, June 2018.
+
+\bibitem{Kar2019}
+A.~Kar, A.~Prakash, M.-Y. Liu, E.~Cameracci, J.~Yuan, M.~Rusiniak, D.~Acuna,
+  A.~Torralba, and S.~Fidler.
+\newblock {Meta-Sim: Learning to Generate Synthetic Datasets}.
+\newblock {\em arXiv preprint 1904.11621}, apr 2019.
+
+\bibitem{Kingma2014AdamAM}
+D.~P. Kingma and J.~Ba.
+\newblock Adam: A method for stochastic optimization.
+\newblock {\em CoRR}, abs/1412.6980, 2014.
+
+\bibitem{DBLP:journals/corr/KumarGTL16}
+V.~Kumar, A.~Gupta, E.~Todorov, and S.~Levine.
+\newblock Learning dexterous manipulation policies from experience and
+  imitation.
+\newblock {\em CoRR}, abs/1611.05095, 2016.
+
+\bibitem{DBLP:conf/icra/KumarTL16}
+V.~Kumar, E.~Todorov, and S.~Levine.
+\newblock Optimal control with learned local models: Application to dexterous
+  manipulation.
+\newblock In {\em 2016 {IEEE} International Conference on Robotics and
+  Automation, {ICRA} 2016, Stockholm, Sweden, May 16-21, 2016}, pages 378--383,
+  2016.
+
+\bibitem{Lan2019MetaRL}
+L.~Lan, Z.~Li, X.~Guan, and P.~Wang.
+\newblock Meta reinforcement learning with task embedding and shared policy.
+\newblock In {\em IJCAI}, 2019.
+
+\bibitem{DBLP:journals/corr/abs-1907-04964}
+N.~C. Landolfi, G.~Thomas, and T.~Ma.
+\newblock A model-based approach for sample-efficient multi-task reinforcement
+  learning.
+\newblock {\em CoRR}, abs/1907.04964, 2019.
+
+\bibitem{DBLP:conf/icml/LevineK13}
+S.~Levine and V.~Koltun.
+\newblock Guided policy search.
+\newblock In {\em Proceedings of the 30th International Conference on Machine
+  Learning, {ICML} 2013, Atlanta, GA, USA, 16-21 June 2013}, pages 1--9, 2013.
+
+\bibitem{DBLP:journals/ijrr/LevinePKIQ18}
+S.~Levine, P.~Pastor, A.~Krizhevsky, J.~Ibarz, and D.~Quillen.
+\newblock Learning hand-eye coordination for robotic grasping with deep
+  learning and large-scale data collection.
+\newblock {\em I. J. Robotics Res.}, 37(4-5):421--436, 2018.
+
+\bibitem{DBLP:conf/icra/LevineWA15}
+S.~Levine, N.~Wagener, and P.~Abbeel.
+\newblock Learning contact-rich manipulation skills with guided policy search.
+\newblock In {\em {IEEE} International Conference on Robotics and Automation,
+  {ICRA} 2015, Seattle, WA, USA, 26-30 May, 2015}, pages 156--163, 2015.
+
+\bibitem{DBLP:conf/iros/LiBKB14}
+M.~Li, Y.~Bekiroglu, D.~Kragic, and A.~Billard.
+\newblock Learning of grasp adaptation through experience and tactile sensing.
+\newblock In {\em 2014 {IEEE/RSJ} International Conference on Intelligent
+  Robots and Systems, Chicago, IL, USA, September 14-18, 2014}, pages
+  3339--3346, 2014.
+
+\bibitem{DBLP:conf/icra/LiYTB14}
+M.~Li, H.~Yin, K.~Tahara, and A.~Billard.
+\newblock Learning object-level impedance control for robust grasping and
+  dexterous manipulation.
+\newblock In {\em 2014 {IEEE} International Conference on Robotics and
+  Automation, {ICRA} 2014, Hong Kong, China, May 31 - June 7, 2014}, pages
+  6784--6791, 2014.
+
+\bibitem{DBLP:journals/ijma/0001MHRB13}
+Q.~Li, M.~Meier, R.~Haschke, H.~J. Ritter, and B.~Bolder.
+\newblock Rotary object dexterous manipulation in hand: a feedback-based
+  method.
+\newblock {\em {IJMA}}, 3(1):36--47, 2013.
+
+\bibitem{2019arXiv190711388L}
+T.~{Li}, W.~{Xi}, M.~{Fang}, J.~{Xu}, and M.~{Qing-Hu Meng}.
+\newblock {Learning to Solve a Rubik's Cube with a Dexterous Hand}.
+\newblock {\em arXiv e-prints}, page arXiv:1907.11388, Jul 2019.
+
+\bibitem{DBLP:journals/corr/abs-1903-01973}
+C.~Lynch, M.~Khansari, T.~Xiao, V.~Kumar, J.~Tompson, S.~Levine, and
+  P.~Sermanet.
+\newblock Learning latent plans from play.
+\newblock {\em CoRR}, abs/1903.01973, 2019.
+
+\bibitem{DBLP:conf/icar/MaD11}
+R.~R. Ma and A.~M. Dollar.
+\newblock On dexterity and dexterous manipulation.
+\newblock In {\em 15th International Conference on Advanced Robotics: New
+  Boundaries for Robotics, {ICAR} 2011, Tallinn, Estonia, June 20-23, 2011.},
+  pages 1--7, 2011.
+
+\bibitem{DBLP:conf/rss/MahlerLNLDLOG17}
+J.~Mahler, J.~Liang, S.~Niyaz, M.~Laskey, R.~Doan, X.~Liu, J.~A. Ojea, and
+  K.~Goldberg.
+\newblock Dex-net 2.0: Deep learning to plan robust grasps with synthetic point
+  clouds and analytic grasp metrics.
+\newblock In {\em Robotics: Science and Systems XIII, Massachusetts Institute
+  of Technology, Cambridge, Massachusetts, USA, July 12-16, 2017}, 2017.
+
+\bibitem{DBLP:journals/corr/abs-1709-06670}
+J.~Mahler, M.~Matl, X.~Liu, A.~Li, D.~V. Gealy, and K.~Goldberg.
+\newblock Dex-net 3.0: Computing robust robot suction grasp targets in point
+  clouds using a new analytic model and deep learning.
+\newblock {\em CoRR}, abs/1709.06670, 2017.
+
+\bibitem{matiisen2017teacherstudent}
+T.~Matiisen, A.~Oliver, T.~Cohen, and J.~Schulman.
+\newblock Teacher-student curriculum learning.
+\newblock {\em arXiv preprint arXiv:1707.00183}, 2017.
+
+\bibitem{Mehta2019}
+B.~Mehta, M.~Diaz, F.~Golemo, C.~J. Pal, and L.~Paull.
+\newblock {Active Domain Randomization}.
+\newblock {\em arXiv preprint 1904.04762}, 2019.
+
+\bibitem{DBLP:journals/corr/MishraRCA17}
+N.~Mishra, M.~Rohaninejad, X.~Chen, and P.~Abbeel.
+\newblock Meta-learning with temporal convolutions.
+\newblock {\em CoRR}, abs/1707.03141, 2017.
+
+\bibitem{DBLP:conf/sca/MordatchPT12}
+I.~Mordatch, Z.~Popovic, and E.~Todorov.
+\newblock Contact-invariant optimization for hand manipulation.
+\newblock In {\em Proceedings of the 2012 Eurographics/ACM {SIGGRAPH} Symposium
+  on Computer Animation, {SCA} 2012, Lausanne, Switzerland, 2012}, pages
+  137--144, 2012.
+
+\bibitem{PDDM}
+A.~Nagabandi, K.~Konoglie, S.~Levine, and V.~Kumar.
+\newblock {Deep Dynamics Models for Learning Dexterous Manipulation}.
+\newblock In {\em Conference on Robot Learning (CoRL)}, 2019.
+
+\bibitem{relu}
+V.~Nair and G.~E. Hinton.
+\newblock Rectified linear units improve restricted boltzmann machines.
+\newblock In {\em Proceedings of the 27th international conference on machine
+  learning (ICML-10)}, pages 807--814, 2010.
+
+\bibitem{nordic}
+{Nordic Semiconductor}.
+\newblock {nRF52832 Product Specification v1.1}.
+\newblock Technical report, {Nordic Semiconductor}, 2016.
+
+\bibitem{DBLP:conf/icra/OkamuraSC00}
+A.~M. Okamura, N.~Smaby, and M.~R. Cutkosky.
+\newblock An overview of dexterous manipulation.
+\newblock In {\em Proceedings of the 2000 {IEEE} International Conference on
+  Robotics and Automation, {ICRA} 2000, April 24-28, 2000, San Francisco, CA,
+  {USA}}, pages 255--262, 2000.
+
+\bibitem{olah2018the}
+C.~Olah, A.~Satyanarayan, I.~Johnson, S.~Carter, L.~Schubert, K.~Ye, and
+  A.~Mordvintsev.
+\newblock The building blocks of interpretability.
+\newblock {\em Distill}, 2018.
+\newblock https://distill.pub/2018/building-blocks.
+
+\bibitem{five}
+OpenAI.
+\newblock {OpenAI Five}.
+\newblock \url{https://blog.openai.com/openai-five/}, 2018.
+
+\bibitem{openai2018learning}
+OpenAI, M.~Andrychowicz, B.~Baker, M.~Chociej, R.~Józefowicz, B.~McGrew,
+  J.~Pachocki, A.~Petron, M.~Plappert, G.~Powell, A.~Ray, J.~Schneider,
+  S.~Sidor, J.~Tobin, P.~Welinder, L.~Weng, and W.~Zaremba.
+\newblock Learning dexterous in-hand manipulation.
+\newblock {\em CoRR}, 2018.
+
+\bibitem{rcr3d}
+Otvinta.
+\newblock 3d-printed rubik's cube robot.
+\newblock \url{http://www.rcr3d.com/}, 2017.
+
+\bibitem{DBLP:journals/corr/abs-1903-02710}
+E.~Parisotto, S.~Ghosh, S.~B. Yalamanchi, V.~Chinnaobireddy, Y.~Wu, and
+  R.~Salakhutdinov.
+\newblock Concurrent meta reinforcement learning.
+\newblock {\em CoRR}, abs/1903.02710, 2019.
+
+\bibitem{peng2017sim}
+X.~B. Peng, M.~Andrychowicz, W.~Zaremba, and P.~Abbeel.
+\newblock Sim-to-real transfer of robotic control with dynamics randomization.
+\newblock {\em CoRR}, abs/1710.06537, 2017.
+
+\bibitem{pinto2017asymmetric}
+L.~Pinto, M.~Andrychowicz, P.~Welinder, W.~Zaremba, and P.~Abbeel.
+\newblock Asymmetric actor critic for image-based robot learning.
+\newblock {\em arXiv preprint arXiv:1710.06542}, 2017.
+
+\bibitem{pinto2017supervision}
+L.~Pinto, J.~Davidson, and A.~Gupta.
+\newblock Supervision via competition: Robot adversaries for learning tasks.
+\newblock In {\em 2017 IEEE International Conference on Robotics and Automation
+  (ICRA)}, pages 1601--1608. IEEE, 2017.
+
+\bibitem{pinto2017robust}
+L.~Pinto, J.~Davidson, R.~Sukthankar, and A.~Gupta.
+\newblock Robust adversarial reinforcement learning.
+\newblock In {\em Proceedings of the 34th International Conference on Machine
+  Learning-Volume 70}, pages 2817--2826. JMLR. org, 2017.
+
+\bibitem{plappert2018multi}
+M.~Plappert, M.~Andrychowicz, A.~Ray, B.~McGrew, B.~Baker, G.~Powell,
+  J.~Schneider, J.~Tobin, M.~Chociej, P.~Welinder, et~al.
+\newblock Multi-goal reinforcement learning: Challenging robotics environments
+  and request for research.
+\newblock {\em arXiv preprint arXiv:1802.09464}, 2018.
+
+\bibitem{Prakash2018}
+A.~Prakash, S.~Boochoon, M.~Brophy, D.~Acuna, E.~Cameracci, G.~State,
+  O.~Shapira, and S.~Birchfield.
+\newblock {Structured Domain Randomization: Bridging the Reality Gap by
+  Context-Aware Synthetic Data}.
+\newblock {\em arXiv preprint 1810.10093}, oct 2018.
+
+\bibitem{DBLP:journals/corr/abs-1709-10087}
+A.~Rajeswaran, V.~Kumar, A.~Gupta, J.~Schulman, E.~Todorov, and S.~Levine.
+\newblock Learning complex dexterous manipulation with deep reinforcement
+  learning and demonstrations.
+\newblock {\em CoRR}, abs/1709.10087, 2017.
+
+\bibitem{qtm}
+T.~Rokicki and M.~Davidson.
+\newblock {God's Number is 26 in the Quarter-Turn Metric}.
+\newblock \url{https://cube20.org/qtm/}, 2014.
+
+\bibitem{ross2010dagger}
+S.~Ross, G.~J. Gordon, and J.~A. Bagnell.
+\newblock No-regret reductions for imitation learning and structured
+  prediction.
+\newblock {\em CoRR}, abs/1011.0686, 2010.
+
+\bibitem{Ruiz2018}
+N.~Ruiz, S.~Schulter, and M.~Chandraker.
+\newblock {Learning To Simulate}.
+\newblock {\em arXiv preprint 1810.02513}, 1810.02513:1--12, 2018.
+
+\bibitem{DBLP:conf/icra/Rus92}
+D.~Rus.
+\newblock Dexterous rotations of polyhedra.
+\newblock In {\em Proceedings of the 1992 {IEEE} International Conference on
+  Robotics and Automation, Nice, France, May 12-14, 1992}, pages 2758--2763,
+  1992.
+
+\bibitem{DBLP:journals/ijrr/Rus99}
+D.~Rus.
+\newblock In-hand dexterous manipulation of piecewise-smooth 3-d objects.
+\newblock {\em I. J. Robotics Res.}, 18(4):355--381, 1999.
+
+\bibitem{DBLP:conf/corl/RusuVRHPH17}
+A.~A. Rusu, M.~Vecerik, T.~Roth{\"{o}}rl, N.~Heess, R.~Pascanu, and R.~Hadsell.
+\newblock Sim-to-real robot learning from pixels with progressive nets.
+\newblock In {\em 1st Annual Conference on Robot Learning, CoRL 2017, Mountain
+  View, California, USA, November 13-15, 2017, Proceedings}, pages 262--270,
+  2017.
+
+\bibitem{DBLP:conf/rss/SadeghiL17}
+F.~Sadeghi and S.~Levine.
+\newblock {CAD2RL:} real single-image flight without a single real image.
+\newblock In {\em Robotics: Science and Systems XIII, Massachusetts Institute
+  of Technology, Cambridge, Massachusetts, USA, July 12-16, 2017}, 2017.
+
+\bibitem{Smundsson2018MetaRL}
+S.~S{\ae}mundsson, K.~Hofmann, and M.~P. Deisenroth.
+\newblock Meta reinforcement learning with latent variable gaussian processes.
+\newblock In {\em UAI}, 2018.
+
+\bibitem{sakagami2002intelligent}
+Y.~Sakagami, R.~Watanabe, C.~Aoyama, S.~Matsunaga, N.~Higaki, and K.~Fujimura.
+\newblock The intelligent asimo: System overview and integration.
+\newblock In {\em IEEE/RSJ international conference on intelligent robots and
+  systems}, volume~3, pages 2478--2483. IEEE, 2002.
+
+\bibitem{sawasaki1991tumbling}
+N.~Sawasaki and H.~INOUE.
+\newblock Tumbling objects using a multi-fingered robot.
+\newblock {\em Journal of the Robotics Society of Japan}, 9(5):560--571, 1991.
+
+\bibitem{DBLP:journals/corr/abs-1112-5309}
+J.~Schmidhuber.
+\newblock {POWERPLAY:} training an increasingly general problem solver by
+  continually searching for the simplest still unsolvable problem.
+\newblock {\em CoRR}, abs/1112.5309, 2011.
+
+\bibitem{ppo}
+J.~Schulman, F.~Wolski, P.~Dhariwal, A.~Radford, and O.~Klimov.
+\newblock Proximal policy optimization algorithms.
+\newblock {\em arXiv preprint arXiv:1707.06347}, 2017.
+
+\bibitem{shadow-robot}
+ShadowRobot.
+\newblock {ShadowRobot Dexterous Hand}.
+\newblock \url{https://www.shadowrobot.com/products/dexterous-hand/}, 2005.
+
+\bibitem{DBLP:journals/trob/ShiWUL17}
+J.~Shi, J.~Z. Woodruff, P.~B. Umbanhowar, and K.~M. Lynch.
+\newblock Dynamic in-hand sliding manipulation.
+\newblock {\em {IEEE} Trans. Robotics}, 33(4):778--795, 2017.
+
+\bibitem{alphago}
+D.~Silver, A.~Huang, C.~J. Maddison, A.~Guez, L.~Sifre, G.~van~den Driessche,
+  J.~Schrittwieser, I.~Antonoglou, V.~Panneershelvam, M.~Lanctot, S.~Dieleman,
+  D.~Grewe, J.~Nham, N.~Kalchbrenner, I.~Sutskever, T.~Lillicrap, M.~Leach,
+  K.~Kavukcuoglu, T.~Graepel, and D.~Hassabis.
+\newblock Mastering the game of go with deep neural networks and tree search.
+\newblock {\em Nature}, 529:484--503, 2016.
+
+\bibitem{DBLP:journals/corr/abs-1712-01815}
+D.~Silver, T.~Hubert, J.~Schrittwieser, I.~Antonoglou, M.~Lai, A.~Guez,
+  M.~Lanctot, L.~Sifre, D.~Kumaran, T.~Graepel, T.~P. Lillicrap, K.~Simonyan,
+  and D.~Hassabis.
+\newblock Mastering chess and shogi by self-play with a general reinforcement
+  learning algorithm.
+\newblock {\em CoRR}, abs/1712.01815, 2017.
+
+\bibitem{DBLP:journals/corr/abs-1210-8385}
+R.~K. Srivastava, B.~R. Steunebrink, and J.~Schmidhuber.
+\newblock First experiments with powerplay.
+\newblock {\em CoRR}, abs/1210.8385, 2012.
+
+\bibitem{DBLP:conf/icra/TaharaAY10}
+K.~Tahara, S.~Arimoto, and M.~Yoshida.
+\newblock Dynamic object manipulation using a virtual frame by a triple
+  soft-fingered robotic hand.
+\newblock In {\em {IEEE} International Conference on Robotics and Automation,
+  {ICRA} 2010, Anchorage, Alaska, USA, 3-7 May 2010}, pages 4322--4327, 2010.
+
+\bibitem{DBLP:journals/corr/abs-1804-10332}
+J.~Tan, T.~Zhang, E.~Coumans, A.~Iscen, Y.~Bai, D.~Hafner, S.~Bohez, and
+  V.~Vanhoucke.
+\newblock Sim-to-real: Learning agile locomotion for quadruped robots.
+\newblock {\em CoRR}, abs/1804.10332, 2018.
+
+\bibitem{tobin2017domain}
+J.~Tobin, R.~Fong, A.~Ray, J.~Schneider, W.~Zaremba, and P.~Abbeel.
+\newblock Domain randomization for transferring deep neural networks from
+  simulation to the real world.
+\newblock {\em arXiv preprint arXiv:1703.06907}, 2017.
+
+\bibitem{DBLP:journals/corr/abs-1710-06425}
+J.~Tobin, W.~Zaremba, and P.~Abbeel.
+\newblock Domain randomization and generative models for robotic grasping.
+\newblock {\em CoRR}, abs/1710.06425, 2017.
+
+\bibitem{mujoco}
+E.~Todorov, T.~Erez, and Y.~Tassa.
+\newblock {MuJoCo}: A physics engine for model-based control.
+\newblock In {\em Intelligent Robots and Systems (IROS), 2012 IEEE/RSJ
+  International Conference on}, pages 5026--5033. IEEE, 2012.
+
+\bibitem{DBLP:conf/icra/TournassoudLM87}
+P.~Tournassoud, T.~Lozano{-}P{\'{e}}rez, and E.~Mazer.
+\newblock Regrasping.
+\newblock In {\em Proceedings of the 1987 {IEEE} International Conference on
+  Robotics and Automation, Raleigh, North Carolina, USA, March 31 - April 3,
+  1987}, pages 1924--1928, 1987.
+
+\bibitem{toyotathr3}
+Toyota.
+\newblock {Partner Robot T-HR3}.
+\newblock
+  \url{https://www.toyota-global.com/innovation/partner_robot/robot/file/T-HR3_EN_0208.pdf},
+  2017.
+
+\bibitem{kociemba}
+M.~Tsoy.
+\newblock {Kociemba}.
+\newblock \url{https://github.com/muodov/kociemba}, 2015.
+
+\bibitem{DBLP:journals/corr/TzengDHFPLSD15}
+E.~Tzeng, C.~Devin, J.~Hoffman, C.~Finn, X.~Peng, S.~Levine, K.~Saenko, and
+  T.~Darrell.
+\newblock Towards adapting deep visuomotor representations from simulated to
+  real environments.
+\newblock {\em CoRR}, abs/1511.07111, 2015.
+
+\bibitem{vanDerMaaten2008}
+L.~van~der Maaten and G.~Hinton.
+\newblock Visualizing data using {t-SNE}.
+\newblock {\em Journal of Machine Learning Research}, 9:2579--2605, 2008.
+
+\bibitem{DBLP:conf/humanoids/HoofHN015}
+H.~van Hoof, T.~Hermans, G.~Neumann, and J.~Peters.
+\newblock Learning robot in-hand manipulation with tactile features.
+\newblock In {\em 15th {IEEE-RAS} International Conference on Humanoid Robots,
+  Humanoids 2015, Seoul, South Korea, November 3-5, 2015}, pages 121--127,
+  2015.
+
+\bibitem{Vuong2019}
+Q.~Vuong, S.~Vikram, H.~Su, S.~Gao, and H.~I. Christensen.
+\newblock {How to pick the domain randomization parameters for sim-to-real
+  transfer of reinforcement learning policies?}
+\newblock {\em arXiv preprint 1903.11774}, pages 1--3, 2019.
+
+\bibitem{DBLP:journals/corr/WangKTSLMBKB16}
+J.~X. Wang, Z.~Kurth{-}Nelson, D.~Tirumala, H.~Soyer, J.~Z. Leibo, R.~Munos,
+  C.~Blundell, D.~Kumaran, and M.~Botvinick.
+\newblock Learning to reinforcement learn.
+\newblock {\em CoRR}, abs/1611.05763, 2016.
+
+\bibitem{wang2019poet}
+R.~Wang, J.~Lehman, J.~Clune, and K.~O. Stanley.
+\newblock Poet: open-ended coevolution of environments and their optimized
+  solutions.
+\newblock In {\em Proceedings of the Genetic and Evolutionary Computation
+  Conference}, pages 142--151. ACM, 2019.
+
+\bibitem{LARS}
+Y.~You, I.~Gitman, and B.~Ginsburg.
+\newblock Scaling {SGD} batch size to 32k for imagenet training.
+\newblock {\em CoRR}, abs/1708.03888, 2017.
+
+\bibitem{DBLP:conf/rss/YuTLT17}
+W.~Yu, J.~Tan, C.~K. Liu, and G.~Turk.
+\newblock Preparing for the unknown: Learning a universal policy with online
+  system identification.
+\newblock In {\em Robotics: Science and Systems XIII, Massachusetts Institute
+  of Technology, Cambridge, Massachusetts, USA, July 12-16, 2017}, 2017.
+
+\bibitem{Zakharov2019}
+S.~Zakharov, W.~Kehl, and S.~Ilic.
+\newblock {DeceptionNet: Network-Driven Domain Randomization}.
+\newblock {\em arXiv preprint 1904.02750}, apr 2019.
+
+\bibitem{DBLP:journals/corr/abs-1808-09105}
+M.~Zhang, S.~Vikram, L.~Smith, P.~Abbeel, M.~J. Johnson, and S.~Levine.
+\newblock {SOLAR:} deep structured latent representations for model-based
+  reinforcement learning.
+\newblock {\em CoRR}, abs/1808.09105, 2018.
+
+\bibitem{DBLP:journals/corr/abs-1810-06045}
+H.~Zhu, A.~Gupta, A.~Rajeswaran, S.~Levine, and V.~Kumar.
+\newblock Dexterous manipulation with deep reinforcement learning: Efficient,
+  general, and low-cost.
+\newblock {\em CoRR}, abs/1810.06045, 2018.
+
+\bibitem{DBLP:journals/corr/abs-1802-09564}
+Y.~Zhu, Z.~Wang, J.~Merel, A.~A. Rusu, T.~Erez, S.~Cabi, S.~Tunyasuvunakool,
+  J.~Kram{\'{a}}r, R.~Hadsell, N.~de~Freitas, and N.~Heess.
+\newblock Reinforcement and imitation learning for diverse visuomotor skills.
+\newblock {\em CoRR}, abs/1802.09564, 2018.
+
+\end{thebibliography}

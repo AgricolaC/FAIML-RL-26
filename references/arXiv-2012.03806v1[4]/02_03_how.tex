@@ -1,0 +1,35 @@
+\subsection{Debate 3: How should we apply Sim2Real?}
+
+The goal of the third debate was to shed light on the relationship between Sim2Real methods and accurate simulations. Dieter Fox and Karen Liu argued in favor and Anca Dragan and Shuran Song against the controversial statement \emph{"For successful Sim2Real transfer, there is no alternative to accurate simulation"}. The debate touched upon a variety of topics, from levels of abstraction to the trade-off between accuracy and generalization. 
+
+% \textbf{Accuracy vs. noise.} The panelists agreed that all simulators implement abstractions of mechanical and physical processes, and hence accuracy can only be measured with respect to the simulator's level of abstraction. The panelists agreed to distinguish the level of abstraction from imprecision at the given level of abstraction, but also from noise that is inherent to the world and potentially modelled in the simulator.
+
+\textbf{Right level of abstraction.} The debaters agreed that finding the right level of abstraction is key, yet difficult as it presupposes knowing what is relevant to the task. Both sides agreed that current simulators do not model physical phenomena sufficiently well. While the proponent side concluded that this situation calls for investing into better modeling at lower levels of abstraction, the opponent side argued that high-level abstraction suffices, comparing simulation of physical interaction with human behavior: Robots need to learn to collaborate with humans without simulating the entire human brain, so why would physical interaction require low-level simulation of physics? Furthermore, humans themselves learn from ``abstract simulation'', such as books and movies. 
+
+\textbf{Imprecision.} Assuming a given level of abstraction, the debaters discussed the implications of imprecise simulation. The opponents argued that accurate modelling is expensive and often infeasible. Additionally, any abstraction -- and thus, any simulator -- inevitably results in a loss of accuracy due to the fact that it does not capture the underlying process.
+The proponent side argued that imprecise simulators at any level of abstraction are useless because, once deployed to the real world, the agent has to unlearn a lot of what it had learned in the imprecise simulator. The only way to get around this issue is heavy domain randomization over a large set of simulation parameters, which however does not scale for more complex tasks and environments. The opposing side argued that exactly this imperfection and deliberate bias causes model resilience and policy generalization.
+
+\textbf{Generalization and Extrapolation.} Another argument of the proponents against imprecise simulation concerned its limited generalization capability: A precise simulator is a useful building block to solve many different problems, while an imprecise simulator will work for some but not other tasks. The proponent side explicitly distinguished general-purpose simulators from  task-specific internal models, which do not need to be precise but only serve a single purpose.
+
+\textbf{Uncertainty and Noise.} The speakers agreed upon the importance of explicit uncertainty estimates, \emph{i.e.} modeling where the simulator is uncertain about its future state predictions. Such estimates, while difficult to obtain, would be useful to identify failure cases early on or leverage them to collect data for improving the simulator.
+
+
+% First main question: what does accuracy even mean?
+
+% \begin{itemize}
+% \item {\bf Why simulators?} It’s cheaper, safer, faster to train robots in sim than in the real world. Additionally, we currently don’t know how to train robots in the real world without the supervised labels or safety net that we can provide in simulation.
+% \item {\bf What do we want from simulators:} Simulators have to generate the right input output behavior, that is, how the state changes as a robot performs actions, and what kind of sensor feedback it’s receiving.
+% \item {\bf What does accurate mean?} Even simulators such as MuJoCo, PhysX, Flex, Bullet are approximations of the correct physics underlying arbitrary body motion. All simulation is some sort of abstraction. So what we need is not necessarily the EXACT, lowest level modeling of all physical phenomena, we need accurate models for the level of abstraction we care about.
+% \end{itemize}
+
+% On one side of the debate, the argument is that we have simulators that accurately model the input output behavior of the world around the robot. On the other side we have simulators that are providing some kind of hand wavy input output behavior, Dieter referred to these simulators as Sloppy Simulators. That is, simulators that don’t provide the correct input output behaviors, at whichever level of abstraction. Such sloppy simulators, might work in some situations but result in undefined behaviour in the real world. In addition, methods such as Domain Randomization which have already demonstrated success in sim2real, are not going to work well with inaccurate simulators.
+
+% To further emphasize on these arguments, the predictable capability of a simulator is crucial. Given an inaccurate simulator, we would need to develop a control policy to compensate for the inaccuracy of a dynamic model which can be a waste of our research energy.
+
+% On the opposing side of the argument, the main points included the fact that accurate modelling is expensive and in some scenarios infeasible. Meanwhile, there are many alternative ways to improve sim2real transfer by better leveraging the inaccurate physics models. For instance 
+% methods that are more robust and less vulnerable to such inherent inaccuracies of the simulators. Complementary methods that improve diversity and how to better model uncertainty.
+
+% Another argument revolved around the notion of the level of abstraction which is slightly an ill-defined problem. The consensus was that we need to draw a distinction between accuracy and abstraction. What we care about are simulators that provide the right governing rules. All the rest of the details, for instance how much the small details of rendering or contact simulation matters, can be defined by the agreed level of abstraction. 
+
+% Finally, there are two fundamental approaches to solving sim2real. It is the question of needing a better simulator or better control algorithms? The research community has already invested a lot of effort into making the control algorithms robust so perhaps the direction of improving the simulators can be pursued by leveraging real world data to improve the simulators.
+% Another interesting point which was made revolved around the idea of thinking more in terms of unifying the levels of abstraction and the potential of modelling simulators with a hierarchical structure. This can include composable physics engines that more explicitly expose levels of abstraction and detail as each level of rendering.

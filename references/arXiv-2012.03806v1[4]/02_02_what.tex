@@ -1,0 +1,22 @@
+\subsection{Debate 2: What Is Sim2Real?}
+
+The second debate topic addressed the question of whether Sim2Real qualifies as a methodology or field of its own. Jan Peters and Martha White argued in favor of and Greg Dudek and John Leonard against the controversial statement \emph{"Sim2Real is old news. It is just [model-based Reinforcement Learning $\vert$ domain randomization $\vert$ system identification $\vert$ $\ldots$]"}.
+The debate centered around the issues of building upon existing work, providing grounds for a community to form, and the specifics of the field that make it unique.
+
+\textbf{Sim2Real is prior art}. The proponent side's main argument was that current Sim2Real methods date back to the 1960s to 1980s, with the main difference being the scale of computational resources available. 
+For example, Real2Sim can be regarded as system identification and Sim2Real as adaptive control: Both combine analytical models with parametric ones (such as shallow neural networks) in order to model complex systems and learn controllers. Similarly, model-based reinforcement learning can be regarded as a method that iteratively refines a poor model or simulation of the world to learn a controller for the real world. 
+
+\textbf{Sim2Real brings together distant research communities.} While acknowledging that the techniques used in Sim2Real are not necessarily new, the opposing side argued that Sim2Real approaches have had significant impact on a wide variety of research domains beyond control (like perception and physical modelling). Therefore, treating Sim2Real as a field of its own provides value by connecting researchers from different disciplines, including robotics, computer vision, control theory, physics-based modelling, reinforcement learning and simulation-based inference. 
+
+%The opposing argument was that there is something unique about the task of closing the Sim2Real gap when involving a robot that can decide what data to collect and how to use that data, which is quite different from the traditional view in control or existing machine learning algorithms.
+
+
+\textbf{Impact of the reality gap on Sim2Real}. Both sides agreed that highly accurate simulations of reality remain a distant “pipe dream” for robotics: there will always exist a reality gap, for any level of sophistication of computer simulations. The debaters disagreed on the impact of this statement on the debate topic. The opponent side argued that the inability to close the reality gap justifies the existence of Sim2Real as a field of its own: Rather than reducing Sim2Real to making simulators more accurate, Sim2Real would then be the field that studies how useful information can be extracted from models that are not entirely accurate. The proponents countered that if Sim2Real is not about closing the reality gap with better modelling, it would simply re-brand existing techniques in robust control.
+
+% (Sebastian: I removed the "Sim2Real - a problem statement or a solution strategy?" paragraph. It is  unclear to me what it implies to be a problem statement or a solution strategy for the main question of the debate. )
+
+% \textbf{Sim2Real - a problem statement or a solution strategy?} 
+
+% The debaters questioned whether Sim2Real refers to tools for leveraging simulation data or to a fundamental problem in robotics.
+% If Sim2Real is a solution strategy, what is the problem it is trying to solve? what are its current flaws? If it is a problem statement, how do the existing techniques in this area address the problem? how hard is this problem? 
+% The opponent side argued that Sim2Real is a solution strategy for model-based control/RL: Simulators are predictive modules and work as a data generation process for planning, optimization and learning algorithms. The enterprise of simulation, they argued, is to produce predictive models that are expressive enough for solving RL and control tasks with little data. The opposing side argued that, under this view, the current Sim2Real techniques are not very different from previous work in planning and adaptive control, with the only difference being the scale and complexity of the models. The opposing side also argued that by calling Sim2Real a solution strategy, the current emphasis of Sim2Real on physics modeling (dynamics and vision) is perhaps narrowing its scope too much.

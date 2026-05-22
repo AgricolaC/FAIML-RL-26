@@ -1,0 +1,90 @@
+As in ~\cite{openai2018learning}, the control policy described in \autoref{sec:policy} receives object state estimates from a vision system consisting of three cameras and a neural network predictor. In this work, the policy requires estimates for all six face angles in addition to the position and orientation of the cube.
+
+Note that the absolute rotation of each face angle in $[-\pi, \pi]$ radians is required by the policy. Due to the rotational symmetry of the stickers on a standard Rubik's cube, it is not possible to predict these absolute face angles from a single camera frame; the system must either have some ability to track state temporally\footnote{We experimented with a recurrent vision model but found it very difficult to train to the necessary performance level. Due to the project's time constraints, we could not investigate this approach further.} or the cube has to be modified.
+
+We therefore use two different options for the state estimation of the Rubik's cube throughout this work:
+\begin{enumerate}
+    \item \textbf{Vision only via asymmetric center stickers.} In this case, the vision model is used to produce the \emph{cube position, rotation, and six face angles}. We cut out one corner of each center sticker on the cube (see \autoref{fig:cube-cutout-stickers}), thus breaking rotational symmetry and allowing our model to determine absolute face angles from a single frame. No further customizations were made to the Rubik's cube. We use this model to estimate final performance of a vision only solution to solving the Rubik's cube.
+    \item \textbf{Vision for pose and Giiker cube for face angles.} In this case, the vision model is used to produce the \emph{cube position and rotation}. For the face angles, we use the previously described customized Giiker cube (see \autoref{sec:physical-setup}) with built-in sensors. We use this model for most experiments in order to not compound errors of the challenging face angle estimation from vision only with errors of the policy.
+\end{enumerate}
+
+
+Since our long-term goal is to build robots that can interact in the real world with arbitrary objects, ideally we would like to fully solve this problem from vision alone using a standard Rubik's cube (i.e. without any special stickers). We believe this is possible, though it may require either more extensive work on a recurrent model or moving to an end-to-end training setup (i.e. where the vision model is learned jointly with the policy). This remains an active area of research for us.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/cube-cut-sim.jpg}
+        \caption{Simulated cube.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/cube-cut-real.jpg}
+        \caption{Real cube.}
+    \end{subfigure}
+    \caption{The Rubik's cube with a corner cut out of each center sticker (a) in simulation and (b) in reality. We used this cube instead of the Giiker cube for some vision state estimation experiments and for evaluating the performance of the policy for solving the Rubik's cube from vision only.}
+    \label{fig:cube-cutout-stickers}
+\end{figure}
+
+\subsection{Vision Model}
+
+Our vision model has a similar setup as in~\cite{openai2018learning}, taking as input an image from each of three RGB Basler cameras located at the left, right, and top of the cage (see \autoref{fig:setup-overview}(a)). The full model architecture is illustrated in \autoref{fig:vision-arch}. We produce a feature map for each image by processing it through identically parameterized ResNet50~\cite{He2016DeepRL} networks (i.e. using common weights). These three feature maps are then flattened, concatenated, and fed into a stack of fully-connected layers which ultimately produce predictions sufficient for tracking the full state of the cube, including the position, orientation, and face angles. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/vision-network-architecture.pdf}
+    \caption{Vision model architecture, which is largely built upon a ResNet50~\cite{He2016DeepRL} backbone. Network weights are shared across the three camera frames, as indicated by the dashed line. Our model produces the position, orientation, and a specific representation of the six face angles of the Rubik's cube. We specify ranges with $[\ldots]$ and dimensionality with $(\ldots)$.}
+    \label{fig:vision-arch}
+\end{figure}
+
+While predicting position and orientation directly works well, we found predicting all six face angles directly to be much more challenging due to heavy occlusion, even when using a cube with asymmetric center stickers. To work around this, we decomposed face angle prediction into several distinct predictions:
+\begin{enumerate}
+    \item \textbf{Active axis:} We make a slight simplifying assumption that only one of the three axes of a cube can be "active" (i.e. be in an non-aligned state), and have the model predict which of the three axes is currently active.
+    \item \textbf{Active face angles:} We predict the angles of the two faces relevant for the active axis \textit{modulo $\pi/2$ radians} (i.e. in $[-\pi/4, \pi/4]$). It is hard to predict the absolute angles in $[-\pi, \pi]$ radians directly due to heavy occlusion (e.g. when a face is on the bottom and hidden by the palm). Predicting these modulo $\pi/2$ angles only requires recognizing the shape and the relative positions of cube edges, and therefore it is an easier task. %We then apply a post-processing logic (\todo{See Appendix X.}) to track the full angles in time.
+    \item \textbf{Top face angle:} The last piece to predict is the absolute angle in $[-\pi, \pi]$ radians of the "top" face, that is the face visible from a camera mounted directly above the hand. Note that this angle is only possible to predict from frames at a single timestamp because of the asymmetric center stickers (See \autoref{fig:cube-cutout-stickers}). We configure the model to make a prediction only for the top face because the top face's center cubelet is rarely occluded. This gives us a stateless estimate of each face's absolute angle of rotation whenever that face is placed on top.
+\end{enumerate}
+
+These decomposed face angle predictions are then fed into post-processing logic (See \autoref{app:hyper} Algorithm~\ref{algorithm:vision_post_processing}) to track the rotation of all face angles, which are in turn passed along to the policy. 
+The top face angle prediction is especially important, as it allows us to correct the tracked absolute face angle state mid-trial. For example, if the tracking of a face angle becomes off by some number of rotations (i.e. a multiple of $\pi/2$ radians), we are still able to correct it with a stateless absolute angle prediction from the model whenever this face is placed on top after a flip.
+Predictions (1) and (2) are primarily important because the policy is unable to rotate a non-active face if the active face angles are too large (in which case the cube becomes interlocked along non-active axes). 
+
+For all angle predictions, we found that discretizing angles into 90 bins per $\pi$ radians yielded better performance than directly predicting angles via regression; see \autoref{table:vision-ablations} for details.
+
+In the meantime, domain randomization in the rendering process remains a critical role in the sim2real transfer. As shown in \autoref{table:vision-ablations}, a model trained without domain randomization can achieve perfectly low errors in simulation but fails dramatically on real world data.
+
+\begin{center}
+\begin{table}[h]
+    \caption{Ablation experiments for the vision model. For each experiment, we ran training with 3 different seeds and report the best performance here. Orientation error is computed as rotational distance over a quaternion representation. Position error is the euclidean distance in 3D space, in millimeters. Face angle error is measured in degrees ($^{\circ}$). "Real" errors are computed using data collected over multiple physical trials, where the position and orientation ground truths are from PhaseSpace (\autoref{sec:physical-setup}) and all face angle ground truths are from the Giiker cube. The full evaluation results, including errors on active axis and active face angles, are reported in \autoref{app:full-results}~\autoref{table:vision-ablations-full}.}
+    \label{table:vision-ablations}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{l c c c | c c c}
+        \toprule
+        \multirow{2}{*}{\textbf{Experiment}} 
+        & \multicolumn{3}{c}{\textbf{Errors (Sim)}} 
+        & \multicolumn{3}{c}{\textbf{Errors (Real)}} \\
+        & \textbf{Orientation} & \textbf{Position} & \textbf{Top Face} & \textbf{Orientation} & \textbf{Position} & \textbf{Top face} \\
+        \midrule
+        Full Model & $6.52^\circ$ & $\mathbf{2.63}$ mm & $11.95^\circ$ & $\mathbf{7.81^\circ}$ & $\mathbf{6.47}$ \textbf{mm} & $\mathbf{15.92^\circ}$ \\
+        \midrule
+        No Domain Randomization & $\mathbf{3.95^\circ}$ & $2.97$ mm & $\mathbf{8.56^\circ}$ & $128.83^\circ$ & $69.40$ mm & $85.33^\circ$  \\
+        No Focal Loss & $15.94^\circ$ & $5.02$ mm & $10.17^\circ$ & $19.10^\circ$ & $9.416$ mm & $17.54^\circ$ \\
+        Non-discrete Angles & $9.02^\circ$ & $3.78$ mm & $42.46^\circ$ & $10.40^\circ$ & $7.97$ mm & $35.27^\circ$  \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+\end{center}
+
+
+\subsection{Distributed Training with Rapid}
+
+As in control policy training (\autoref{sec:policy}), the vision model is trained entirely from synthetic data, without any images from the real world. This necessarily entails a more complicated training setup, wherein the synthetic image generation must be coupled with optimization. To manage this complexity, we leverage the same Rapid framework~\citep{five} which is used in policy training for distributed training.
+
+\autoref{fig:adr-architecture-vision} gives an overview of the setup for a typical vision experiment. In the case of vision training, the ``data workers'' are standalone Unity renderers, responsible for rendering simulated images using OpenAI Remote Rendering Backend (ORRB)~\cite{chociej2019orrb}. These images are rendered according to ADR parameters pulled from the ADR subsystem (see \autoref{sec:adr}). A list of randomization parameters is available in \autoref{app:visual_randomizations} \autoref{table:vision_randomizations}. Each rendering node uses 1 NVIDIA V100 GPU and 8 CPU cores, and the size of the rendering pool is tuned such that rendering is not a bottleneck in training. The data from these rendering nodes is then propagated to a cluster of Redis nodes where it is stored in separate queues for training and evaluation. The training data is then read by a pool of optimizer nodes, each of which uses 8 NVIDIA V100 GPUs and 64 CPU cores, in order to perform optimization in a data-parallel fashion. Meanwhile, the evaluation data is read by the ``ADR eval workers'' in order to provide feedback on ADR parameters, per \autoref{sec:adr}.
+
+
+As noted above, the vision model produces several distinct predictions, each of which has its own loss function to be optimized: mean squared error for both position and orientation, and cross entropy for each of the decomposed face angle predictions. To balance these many losses, which lie on different scales, we use focal loss weighting as described in~\cite{guo2018dynamic} to dynamically and automatically assign loss weights. One modification we made in order to better fit our multiple regression tasks is that we define a low target error for each prediction and then use the percentage of samples that obtain errors below the target as the probability $p$ in the focal loss, i.e. $\text{FL}(p; \gamma) = - (1-p)^\gamma \log(p)$, where $\gamma=1$ in all our experiments. This both removes the need to manually tune loss weights and improves optimization, as it allows loss weights to change dynamically during training (see \autoref{table:vision-ablations} for performance details). 
+
+Optimization is then performed against this aggregate loss using the LARS optimizer~\cite{LARS}. We found LARS to be more stable than the Adam optimizer~\cite{Kingma2014AdamAM} when using larger batches and higher learning rates (we use at most a batch size of $1024$ with a peak learning rate of $6.0$). See \autoref{app:hyperparameters} for further hyperparameter details.

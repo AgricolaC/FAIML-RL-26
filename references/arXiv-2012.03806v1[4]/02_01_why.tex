@@ -1,0 +1,22 @@
+\subsection{Debate 1: Why should we invest in Sim2Real?}
+
+The debates started off by questioning the motivation for using Sim2Real transfer. Chris Atkeson and Abhinav Gupta argued in favor of and Ken Goldberg and Peter Welinder against the controversial statement \emph{"Sim2Real is waste of time and money"}. We present the key topics covered in the debate which can be broadly clustered into the actual monetary cost and the effectiveness/time saved by Sim2Real. 
+
+\textbf{Sim2Real is cheap.}
+The opponent side argued that Sim2Real is significantly cheaper than real world experimentation due to the reduced cost in building and maintaining real robots. The proponents countered that Sim2Real being cheap is a myth as training a policy for OpenAI's Rubik's cube costed several thousands of dollars for simulation alone and over a year of development was necessary to successfully transfer policies to the real world~\cite{Openai2019:Solving}. The opponents argued that the high cost reflects the fact that Sim2Real was applied to a problem of such complexity for the first time, and that its cost will reduce significantly, similar to how the cost of robotic hardware decreased over the last decades.
+
+\textbf{Sim2Real democratizes research vs. ``Sim2Null".} Given the low cost of simulation compared to real-robot experiments, simulation clearly lowers the entry barrier for students and researchers. However, there was consensus that easy-to-use simulation environments like OpenAI gym also lead to a rise of simulation-only research that does not generalize to the real world -- a concept Ken Goldberg termed \emph{Sim2Null}.
+
+\textbf{Sim2Real is diverse.}
+Another variant of the cost argument relates to the diversity of data that can be acquired through simulation. While it is possible to sample millions of variants of the same task using techniques like domain randomization, the proponent side suggested that data collection in the real world can generate much more diverse data sets cheaply, for example by renting apartments and exploring them with robots. All agreed that realistic non-deterministic simulation is understudied.
+
+\textbf{Sim2Real already works.}
+The opponents highlighted that there are various successful applications of Sim2Real, such as in civil engineering and aircraft design, but also in robotic grasping \cite{mahler_learning_2019}. The proponents objected that "Sim2Real works" is not a well-defined statement, and that many approaches, in particular policies trained in OpenAI gym, generalize poorly if at all to the real world.
+
+\textbf{Simulation as a necessary but not sufficient condition for success in real}. Another argument revolved around the question whether successful performance in simulation is a necessary condition for success in the real world. The opponent side argued for this view, highlighting the opportunity to accelerate research using simulation. The proponents questioned the idea of simulation as a necessary condition, since overly simplified modeling of the world and its modalities may render the simulated problem much harder than the real one.
+
+\textbf{Sim2Real is safe.} There was agreement that experimentation in Sim2Real is inherently safe and thus useful for dangerous tasks and exploration. However, the proponent side argued that robots are becoming safer themselves, for example soft robots.
+
+\textbf{Sim2Gradstudent2Real.} All panelists agreed that the state of the art in Sim2Real involves a large amount of manual tuning. The proponent side criticized this fact and suggested that useful Sim2Real research should be concerned with rigorous modeling and problem understanding \cite{hwangbo_learning_2019}. In contrast, the opponent side argued that this situation motivates investigating in data-efficient general-purpose Sim2Real methods.
+
+In the closing remarks, all speakers unanimously agreed that simulations alone are not sufficient. There was agreement that simulation tasks and benchmarks need to become more challenging and that researchers need to run convincing real-world experiments rather than drawing general conclusions from simulation-only experiments.

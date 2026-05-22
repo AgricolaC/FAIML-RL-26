@@ -1,0 +1,170 @@
+\documentclass{article}
+\pdfoutput=1
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algpseudocode}  % algorithm
+\usepackage{algorithm}      % allow algorithm to float
+\usepackage{siunitx}
+\usepackage{placeins}
+\usepackage[inline]{enumitem}
+\usepackage{graphicx}
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{footnote}
+\usepackage{scrextend}
+\usepackage[page,header]{appendix}
+\usepackage{titletoc}
+\usepackage{blindtext}
+\input{macros.tex}
+
+\title{Solving Rubik’s Cube with a Robot Hand}
+
+
+\author{
+  OpenAI \\
+  Ilge Akkaya\thanks{Authors are listed alphabetically. We include a detailed contribution statement at the end of this manuscript. Please cite as OpenAI et al., and use the following bibtex for citation: \url{https://openai.com/bibtex/openai2019rubiks.bib}},
+  Marcin Andrychowicz\samethanks,
+  Maciek Chociej\samethanks,
+  Mateusz Litwin\samethanks,
+  Bob McGrew\samethanks,
+  Arthur Petron\samethanks, \\
+  Alex Paino\samethanks,
+  Matthias Plappert\samethanks,
+  Glenn Powell\samethanks,
+  Raphael Ribas\samethanks,
+  Jonas Schneider\samethanks,
+  Nikolas Tezak\samethanks,\\
+  Jerry Tworek\samethanks,
+  Peter Welinder\samethanks,
+  Lilian Weng\samethanks,
+  Qiming Yuan\samethanks,
+  Wojciech Zaremba\samethanks,
+  Lei Zhang\samethanks
+}
+
+\begin{document}
+
+
+\maketitle
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1.0\textwidth]{figures/hero} \\ \vspace{0.1cm}
+\caption{A five-fingered humanoid hand trained with reinforcement learning and automatic domain randomization solving a Rubik's cube.}
+\end{figure}
+
+\begin{abstract}
+We demonstrate that models trained only in simulation can be used to solve a manipulation problem of unprecedented complexity on a real robot. This is made possible by two key components: a novel algorithm, which we call automatic domain randomization (ADR) and a robot platform built for machine learning. ADR automatically generates a distribution over randomized environments of ever-increasing difficulty. Control policies and vision state estimators trained with ADR exhibit vastly improved sim2real transfer. For control policies, memory-augmented models trained on an ADR-generated distribution of environments show clear signs of emergent meta-learning at test time. The combination of ADR with our custom robot platform allows us to solve a Rubik's cube with a humanoid robot hand, which involves both control and state estimation problems. Videos summarizing our results are available: \url{https://openai.com/blog/solving-rubiks-cube/}
+\end{abstract}
+
+
+
+\section{Introduction}
+\label{sec:intro}
+\input{sections/intro.tex}
+
+\section{Tasks}
+\label{sec:task}
+\input{sections/task.tex}
+
+
+\section{Physical Setup}
+\label{sec:physical-setup}
+\input{sections/setup.tex}
+
+\section{Simulation}
+\label{sec:sim}
+\input{sections/simulation.tex}
+
+\section{Automatic Domain Randomization}
+\label{sec:adr}
+\input{sections/adr.tex}
+
+\section{Policy Training in Simulation}
+\label{sec:policy}
+\input{sections/policy.tex}
+
+\section{State Estimation from Vision}
+\label{sec:vision}
+\input{sections/vision.tex}
+
+\section{Results}
+\label{sec:exp-adr}
+\input{sections/exp-adr.tex}
+
+
+\section{Signs of Meta-Learning}
+\label{sec:exp-meta}
+\input{sections/exp-meta.tex}
+
+\section{Related Work}
+\label{sec:related}
+\input{sections/related.tex}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{sections/conclusion.tex}
+
+\section*{Acknowledgements}
+We would like to thank Shadow Robot Company Ltd. for building, maintaining, and improving the Shadow Dexterous Hand, PhaseSpace Inc. for building custom Rubik's cubes and supporting our motion capture setup, JITX for building custom electronics and writing firmware for the Giiker cube, and Kimly Do for designing the cage. We would also like to thank Chris Hallacy, Jacob Hilton, and Ludwig Schubert for volunteering as human Rubik's cube solvers and and everybody at OpenAI for their help and support.
+
+We would also like to thank the following people for providing thoughtful feedback on earlier versions of this
+manuscript: Josh Achiam, Nick Cammarata, Jeff Clune, Harri Edwards, David Farhi, Ken Goldberg, Lerrel Pinto, and John Schulman.
+
+\section*{Author Contributions}
+This manuscript is the result of the work of the entire OpenAI Robotics team. We list the contributions of every team member here grouped by topic and in alphabetical order.
+
+\begin{itemize}
+    \item Marcin Andrychowicz, Matthias Plappert, and Raphael Ribas developed the first version of ADR.
+    
+    \item Maciek Chociej, Alex Paino, Peter Welinder, Lilian Weng, and Qiming Yuan developed the vision state estimator.
+    
+    \item Maciek Chociej, Peter Welinder and Lilian Weng applied ADR to vision.
+    
+    \item Ilge Akkaya, Marcin Andrychowicz, Matthias Plappert, Raphael Ribas, Nikolas Tezak, Jerry Tworek, and Lei Zhang contributed to the RL training setup.
+    
+    \item Mateusz Litwin, Jerry Tworek, and Lei Zhang improved ADR for RL training.
+    
+    \item Mateusz Litwin improved the robot model and Jerry Tworek developed the Rubik's cube simulation model.
+    
+    \item Arthur Petron and Jonas Schneider built the physical robot setup.
+    
+    \item Ilge Akkaya, Maciek Chociej, Mateusz Litwin, Arthur Petron, Glenn Powell, Jonas Schneider, Peter Welinder, Lilian Weng, and Qiming Yuan contributed software for the robot platform.
+    
+    \item Mateusz Litwin, Glenn Powell, and Jonas Schneider developed system infrastructure.
+    
+    \item Ilge Akkaya, Mateusz Litwin, Arthur Petron, Alex Paino, Matthias Plappert, Jerry Tworek, Lilian Weng, and Lei Zhang wrote this manuscript.
+    
+    \item Marcin Andrychowicz, Bob McGrew, Matthias Plappert, Jonas Schneider, Peter Welinder, and Wojciech Zaremba led aspects of this project and set research directions.
+    
+    \item Wojciech Zaremba led the team.
+\end{itemize}
+
+\bibliographystyle{abbrv}
+\bibliography{references}
+
+\newpage
+\appendix
+\appendixpage
+
+
+
+\input{appendix/hardware.tex}
+\input{appendix/randomizations.tex}
+\input{appendix/implementation.tex}
+\input{appendix/full-results.tex}
+\input{appendix/visualizations.tex}
+
+\end{document}

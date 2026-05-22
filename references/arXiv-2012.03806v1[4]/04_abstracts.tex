@@ -1,0 +1,53 @@
+\section{Presented Abstracts}
+
+18 short research abstracts were selected to be presented in the workshop during three 20-minutes interactive sessions. Authors were invited to submit work on topics related to Sim2Real, including methods for improving simulator accuracy, training robust controllers, formalizing the Sim2Real problem, assessing the difficulty of and benchmarking strategies for Sim2Real. Below, we provide a short summary of each work.
+
+\subsection{On the formalization and difficulty of Sim2Real}
+One of the standing issues in Sim2Real is the lack of a framework for comparing Sim2Real solutions. Paull \emph{et al.}~\cite{Paull:2020aa} propose to distinguish between the use of the simulator as a predictor vs. as a teacher, and argue that regardless of its role, the value of any simulator is its impact on final task performance.
+% the value of a simulator for robotics tasks by discussing the different sources of reality gap. It argues that the value of a simulator is conditioned on the task that it is being used to help solve.
+
+On the topic of the difficulty of Sim2Real, multiple submissions explored the question whether current simulators are adequate for solving complex manipulation and locomotion tasks. Zhang~\cite{Zhang:2020aa} argues that the gap between current simulators for contact-rich tasks is too wide to expect any positive transfer, even when considering domain randomization. Rizzardo~\emph{et al.}~\cite{Rizzardo:2020aa} describe one such contact-rich task, precision agriculture, where simulation of fruit picking is a bottleneck for Sim2Real. Dao~\emph{et al.}~\cite{Dao:2020aa} show show how a state-of-the-art simulator, with its limitations in simulating contacts, can be used to train controllers that successfully transfer to real a walking bipedal robot without using any domain randomization.
+
+%This position paper supports the view that any improved contact simulation is a prerequisite, before sim-to-real transfer can even come into relevance in contact perception \cite{Zhang:2020aa}.
+
+%They are able to achieve direct sim-to-real transfer without relying on dynamics randomization or model adaptation for the difficult and highly dynamic task of bipedal locomotion, transferring high performance policies capable of walking at 2.6 m/s directly to the bipedal robot Cassie \cite{Dao:2020aa}.
+
+%Studies the importance and the limitations of Sim2Real for robotic manipulation in precision agriculture \cite{Rizzardo:2020aa}.
+Finally, on the topic of benchmarking, Kadian \emph{et al.}~\cite{Kadian:2020aa} introduce Habitat-PyRobot Bridge (HaPy), a library for seamless execution of code on simulated agents and robots, and propose using the Sim-vs-Real Correlation Coefficient (SRCC) as a transfer metric: to evaluate whether improvements in performance in simulation are correlated with improvements in the real world.
+
+%developed Habitat-PyRobot Bridge (HaPy), a library for seamless execution of identical code on simulated agents and robots, Then the examined the question that if one method outperforms another in simulation, how likely is that trend to hold in reality on a robot? They found that the Sim- vs-Real Correlation Coefficient (SRCC) metric is low for HaPy.
+
+
+\subsection{On bridging the reality gap with existing simulators}
+A successful technique for Sim2Real is to explicitly design or learn intermediate representations that generalize between simulation data and real data. Zhang \emph{et al.}\cite{Zhang:2020ab} propose to using an off-the-shelf 3D object detector to train obstacle avoidance policies for manipulation that directly transfer to the real world without the need of a visually accurate simulator. Related to this approach, Liang \emph{et al.}\cite{Liang:2020aa} train obstacle avoidance policies for mobile robot navigation in simulated environments to navigate crowds. Here, the intermediate representation is provided by laser scan readings, which are easier to simulate than cameras. Yan~\emph{et al.}~\cite{Yan:2020aa} propose to learn intermediate representations for deformable object manipulation by jointly optimizing both the visual representation model and the dynamics model using contrastive estimation. Antonova~\emph{et al.}~\cite{Antonova:2020ab} propose a meta-representation learning approach that infers analytic relations from simulation and leverages these relations when learning intermediate representations in the real domain.
+
+A related approach for vision tasks is to use off-the-shelf photorealistic rendering engines to produce self-labeled data. 
+Denninger~\emph{et al.}~\cite{Denninger:2020aa} introduce \textit{BlenderProc}, a pipeline for procedural generation of labelled data for vision tasks, which the authors demonstrate on the task of image segmentation.  Wu~\emph{et al.}~\cite{Wu:2020aa} leverage domain randomization to generalize deformable object manipulation policies to the real domain.
+
+Finally, the Sim2Real gap can be addressed at the policy level. Malmir \emph{et al.}\cite{Malmir:2020aa} introduce a method that leverages the discrepancies between inverse dynamics in simulation and the real world to compute corrections to controllers learned in simulation. Josifovski \emph{et al.}~\cite{Josifovski:2020aa} propose reducing the Sim2Real gap using curriculum learning, by training the robot on increasingly more difficult versions of the task.
+%The inverse dynamics model is used to transform the real-world into an environment where the effect of actions is similar to the one observed in simulation, with additive action compensation.
+
+
+%They propose a unified representation of obstacles and targets in both simulated and real worlds based on 3D bounding boxes.  This allows us to design a vision-based obstacle avoidance method that trains a Soft-Actor Critic (SAC) model in a simulator and directly applies the learned control policy in the real world \cite{Zhang:2020ab}.
+
+%Introduces a data-driven nonlinear disturbance observer to reduce the reality gap caused by the imperfect simulation of the real-world physics. The main focus is on increasing robustness of the closed-loop control without changing the RL algorithm or simulation model to account for the uncertainty of the real world \cite{Malmir:2020aa}.
+
+%A novel high fidelity 3-D simulator that significantly reduces the sim-to-real gap in training collision avoidance policies based on a Deep Reinforcement Learning (DRL) for dense crowd scenarios \cite{Liang:2020aa}.
+
+%This abstract presents BlenderProc is an open-source and modular pipeline for rendering photorealistic images of procedurally generated 3D scenes which can be used for training data-hungry deep learning models \cite{Denninger:2020aa}.
+
+\subsection{On bridging the reality gap with improved models and real-world data}
+Based on the intuition that more accurate models are more likely to transfer to real, several submissions propose leveraging real-world data for improving simulators. 
+%This approach is closely related to model-based RL, and can be interpreted as a variant where engineered simulators act as a prior hypothesis for real-world data generation.
+
+Raparthy~\emph{et al.}~\cite{Raparthy:2020aa} propose a curiosity-based data collection scheme  for training a physics-based simulator with a residual model for the discrepancies between real-world and simulated data. Heiden~\emph{et al.}~\cite{Heiden:2020aa} propose a differentiable formulation of rigid-body dynamics that allows training both a residual physics model along with the internal parameters of the simulator, allowing to backpropagate through the physics-based model.
+
+%Propose a learning framework to jointly optimize both the visual representation model and the dynamics model using contrastive estimation. Using simulation data collected by randomly perturbing deformable objects on a table, they learn latent dynamics models for these objects in an offline fashion. Then, using the learned models, simple model-based planning is used to solve challenging deformable object manipulation tasks, such as spreading ropes and cloths \cite{Yan:2020aa}.
+
+% this might be better in a different section
+Possas \emph{et al.}~\cite{Possas:2020aa} take an alternative approach, where the simulator is treated as a black-box, and real-world data is used to infer the parameters of the simulator online as a robot is learning to execute a task. Antonova \emph{et al.}~\cite{Antonova:2020aa} propose a related method, where inference is done with Gaussian Processes with kernels learned from simulation data.
+Similarly, Desai \emph{et al.}~\cite{Desai:2020aa} propose to reduce the distribution mismatch between  simulator and real world by learning behaviors that mimic the observations of behavior demonstrations.
+
+%%% Perhaps this can be further split into the methods that build a model and those that do not (e.g., domain randomization)
+
+%Aim to circumvent the sample inefficiency of RL. Instead of jointly learning both the pick and the place locations, they only explicitly learn the placing policy conditioned on random pick points. By selecting the pick point that has Maximal Value under Placing (MVP), a picking policy arises. Domain randomization is used to transfer such policies from simulation to reality \cite{Wu:2020aa}. TODO

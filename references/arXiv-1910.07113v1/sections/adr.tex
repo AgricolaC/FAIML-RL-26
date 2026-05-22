@@ -1,0 +1,151 @@
+In~\cite{openai2018learning}, we were able to train a control policy and a vision model in simulation and then transfer both to a real robot through the use of domain randomization~\cite{tobin2017domain, peng2017sim}. However, this required a significant amount of manual tuning and a tight iteration loop between randomization design in simulation and validation on a robot. In this section, we describe how \emph{automatic domain randomization} (ADR) can be used to automate this process and how we apply ADR to both policy and vision training.
+
+Our main hypothesis that motivates ADR is that \textit{training on a maximally diverse distribution over environments leads to transfer via emergent meta-learning}. More concretely, if the model has some form of memory, it can learn to adjust its behavior during deployment to improve performance on the current environment over time, i.e. by implementing a learning algorithm internally. We hypothesize that this happens if the training distribution is so large that the model cannot memorize a special-purpose solution per environment due to its finite capacity. ADR is a first step in this direction of unbounded environmental complexity: it automates and gradually expands the randomization ranges that parameterize a distribution over environments. Related ideas were also discussed in~\cite{DBLP:journals/corr/DuanSCBSA16, botvinick2019reinforcement, wang2019poet, clune2019ai}.
+
+In the remainder of this section, we first describe how ADR works at a high level and then describe the algorithm and our implementation in greater detail.
+
+\subsection{ADR Overview}
+We use ADR both to train our vision models (supervised learning) and our policy (reinforcement learning). In each case, we generate a distribution over environments by randomizing certain aspects, e.g. the visual appearance of the cube or the dynamics of the robotic hand. While domain randomization requires us to define the ranges of this distribution manually and keep it fixed throughout model training, in ADR the distribution ranges are defined automatically and allowed to change.
+
+A top-level diagram of ADR is given in~\autoref{fig:adr-architecture-top}. We give an intuitive overview of ADR below. See \autoref{sec:adr_algorithm} for a formal description of the algorithm.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/adr-architecture-top.pdf}
+    \caption{Overview of ADR. ADR controls the distribution over environments. We sample environments from this distribution and use it to generate training data, which is then used to optimize our model (either a policy or a vision state estimator). We further evaluate performance of our model on the current distribution and use this information to update the distribution over environments automatically.}
+    \label{fig:adr-architecture-top}
+\end{figure}
+
+At its core, ADR realizes a training curriculum that gradually expands a distribution over environments for which the model can perform well. The initial distribution over environments is concentrated on a single environment. For example, in policy training the initial environment is based on calibration values measured from the physical robot.
+
+The distribution over environments is sampled to obtain environments used to generate training data and evaluate model performance. ADR is independent of the algorithm used for model training. It only generates training data. This allows us to use ADR for both policy and vision model training.
+
+As training progresses and model performance improves sufficiently on the initial environment, the distribution is expanded. This expansion continues as long as model performance is considered acceptable. With a sufficiently powerful model architecture and training algorithm, the distribution is expected to expand far beyond manual domain randomization ranges since every improvement in the model's performance results in an increase in randomization.
+
+ADR has two key benefits over manual domain randomization (DR):
+\begin{itemize}
+    \item Using a curriculum that gradually increases difficulty as training progresses simplifies training, since the problem is first solved on a single environment and additional environments are only added when a minimum level of performance is achieved~\cite{graves2017curriculum, matiisen2017teacherstudent}.
+    \item It removes the need to manually tune the randomizations. This is critical, because as more randomization parameters are incorporated, manual adjustment becomes increasingly difficult and non-intuitive.
+\end{itemize}
+
+Acceptable performance is defined by \emph{performance thresholds}. For policy training, they are configured as the lower and upper bounds on the number of successes in an episode. For vision training, we first configure target performance thresholds for each output (e.g. position, orientation). During evaluation, we then compute the percentage of samples which achieve these targets for all outputs; if the resulting percentage is above the upper threshold or below the lower threshold, the distribution is adjusted accordingly.
+
+\subsection{Algorithm}\label{sec:adr_algorithm}
+
+
+
+
+
+
+Each environment $e_\lambda$ is parameterized by $\lambda \in \mathbb{R}^d$, where $d$ is the number of parameters we can randomize in simulation. In domain randomization (DR), the environment parameter $\lambda$ comes from a \emph{fixed} distribution $P_\phi$ parameterized by $\phi \in \mathbb{R}^{d'}$. However, in automatic domain randomization (ADR), $\phi$ is \emph{changing} dynamically with training progress. The sampling process in \autoref{fig:adr-architecture-top} works out as $\lambda \sim P_\phi$, resulting in one randomized environment instance $e_\lambda$.
+
+To quantify the amount of ADR expansion, we define \emph{ADR entropy} as $\mathcal{H}(P_\phi) = -\frac{1}{d}\int P_{\phi}(\lambda) \log P_{\phi}(\lambda) d\lambda$ 
+in units of nats/dimension. The higher the ADR entropy, the broader the randomization sampling distribution. The normalization allows us to compare between different environment parameterizations.
+
+In this work, we use a factorized distribution parameterized by $d' = 2d$ parameters. To simplify notation, let $\phi^L, \phi^H \in \R^d$ be a certain partition of $\phi$. For the $i$-th ADR parameter $\lambda_i$, $i = 1, \dots, d$, the pair $(\phi^L_i,\, \phi^H_i)$ is used to describe a uniform distribution for sampling $\lambda_i$ such that $\lambda_i \sim U(\phi^L_i,\, \phi^H_i)$. Note that the boundary values are inclusive. The overall  distribution is given by
+\begin{equation*}
+P_{\phi}(\lambda) = \prod_{i=1}^d U(\phi^L_i,\, \phi^H_i)
+\end{equation*}
+with ADR entropy
+\begin{equation*}
+\mathcal{H}(P_\phi) = \frac{1}{d}\sum_{i=1}^d \log(\phi^H_i - \phi^L_i).
+\end{equation*}
+
+
+The ADR algorithm is listed in Algorithm~\ref{algorithm:adr}. For the factorized distribution, Algorithm~\ref{algorithm:adr} is applied to $\phi^L$ and $\phi^H$ separately.
+
+At each iteration, the ADR algorithm randomly selects a dimension of the environment $\lambda_i$ to fix to a boundary value $\phi^L_i$ or $\phi^H_i$ (we call this ``boundary sampling''), while the other parameters are sampled as per $P_{\phi}$. Model performance for the sampled environment is then evaluated and appended to the buffer associated with the selected boundary of the selected parameter. Once enough performance data is collected, it is averaged and compared to thresholds. If the average model performance is better than the high threshold $t_H$, the parameter for the chosen dimension is increased. It is decreased if the average model performance is worse than the low threshold $t_L$.
+
+\begin{algorithm}
+\caption{ADR}\label{algorithm:adr}
+\begin{algorithmic}
+\Require $\phi^{0}$ \Comment{Initial parameter values}
+\Require $\{D^L_i, D^H_i\}_{i=1}^d$ \Comment{Performance data buffers}
+\Require $m$, $t_L$, $t_H$, where $t_L < t_H$ \Comment{Thresholds}
+\Require $\Delta$ \Comment{Update step size}
+\State $\phi \leftarrow \phi^{0}$
+\Repeat
+    \State $\lambda \sim P_{\phi}$
+    \State $i \sim U\{1, \dots, d\}$, $x \sim U(0, 1)$
+    \If{$x < 0.5$}
+        \State $D_i \gets D^L_i$, $\lambda_i \gets \phi^L_i$ \Comment{Select the lower bound in ``boundary sampling''}
+    \Else{}
+        \State $D_i \gets D^H_i$, $\lambda_i \gets \phi^H_i$ \Comment{Select the higher bound in ``boundary sampling''}
+    \EndIf
+    \State $p \gets$ \Call{EvaluatePerformance}{$\lambda$}  \Comment{Collect model performance on environment parameterized by $\lambda$}
+    \State $D_i \gets D_i \cup \{p\}$  \Comment{Add performance to buffer for $\lambda_i$, which was boundary sampled}
+    \If{\Call{Length}{$D_i$} $\geq m$}
+        \State $\bar{p} \gets$ \Call{Average}{$D_i$}
+        \State \Call{Clear}{$D_i$}
+        \If{$\bar{p} \geq t_H$}
+            \State $\phi_i \gets \phi_i + \Delta$
+        \ElsIf{$\bar{p} \leq t_L$}
+            \State $\phi_i \gets \phi_i - \Delta$
+        \EndIf
+    \EndIf
+\Until{training is complete}
+\end{algorithmic}
+\end{algorithm}
+
+
+As described, the ADR algorithm modifies $P_{\phi}$ by always fixing one environment parameter to a boundary value. To generate model training data, we use Algorithm~\ref{algorithm:generate_data} in conjunction with ADR. The algorithm samples $\lambda$ from $P_{\phi}$ and runs the model in the sampled environment to generate training data.
+
+To combine ADR and training data generation, at every iteration we execute Algorithm~\ref{algorithm:adr} with probability $p_b$ and Algorithm~\ref{algorithm:generate_data} with probability $1 - p_b$. We refer to $p_b$ as the \emph{boundary sampling probability}.
+
+\begin{algorithm}
+\caption{Training Data Generation}\label{algorithm:generate_data}
+\begin{algorithmic}
+\Require $\phi$ \Comment{ADR distribution parameters}
+\Repeat
+    \State $\lambda \sim P_{\phi}$
+    \State \Call{GenerateData}{$\lambda$}
+\Until{training is complete}
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Distributed Implementation}
+
+We used a distributed version of ADR in this work. The system architecture is illustrated in \autoref{fig:adr-architecture} for both our policy and vision training setup. We describe policy training in greater detail in \autoref{sec:policy} and vision training in \autoref{sec:vision}. Here we focus on ADR.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/adr-architecture-policy.pdf}
+        \caption{Policy training architecture.}
+        \label{fig:adr-architecture-policy}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/adr-architecture-vision.pdf}
+        \caption{Vision training architecture.}
+        \label{fig:adr-architecture-vision}
+    \end{subfigure}
+    \caption{The distributed ADR architecture for policy (left) and vision (right). In both cases, we use Redis for centralized storage of ADR parameters ($\Phi$), model parameters ($\Theta$), and training data ($T$). ADR eval workers run Algorithm~\ref{algorithm:adr} to estimate performance using boundary sampling and report results using performance buffers ($\{D_i\}_{i=1}^d$). The ADR updater uses those buffers to obtain average performance and increases or decreases boundaries accordingly. Rollout workers (for the policy) and data producers (for vision) produce data by sampling an environment as parameterized by the current set of ADR parameters (see Algorithm~\ref{algorithm:generate_data}). This data is then used by the optimizer to improve the policy and vision model, respectively.}
+    \label{fig:adr-architecture}
+\end{figure}
+
+The highly-parallel and asynchronous implementation depends on several centralized storage of (policy or vision) model parameters $\Theta$,  ADR parameters $\Phi$, training data $T$, and performance data buffers $\{D_i\}_{i=1}^d$. We use Redis to implement them.
+
+By using centralized storage, the ADR algorithm is decoupled from model optimization. However, to train a good policy or vision model using ADR, it is necessary to have a concurrent optimizer that consumes the training data in $T$ and pushes updated model parameters to $\Theta$.
+
+We use $W$ parallel worker threads instead of the sequential while-loop. For training the policy, each worker pulls the latest distribution and model parameters from $\Phi$ and $\Theta$ and executes Algorithm~\ref{algorithm:adr} with probability $p_b$ (denoted as ``ADR Eval Worker'' in \autoref{fig:adr-architecture-policy}). Otherwise, it executes Algorithm~\ref{algorithm:generate_data} and pushes the generated data to $T$ (denoted as ``Rollout Worker'' in \autoref{fig:adr-architecture-policy}). To avoid wasting a large amount of data for only ADR, we also use this data to train the policy. The setup for vision is similar. Instead of rolling out a policy, we use the ADR parameters to render images and use those to train the supervised vision state estimator. Since data is cheaper to generate, we do not use the ADR evaluator data to train the model in this case but only used the data produced by the ``Data Producer'' (compare \autoref{fig:adr-architecture-vision}).
+
+In the policy model, $\phi^{0}$ is set based on a calibrated environment parameter according to $\phi^{0, L}_i = \phi^{0, H}_i = \lambda_{i}^\text{calib}$ for all $i = 1, \dots, d$. In the vision model, the initial randomizations are set to zero, i.e. $\phi^{0, L}_i = \phi^{0, H}_i = 0$. The distribution parameters are pushed to $\Phi$ to be used by all workers at the beginning of the algorithm.
+
+\subsection{Randomizations}
+
+Here, we describe the categories of randomizations used in this work. The vast majority of randomizations are for a scalar environment parameter $\lambda_i$ and are parameterized in ADR by two boundary parameters $(\phi^L_i, \phi^H_i)$. For a full listing of randomizations used in policy and vision training, see~\autoref{app:randomizations}.
+
+A few randomizations, such as observation noise, are controlled by more than one environment parameter and are parameterized by a larger set of boundary parameters. For full details on these randomizations and their ADR parameterization, see~\autoref{app:randomizations}.
+
+\paragraph{Simulator physics.} We randomize simulator physics parameters such as geometry, friction, gravity, etc. See \autoref{sec:physics_randomizations} for details of their ADR parameterization.
+
+\paragraph{Custom physics.} We model additional physical robot effects that are not modelled by the simulator, for example, action latency or motor backlash. See~\citep[Appendix~C.2]{openai2018learning} for implementation details of these models. We randomize the parameters in these models in a similar way to simulator physics randomizations.
+
+\paragraph{Adversarial.} We use an adversarial approach similar to~\cite{pinto2017supervision, pinto2017robust} to capture any remaining unmodeled physical effects in the target domain. However, we use random networks instead of a trained adversary. See \autoref{sec:random_network_adversary} for details on implementation and ADR parameterization.
+
+\paragraph{Observation.} We add Gaussian noise to policy observations to better approximate observation conditions in reality. We apply both correlated noise, which is sampled once at the start of an episode and uncorrelated noise, which is sampled at each time step. We randomize the parameters of the added noise. See \autoref{sec:observation_randomizations} for details of their ADR parameterization.
+
+\paragraph{Vision.} We randomize several aspects in ORRB~\cite{chociej2019orrb} to control the rendered scene, including lighting conditions, camera positions and angles, materials and appearances of all the objects, the texture of the background, and the post-processing effects on the rendered images. See \autoref{app:visual_randomizations} for details.

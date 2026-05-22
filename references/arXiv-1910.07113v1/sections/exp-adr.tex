@@ -1,0 +1,236 @@
+In this section, we investigate the effect ADR has on transfer (\autoref{sec:result-adr-transfer}), empirically show the importance of having a curriculum for policy training (\autoref{sec:result-adr-curr}), quantify vision performance (\autoref{sec:result-vision}), and finally present our results that push the limits of what is possible by solving a Rubik's cube on the real Shadow hand (\autoref{sec:result-rubik}).
+
+\subsection{Effect of ADR on Policy Transfer}
+\label{sec:result-adr-transfer}
+
+To understand the transfer performance impact of training policies with ADR, we study the problem on the simpler block reorientation task previously introduced in~\cite{openai2018learning}. We use this task since it is computationally more tractable and because baseline performance has been established. As in~\cite{openai2018learning}, we measure performance in terms of the number of consecutive successes. We terminate an episode if the block is either dropped or if $50$ consecutive successes are achieved. An optimal policy would therefore be one that achieves a mean of $50$ successes.
+
+\subsubsection{Sim2Sim}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/adr-perf.pdf}
+        \label{fig:adr-sim2sim-perf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/adr-ent.pdf}
+        \label{fig:adr-sim2sim-volume}
+    \end{subfigure}
+    \caption{
+    Sim2sim performance (left) and ADR entropy (right) over the course of training. We can see that a policy trained with ADR has better sim2sim transfer as ADR increases the randomization level over time.}
+    \label{fig:adr-sim2sim}
+\end{figure}
+
+We first consider the sim2sim case. More concretely, we train a policy with ADR and continuously benchmark its performance on an distribution of environments with manually tuned randomizations, very similar to the ones we used in~\cite{openai2018learning}. Note that no ADR experiment has ever been trained on this distribution directly. Instead we use ADR to decide what distribution to train on, making the manually designed distribution over environments a test set for sim2sim transfer. We report our results in \autoref{fig:adr-sim2sim}.
+
+As seen in \autoref{fig:adr-sim2sim}, the policy trained with ADR transfers to the manually randomized distribution. Furthermore, the sim2sim transfer performance increases as ADR increases the randomization entropy.
+
+\subsubsection{Sim2Real}
+Next, we evaluate the sim2real transfer capabilities of our policies. Since rollouts on the robot are expensive, we limit ourselves to 7 different policies that we evaluate. For each of them, we collect a total of $10$ trials on the robot and measure the number of consecutive successes. As before, a trial ends when we either achieve $50$ successes, the robot times out or the block is dropped. For each policy we deploy, we also report simulation performance by measuring the number of successes across $500$ trials each for reference. As before, we use the manually designed randomizations as described in~\cite{openai2018learning} for sim evaluations. We summarize our results in \autoref{table:adr-xyz-transfer} and report detailed results in \autoref{app:full-results}.
+
+\begin{table}[h]
+    \caption{Performance of different policies on the block reorientation task. We evaluate each policy in simulation (N=500 trials) and on the real robot (N=10 trials) and report the mean $\pm$ standard error and median number of successes. For ADR policies, we report the entropy in nats per dimension (npd). For ``Manual DR'', we obtain an upper bound on its ADR entropy by running ADR with the policy fixed and report the entropy once the distribution stops changing (marked with an ``*'').}
+    \label{table:adr-xyz-transfer}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{@{}lrr|rr|rr@{}}
+            \toprule
+            \multirow{2}{*}{\textbf{Policy}} & \multirow{2}{*}{\textbf{Training Time}} & \multirow{2}{*}{\textbf{ADR Entropy}} & \multicolumn{2}{c}{\textbf{Successes (Sim)}} & \multicolumn{2}{c}{\textbf{Successes (Real)}} \\
+            & & & \textbf{Mean} & \textbf{Median} & \textbf{Mean} & \textbf{Median} \\
+            \midrule
+            Baseline (data from \cite{openai2018learning}) & --- & --- & $43.4 \pm 0.6$ & $\mathbf{50}$ & $18.8 \pm 5.4$ & $13.0$ \\
+            Baseline (re-run of \cite{openai2018learning}) & --- & --- & $33.8 \pm 0.9$ & $\mathbf{50}$ & $4.0 \pm 1.7$ & $2.0$ \\
+            \midrule
+            Manual DR & $13.78$~days & $-0.348$\textsuperscript{*}~npd& $42.5 \pm 0.7$ & $\mathbf{50}$ & $2.7 \pm 1.1$ & $1.0$ \\
+            \midrule
+            ADR (Small) & $0.64$~days & $-0.881$~npd & $21.0 \pm 0.8$ & $15$ & $1.4 \pm 0.9$ & $0.5$ \\
+            ADR (Medium) & $4.37$~days & $-0.135$~npd & $34.4 \pm 0.9$ & $\mathbf{50}$ & $3.2 \pm 1.2$ & $2.0$ \\
+            ADR (Large) & $13.76$~days & $0.126$~npd & $40.5 \pm 0.7$ & $\mathbf{50}$ & $13.3 \pm 3.6$ & $11.5$ \\
+            \midrule
+            ADR (XL) & --- & $0.305$~npd & $45.0 \pm 0.6$ & $\mathbf{50}$ & $16.0 \pm 4.0$ & $12.5$ \\
+            ADR (XXL) & --- & $\mathbf{0.393}$~\textbf{npd} & $\mathbf{46.7 \pm 0.5}$ & $\mathbf{50}$ & $\mathbf{32.0 \pm 6.4}$ & $\mathbf{42.0}$ \\
+            \bottomrule
+        \end{tabular}
+\end{table}
+
+The first two rows connect our results in this work to the previous results reported in~\cite{openai2018learning}. For convenience, we repeat the numbers reported in~\cite{openai2018learning} in the first row. We also re-deploy the exact same policy we used back then on our setup today. We find that the same policy performs much worse today, presumably because both our physical setup and simulation have changed since (as described in \autoref{sec:physical-setup} and \autoref{sec:sim}, respectively).
+
+The next section of the table compares a policy trained with ADR and a policy trained with manual domain randomization (denoted as ``Manual DR''). Note that ``Manual DR'' uses the same randomizations as the baseline from~\cite{openai2018learning} but is trained on our current setup with the same model architecture and hyperparameters as the ADR policy. For the ADR policy, we select snapshots at different points during training at varying levels of entropy and denote them as small, medium, and large.\footnote{Note that this is one experiment, not multiple different experiments, taken at different points in time during training.} We can clearly see a pattern: increased ADR entropy corresponds to increased sim2sim and sim2real transfer. The policy trained with manual domain randomization achieves high performance in simulation. However, when deployed on the robot, it fails. This is because, in contrast to our results obtained in~\cite{openai2018learning}, we did not tune our simulation and randomization setup by hand to match changes in hardware. Our ADR policies transfer because ADR automates this process and results in training distributions that are vastly broader than our manually tuned distribution was in the past. Also note that ``ADR (Large)'' and ``Manual DR'' were trained for the same amount of wall-clock time and share all training hyperparameters except for the environment distribution, i.e. they are fully comparable. Due to compute constraints, we train those policies at $\nicefrac{1}{4}$th of our usual scale in terms of compute (compare \autoref{sec:policy}).
+
+The last block of the table lists results that we obtained when scaling ADR up. We report results for ``ADR (XL)'' and ``ADR (XXL)'', referring to two long-running experiments that were continuously trained for extended periods of time and at larger scale. We can see that they exhibit the best sim2sim and sim2real transfer and that, again, an increase in ADR entropy corresponds to vastly improved sim2real transfer. Our best result significantly beat the baseline reported in~\cite{openai2018learning} even though we did not tune the simulation and robot setup for peak performance on the block reorientation task: we increase mean performance by almost $2\times$ and median performance by more than $3\times$. As a side note, we also see that policies trained with ADR eventually achieve near-perfect performance for sim2sim transfer as well.
+
+In summary, ADR clearly leads to improved transfer with much less need for hand-engineered randomizations. We significantly outperformed our previous best results, which were the result of multiple months of iterative manual tuning.
+
+\subsection{Effect of Curriculum on Policy Training}
+\label{sec:result-adr-curr}
+We designed ADR to expand the complexity of the training distribution gradually. This makes intuitive sense: start with a single environment and then grow the distribution over environments as the agent progresses. The resulting curriculum should make it possible to eventually master a highly diverse set of environments. However, it is not clear if this curriculum property is important or if we can train with a fixed set of domain randomization parameters once they have been found.
+
+To test for this, we conduct the following experiment. We train one policy with ADR on the block reorientation task and compare it against multiple policies with different fixed randomizations. We use 4 different fixed levels: small, medium, large, and XL. They correspond to the ADR parameters of the policies from the previous section (compare \autoref{table:adr-xyz-transfer}). However, note that we only use the ADR parameters, \emph{not} the policies from \autoref{table:adr-xyz-transfer}. Instead, we train new policies from scratch using these parameters and train all of them for the same amount of wall-clock time. We evaluate performance of all policies continuously on the same manually randomized distribution from~\cite{openai2018learning}, i.e. we test for sim2sim transfer in all cases. We depict our results in \autoref{fig:adr-curr}. Note that for all DR runs the randomization entropy is constant; only the one for ADR gradually increases.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/adr-curr-v2-perf.pdf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/adr-curr-v2-ent.pdf}
+    \end{subfigure}
+    \caption{Sim2sim performance (left) and ADR entropy (right) over the course of training. \emph{ADR} refers to a regular training run, i.e. we start with zero randomization and let ADR gradually expand the randomization level. We compare ADR against runs with domain randomization (DR) fixed at different levels and train policies on each of those environment distributions. We can see that ADR makes progress much faster due to its curriculum property.}
+    \label{fig:adr-curr}
+\end{figure}
+
+Our results in \autoref{fig:adr-curr} clearly demonstrate that adaptively increasing the randomization entropy is important: the ADR run achieves high sim2sim transfer much more quickly than all other runs with fixed randomization entropy.\footnotetext{The attentive reader will notice that the sim2sim performance reported in \autoref{fig:adr-curr} is different from the sim2sim performance reported in \autoref{table:adr-xyz-transfer}. This is because here we train the policies for \emph{longer} but on a \emph{fixed} ADR entropy whereas in \autoref{table:adr-xyz-transfer} we had a single ADR run and took snapshots at different points over the course of training.} There is also a clear pattern: the larger the fixed randomization entropy, the longer it takes to train from scratch. We hypothesize that for a sufficiently difficult task and randomization entropy, training from scratch becomes infeasible altogether. More concretely, we believe that for too complex environments the policy would never learn due to the task being so hard that there is no sufficient reinforcement learning signal.
+
+
+
+\subsection{Effect of ADR on Vision Model Performance}
+\label{sec:result-vision}
+
+When training vision models, ADR controls both the ranges of randomization in ORRB (i.e. light distance, material metallic and glossiness) and TensorFlow distortion operations (i.e. adding Gaussian noise and channel noise). A full list of vision ADR randomization parameters are available in \autoref{app:visual_randomizations}~\autoref{table:vision_randomizations}. We train ADR-enhanced vision models to do state estimation for both the block reorientation~\cite{openai2018learning} and Rubik's cube task. 
+As shown in \autoref{table:vision_adr_locked}, we are able to reduce the prediction errors on both block orientation and position further than our manual domain randomization results in the previous work~\cite{openai2018learning}.\footnote{Note that this model has the same manual DR as in~\cite{openai2018learning} but is evaluated on a newly collected real image set, so the numbers are slightly different from~\cite{openai2018learning}.} We can also see that increased ADR entropy again corresponds to better sim2real transfer.
+
+\begin{table}[h]
+    \caption{Performance of vision models at different ADR entropy levels for the block reorientation state estimation task. Note that the baseline model here uses the same manual domain randomization configuration as in~\cite{openai2018learning} but is evaluated on a newly collected real image dataset (the same real dataset described in \autoref{table:vision-ablations})}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}lrr|rr|rr@{}}
+        \toprule
+        \multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Training Time}} & \multirow{2}{*}{\textbf{ADR Entropy}} & \multicolumn{2}{c}{\textbf{Errors (Sim)}} & \multicolumn{2}{c}{\textbf{Errors (Real)}} \\
+        & & & \textbf{Orientation} & \textbf{Position} & \textbf{Orientation} & \textbf{Position} \\
+        \midrule
+        Manual DR &  13.62 hrs & --- & $1.99^\circ$ & $4.03$ mm & $5.19^\circ$ & $8.53$ mm \\
+        \midrule
+        ADR (Small) & 2.5 hrs & $0.922$ npd & $2.81^\circ$ & $4.21$ mm & $6.99^\circ$ & $8.13$ mm \\
+        ADR (Middle) & 3.87 hrs & $1.151$ npd & $2.73^\circ$ & $4.11$ mm & $6.66^\circ$ & $8.14$ mm \\
+        ADR (Large) & 12.76 hrs & $\mathbf{1.420}$ npd & $1.85^\circ$ & $5.18$ mm & $\mathbf{5.09}^\circ$ & $\mathbf{7.85}$ mm \\
+        \bottomrule
+    \end{tabular}
+    \label{table:vision_adr_locked}
+\end{table}
+
+
+Predicting the full state of a Rubik's cube is a more difficult task and demands longer training time. A vision model using ADR succeeds to achieve lower errors than the baseline model with manual DR configuration given a similar amount of training time, as demonstrated in \autoref{table:vision_adr_full}. Higher ADR entropy well correlates with lower errors on real images. ADR again outperforms our manually tuned randomizations (i.e. the baseline). Note that errors in simulation increase as ADR generates harder and harder synthetic tasks.
+
+
+\begin{table}[h]
+    \caption{Performance of vision models at different ADR entropy levels for the Rubik's cube prediction task (See \autoref{sec:vision}). The real image datasets used for evaluation are same as in \autoref{table:vision-ablations}. The full evaluation results are reported in \autoref{app:full-results}~\autoref{table:vision-ablations-full}.}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{@{}lrr|rrr|rrr@{}}
+            \toprule
+            \multirow{2}{*}{\textbf{Model}} & \textbf{Training} & \textbf{ADR} & \multicolumn{3}{c}{\textbf{Errors (Sim)}} & \multicolumn{3}{c}{\textbf{Errors (Real)}} \\
+            & \textbf{Time} & \textbf{Entropy} 
+            & \textbf{Orientation} & \textbf{Position} & \textbf{Top angle} 
+            & \textbf{Orientation} & \textbf{Position} & \textbf{Top angle} \\
+            \midrule
+            Baseline 
+            & $76.29$ hrs & --- & $6.52^\circ$ & $2.63$ mm & $11.95^\circ$ 
+            & $7.81^\circ$ & $6.47$ mm & $15.92^\circ$ \\
+            \midrule
+            ADR (Small) 
+            & $20.9$ hrs & $-0.565$ npd & $5.02^\circ$ & $3.36$ mm & $9.34^\circ$ 
+            & $8.93^\circ$ & $7.61$ mm & $16.57^\circ$ \\
+            ADR (Middle) 
+            & $30.6$ hrs & $0.511$ npd & $15.68^\circ$ & $3.02$ mm & $20.29^\circ$ 
+            & $8.44^\circ$ & $7.30$ mm & $15.81^\circ$\\
+            ADR (Large) 
+            & $75.1$ hrs & $\mathbf{0.806}$ npd & $15.76^\circ$ & $3.58$ mm & $20.78^\circ$ 
+            & $\mathbf{7.48}^\circ$ & $\mathbf{6.24}$ mm & $\mathbf{13.83}^\circ$ \\
+            \bottomrule
+        \end{tabular}
+    \label{table:vision_adr_full}
+\end{table}
+
+\subsection{Solving the Rubik's Cube}
+\label{sec:result-rubik}
+
+In this section, we push the limits of sim2real transfer by considering a manipulation problem of unprecedented complexity: solving Rubik's cube using the real Shadow hand. This is a daunting task due to the complexity of Rubik's cube and the interactions between it and the hand: in contrast to the block reorientation task, there is no way we can accurately capture the object in simulation. While we model the Rubik's cube (see \autoref{sec:sim}), we make no effort to calibrate its dynamics. Instead, we use ADR to automate the randomization of environments.
+
+We further need to sense the state of the Rubik's cube, which is also much more complicated than for the block reorientation task. We always use vision for the pose estimation of the cube itself. For the $6$~face angles, we experiment with two different setups: the Giiker cube (see \autoref{sec:physical-setup}) and a vision model which predicts face angles (see \autoref{sec:vision}).
+
+We first evaluate performance on this task quantitatively and then highlight some qualitative findings.
+
+\subsubsection{Quantitative Results}
+We compare four different policies: a policy trained with manual domain randomization (``Manual DR'') using the randomizations that we used in~\cite{openai2018learning} trained for about 2 weeks, a policy trained with ADR for about 2 weeks, and two policies we continuously trained and updated with ADR over the course of months.
+
+\begin{table}[h]
+    \caption{Performance of different policies on the Rubik's cube for a fixed fair scramble goal sequence. We evaluate each policy on the real robot (N=10 trials) and report the mean $\pm$ standard error and median number of successes (meaning the total number of successful rotations and flips). We also report two success rates for applying half of a fair scramble (``half'') and the other one for fully applying it (``full''). For ADR policies, we report the entropy in nats per dimension (npd). For ``Manual DR'', we obtain an upper bound on its ADR entropy by running ADR with the policy fixed and report the entropy once the distribution stops changing (marked with an ``*'').}
+    \label{table:adr-full-transfer}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}lllr|rrrr@{}}
+        \toprule
+        \multirow{2}{*}{\textbf{Policy}} & \multicolumn{2}{c}{\textbf{Sensing}} & \multirow{2}{*}{\textbf{ADR Entropy}} & \multicolumn{2}{c}{\textbf{Successes (Real)}} & \multicolumn{2}{c}{\textbf{Success Rate}} \\
+        & \textbf{Pose} & \textbf{Face Angles} & & \textbf{Mean} & \textbf{Median} & \textbf{Half} & \textbf{Full} \\
+        \midrule
+        Manual DR & Vision & Giiker & $-0.569$\textsuperscript{*}~npd & $1.8 \pm 0.4$ & $2.0$ & $0$ \% & $0$ \% \\
+        ADR & Vision & Giiker & $-0.084$~npd & $3.8 \pm 1.0$ & $3.0$ & $0$ \% & $0$ \% \\
+        \midrule
+        ADR (XL) & Vision & Giiker & $0.467$~npd & $17.8 \pm 4.2$ & $12.5$ & $30$ \% & $10$ \% \\
+        ADR (XXL) & Vision & Giiker & $\mathbf{0.479}$~\textbf{npd} & $\mathbf{26.8 \pm 4.9}$ & $\mathbf{22.0}$ & $\mathbf{60}$ \textbf{\%} & $\mathbf{20}$ \textbf{\%} \\
+        \midrule
+        ADR (XXL) & Vision & Vision & $\mathbf{0.479}$~\textbf{npd} & $12.8 \pm 3.4$ & $10.5$ & $20$ \% & $0$ \% \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+To evaluate performance, we define a fixed procedure that we repeat 10 times per policy to obtain 10 trials. More concretely, we always start from a solved cube state and ask the hand to move the Rubik's cube into a fair scramble. Since the problem is symmetric, this is equivalent to solving the Rubik's cube starting from a fairly scrambled Rubik's cube. However, it reduces the probability of human error and labor significantly since ensuring a correct initial state is much simpler if the cube is solved. We use the following fixed scrambling sequence for all 10 trials, which we obtained using the ``TNoodle'' application of the World Cube Association\footnote{\url{https://www.worldcubeassociation.org/regulations/scrambles/}} via a random sample (i.e., this was not cherry-picked):
+\begin{quote}
+    L2 U2 R2 B D2 B2 D2 L2 F' D' R B F L U' F D' L2
+\end{quote}
+Completing this sequence requires a total of $43$ successes ($26$ face rotations and $17$ cube flips). If the sequence is completed successfully, we continue the trial by reversing the sequence. A trial ends if $50$~successes have been achieved, if the cube is dropped, or if the policy fails to achieve a goal within $1600$~timesteps, which corresponds to $128$~seconds.
+
+For each trial, we measure the number of successfully achieved goals (both flips and rotations). We also define two thresholds for each trial: Applying at least half of the fair scramble successfully (i.e. $22$~successes) and applying at least the full fair scramble successfully (i.e. $43$~successes). We report success rates for both averaged across all $10$~trials and denote them as ``half'' and ``full'', respectively. Achieving the ``full'' threshold is equivalent to solving the Rubik's cube since going from solved to scrambled is as difficult as going from scrambled to solved.\footnote{With the exception of the fully solved configuration being slightly easier for the vision model to track.} We report our summarized results in \autoref{table:adr-full-transfer} and full results in \autoref{app:full-results}.
+
+We see a very similar pattern as before: manual domain randomization fails to transfer. For policies that we trained with ADR, we see that sim2real transfer clearly depends on the entropy per dimension. ``Manual DR'' and ``ADR'' were trained for $14$~days at $\nicefrac{1}{4}$th of our usual scale in terms of compute (see \autoref{sec:policy}) and are fully comparable. Our best policy, which was continuously trained over the course of multiple months at larger scale, achieves $26.80$ successes on average over 10 trials. This corresponds to successfully solving a Rubik's cube that requires $15$ face rotations $60\%$ of the time and to solve a Rubik's cube that requires $26$ face rotations $20\%$ of the time. Note that $26$~quarter face rotations is the worst case for solving a Rubik's cube with only about $3$~Rubik's cube configurations requiring that many~\cite{qtm}. In other words, almost all solution sequences will require less than $26$ face rotations.
+
+
+\subsubsection{Qualitative Results}
+We observe many interesting emergent behaviors on our robot when using our best policy (``ADR (XXL)'') for solving the Rubik's cube. We encourage the reader to watch the uncut video footage we recorded:\footnotetext{This video solves the Rubik's cube from an initial randomly scrambled state. This is different from the quantitative experiments we conducted in the previous section.}
+\mbox{\url{https://youtu.be/kVmp0uGtShk}}.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{figures/perturb-none.jpg}
+        \caption{Unperturbed (for reference).}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{figures/perturb-glove.jpg}
+        \caption{Rubber glove.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{figures/perturb-finger.jpg}
+        \caption{Tied fingers.}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{figures/perturb-blanket.jpg}
+        \caption{Blanket occlusion and perturbation.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{figures/perturb-giraffe.jpg}
+        \caption{Plush giraffe perturbation.\footnotemark}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{figures/perturb-pen.jpg}
+        \caption{Pen perturbation.}
+    \end{subfigure}
+    \caption{Example perturbations that we apply to the real robot hand while it solves the Rubik's cube. We did not train the policy to be able to handle those perturbations, yet we observe that it is robust to all of them. A video of is available: \mbox{\url{https://youtu.be/QyJGXc9WeNo}}}
+    \label{fig:cube-perturbations}
+\end{figure}
+
+For example, we observe that the robot sometimes accidentally rotates an incorrect face. If it does so, our best policies are usually able to recover from this mistake by first rotating the face back and then pursuing the original subgoal without us having to change the subgoal. We also observe that the robot first aligns faces after performing a flip before attempting a rotation to avoid interlocking due to misalignment. Still, rotating a face can be challenging at times and we sometimes observe situations in which the robot is stuck. In this case we often see that the policy eventually adjusts its grasp to attempt the face rotation a different way, thus often succeeding eventually. Other times we observe our policy attempting a face rotation but the cube slips, resulting in a rotation of the entire cube as opposed to a specific face. In this case the policy rearranges its grasp and tries again, usually succeeding eventually.
+
+We also observe that the policy appears more likely to drop the cube after being stuck on a challenging face rotation for a while. We do not quantify this but hypothesize that it might have ``forgotten'' about flips by then since the recurrent state of the policy has only observed a mostly stationary cube for several seconds. For flips, information about the cube's dynamics properties are more important. Similarly, we also observe that the policy appears to be more likely to drop the cube early on, presumably again because the necessary information about the cube's dynamic properties have not yet been captured in the policy's hidden state.
+
+We also experiment with several perturbations. For example, we use a rubber glove to significantly change the friction and surface geometry of the hand. We use straps to tie together multiple fingers. We use a blanket to occlude the hand and Rubik's cube during execution. We use a pen and plush giraffe to poke the cube. While we do not quantify these experiments, we find that our policy still is able to perform multiple face rotations and cube flips under all of these conditions even though it was clearly not trained on them. \autoref{fig:cube-perturbations} shows examples of perturbations we tried. A video showing the behavior of our policy under those perturbations is also available: \mbox{\url{https://youtu.be/QyJGXc9WeNo}}
+
+\footnotetext{Her name is Rubik, for obvious reasons.}

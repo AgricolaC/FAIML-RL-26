@@ -1,0 +1,24 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Problem Formulation and Nomenclature}{}% 2
+\BOOKMARK [1][-]{section.3}{Foundations of Sim-to-Real Transfer}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Early Methods}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Constructing Stochastic Simulators}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Randomizing a Simulator}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.4}{Measuring and Predicting the Reality Gap}{section.3}% 7
+\BOOKMARK [1][-]{section.4}{Relation of Sim-to-Real to other Fields}{}% 8
+\BOOKMARK [2][-]{subsection.4.1}{Curriculum Learning}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.2}{Meta Learning}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.3}{Transfer Learning}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.4}{Knowledge Distillation}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.5}{Distributional Robustness}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.6}{System Identification}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.7}{Adaptive Control}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.8}{Simulation-Based Inference}{section.4}% 16
+\BOOKMARK [1][-]{section.5}{Domain Randomization for Sim-to-Real Transfer}{}% 17
+\BOOKMARK [2][-]{subsection.5.1}{Static Domain Randomization}{section.5}% 18
+\BOOKMARK [2][-]{subsection.5.2}{Adaptive Domain Randomization}{section.5}% 19
+\BOOKMARK [2][-]{subsection.5.3}{Adversarial Domain Randomization}{section.5}% 20
+\BOOKMARK [1][-]{section.6}{Discussion and Outlook}{}% 21
+\BOOKMARK [2][-]{subsection.6.1}{Choosing a Suitable Domain Randomization Approach}{section.6}% 22
+\BOOKMARK [2][-]{subsection.6.2}{Sim-to-Real Transfer without Domain Randomization}{section.6}% 23
+\BOOKMARK [2][-]{subsection.6.3}{Promising Future Research Directions}{section.6}% 24

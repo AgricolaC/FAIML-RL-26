@@ -1,0 +1,10 @@
+
+\section{System Monitoring}
+\label{app:hardware-monitoring}
+
+Reliability of the physical setup was one of the key challenges mentioned in \cite{openai2018learning}. To address this issue we built new monitoring system which ensures experiments were performed on a fully functional robot and that physical setup was consistent for all experiments. 
+New system includes recording, visualization, alerting and persistence of all operations performed on the physical robots. New debugging and investigation capabilities were unlocked and allowed us to detect robot breakage in real time (e.g. breaking tendons), find regressions in the physical setup and identify differences between policies deployed on the physical setup and in the simulation.
+
+We used InfluxDB\footnote{InfluxDB is a time series database designed to handle high write and query loads. See \url{https://www.influxdata.com/products/influxdb-overview} for more information.} database to do real-time tracking and persistence of native resolution sensor data and detailed information about the context in which experiments were conducted.
+
+We used Grafana\footnote{Grafana is an open-source, general purpose dashboard and graph composer, which runs as a web application. See \url{https://grafana.com} for more information.}, with InfluxDB as a data source, to display information on policy performance on the task, to visualize data from robot sensors and to show the health status of robotic components.

@@ -1,0 +1,74 @@
+The simulation setup is similar to~\cite{openai2018learning}: we simulate the physical system with the MuJoCo physics engine~\cite{mujoco}, and we use ORRB~\cite{chociej2019orrb}, a remote rendering backend built on top of Unity3D,\footnote{Unity is a cross-platform game engine. See \url{https://www.unity.com} for more information.} to render synthetic images for training the vision based pose estimator.
+
+While the simulation cannot perfectly match reality, we still found it beneficial to help bridge the gap by modeling our physical setup accurately. Our MuJoCo model of the Shadow Dexterous Hand has thus been further improved since~\cite{openai2018learning} to better match the physical system via new dynamics calibration and modeling of a subset of tendons existing in the physical hand and we developed an accurate model of the Rubik's cube.
+
+\subsection{Hand Dynamics Calibration}
+
+We measured joint positions for the same time series of actions for the real and simulated hands in an environment where the hand can move freely and made two observations:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/simulation-coupling2.jpg}
+    \caption{Transparent view of the hand in the new simulation. One spatial tendon (green lines) and two cylindrical geometries acting as pulleys (yellow cylinders) have been added for each non-thumb finger in order to achieve coupled joints dynamics similar to the physical robot.}
+    \label{fig:simulation-coupling}
+\end{figure}
+
+\begin{enumerate}
+  \item The joint positions recorded on a physical robot and in simulation were visibly different (see \autoref{fig:simulation-before-calibration}).
+  \item The dynamics of \emph{coupled joints} (i.e. distal two joints of non-thumb fingers, see~\cite[Appendix~B.1]{openai2018learning}) were different on a physical robot and in simulation. In the original simulation used in \cite{openai2018learning}, movement of coupled joints was modeled with two fixed tendons which resulted in both joints traveling roughly the same distance for each action. However, on the physical robot, movement of coupled joints depends on the current position of each joint. For instance, like in the human hand, the proximal segment of a finger bends before the distal segment when bending a finger.
+\end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/calib-before.pdf}
+        \caption{Comparison against original simulation.}
+        \label{fig:simulation-before-calibration}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/calib-after.pdf}
+        \caption{Comparison against new simulation.}
+        \label{fig:simulation-after-calibration}
+    \end{subfigure}
+    \caption{Comparison of positions of the LFJ3 joint on a real and simulated robot hand for the same control sequence, for the original simulation (a) and for the new simulation (b)}
+    \label{fig:simulation-calibration}
+\end{figure}
+
+To address the dynamics of coupled joints, we added a non-actuated spatial tendon and pulleys to the simulated non-thumb fingers (see \autoref{fig:simulation-coupling}), analogous to the non-actuated tendon present in the physical robot.
+Parameters relevant to the joint movement in the new MuJoCo model were then calibrated to minimize root mean square error between reference joint positions recorded on a physical robot and joint positions recorded in simulation for the same time series of actions. We observe that better modeling of coupling and dynamics calibration improves performance significantly and present full results in \autoref{app:full-results-sim-calib}. We use this version of the simulation throughout the rest of this work.
+
+
+\subsection{Rubik's Cube}
+
+Behind the apparent simplicity of a cube-like exterior, a Rubik's cube hides a high degree of internal complexity and surprisingly nontrivial interactions between elements. A regular 3x3x3 cube consists of 26 externally facing \emph{cubelets} that are bound together to constitute a larger cubic shape. Six cubelets that reside in the center of each face are connected by axles to the inner core and can only rotate in place with one degree of freedom. In contrast to that, the edge and corner cubelets are not fixed and can move around the cube whenever the larger faces are rotated. To prevent the cube from falling apart, these cubelets have little plastic tabs that extend towards the core and allow each piece to be held in place by its neighbors, which in the end are retained by the center elements. Additionally, most Rubik's cubes are to a certain degree elastic and allow for small deformations from their original shape, constituting additional degrees of freedom.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/simulation-cube.jpg}
+        \caption{Rendering of the cube model.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/simulation-cube-axis.jpg}
+        \caption{Rendering of the different axis.}
+    \end{subfigure}
+    \caption{Our MuJoCo model of the Rubik's cube. On the left, we show a rendered version. On the right, we show the individual cublets that make up our model and visualize the different axis and degrees of freedom of our model.}
+    \label{fig:simulation-cube}
+\end{figure}
+
+The components of the cube constantly exert pressure on each other which results in a certain base level of friction in the system both between the cubelets and in the joints. It is enough to apply force to a single cubelet to rotate a face, as it will be propagated between the neighboring elements via contact forces. Although a cube has six faces that can be rotated, not all of them can be rotated simultaneously -- whenever one face has already been moved by a certain angle, perpendicular faces are in a locked state and prevented from moving. However, if this angle is small enough, the original face often "snaps" back into its nearest aligned state and in that way we can proceed with rotating the perpendicular face. This property is commonly called the "forgiveness" of a Rubik's Cube and its strength varies greatly among models available on the market.
+
+Since we train entirely in simulation and need to successfully transfer to the real world without ever experiencing it, we needed to create a model rich enough to include all of the aforementioned behaviors, while at the same time keeping software complexity and computational costs manageable. We used the MuJoCo~\cite{mujoco} physics engine, which implements a stable and fast numerical solutions for simulating body dynamics with soft contacts.
+
+Inspired by the physical cube, our simulated model consists of 26 rigid body convex cubelets. MuJoCo allows for these shapes to penetrate each other by a small margin when a force is applied. Six central cubelets have a single \emph{hinge joint} representing a single rotational degree of freedom about the axes running through the center of the cube orthogonal to each face. All remaining 20 corner and edge cubelets have three hinge joints corresponding to full Euler angle representation, with rotation axes passing through the center of the cube. In that way, our cube has $6 \times 1 + 20 \times 3 = 66$ degrees of freedom, that allow us to represent effectively not only \emph{43 quintillion} fully aligned cube configurations but also all physically valid intermediate states.
+
+Each cubelet mesh was created on the basis of the cube of size 1.9 cm. Our preliminary experiments have shown that with perfectly cubic shape, the overall Rubik's cube model was highly unforgiving. Therefore, we beveled all the edges of the mesh 1.425 mm inwards, which gave satisfactory results.\footnote{Real Rubik's cubes also have cubelets with rounded corners, for the same reason.}. We do not implement any custom physics in our modelling, but rely on the cubelet shapes, contact forces and friction to drive the movement of the cube. We conducted experiments with spring joints which would correspond to additional degrees of freedom for cube deformation, but found they were not necessary and that native MuJoCo soft contacts already exhibit similar dynamics.
+
+We performed a very rudimentary dynamics calibration of the parameters which MuJoCo allows us to specify, in order to roughly match a physical Rubik's cube. Our goal was not to get an exact match, but rather to have a plausible model as a starting point for domain randomization.
+

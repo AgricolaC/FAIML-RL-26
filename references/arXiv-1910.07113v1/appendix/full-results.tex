@@ -1,0 +1,191 @@
+\section{Full Results}
+\label{app:full-results}
+
+\subsection{Simulation Calibration}
+\label{app:full-results-sim-calib}
+
+We test how much of an impact simulation calibration has. We use a simplifed version of the Rubik's cube: The face cube. In this version, the Rubik's cube is constrained to only have 2 degrees of freedom with the other degrees disabled. We evaluate a policy trained on the old simulation and on the new simulation (i.e. with coupling and dynamics calibration). We calibrate the following MuJoCo parameters that are related to joint movements: \texttt{dof\_damping}, \texttt{jnt\_range}, \texttt{geom\_size}, \texttt{tendon\_range}, \texttt{tendon\_lengthspring}, \texttt{tendon\_stiffness}, \texttt{actuator\_forcerange}, and \texttt{actuator\_gainprm}. Results are in \autoref{table:sim-calibration-face-cube}.
+
+\begin{table}[h]
+    \caption{Performance of two policies trained on two different environments on a simplified version of the Rubik's cube task. We run 10 trials for each policy on the physical setup and report the mean and median number of face rotations and mean number of policy steps per face rotation.}
+    \label{table:sim-calibration-face-cube}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}lrrr@{}}
+        \toprule
+        \multirow{2}{*}{\textbf{Policy}} &  \multicolumn{2}{c}{\textbf{Successes}} & \textbf{Steps Per Success} \\
+        & \textbf{Mean} & \textbf{Median} & \textbf{Mean} \\
+        \midrule
+        Original Simulation & $4.8 \pm 2.89$ & $5.00$ & $321.10$ \\
+        New Simulation (Coupling Model + Calibration) & $\mathbf{14.30 \pm 6.56}$ & $\mathbf{15.50}$ &  $\mathbf{252.50}$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Physical Trials}
+\label{app:full-results-phy-trials}
+
+The full statistics of our physical trials are available in \autoref{table:adr-xyz-transfer-full} and \autoref{table:adr-full-transfer-full}.
+
+\begin{table}[h]
+    \caption{Performance of different policies on the block reorientation task. We evaluate each policy on the real robot for 10 trials. For each individual trial, we report the mean $\pm$ standard error and median number of successes, the time per success in second, as well as the full list of success counts.}
+    \label{table:adr-xyz-transfer-full}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{l|rrr|l}
+        \toprule
+        \textbf{Policy}
+        & \textbf{Mean}
+        & \textbf{Median}
+        & \textbf{Time per Success} 
+        & \multicolumn{1}{c}{\textbf{Trials (sorted)}} \\
+
+        \midrule
+        
+        Baseline (from \cite{openai2018learning})
+        & $18.8 \pm 5.4$ & $13.0$ & --- 
+        & $50,41,29,27,14,12,6,4,4,1$ \\
+        
+        Baseline (re-run of \cite{openai2018learning})
+        & $4.0 \pm 1.7$ & $2.0$ & $17.24$ sec
+        & $17,10,3,3,2,2,1,1,1,0$ \\
+
+        \midrule
+
+        Manual DR 
+        & $2.7 \pm 1.1$ & $1.0$ & $31.65$ sec
+        & $11,5,4,3,1,1,1,1,0,0$ \\
+        ADR (Small)
+        & $1.4 \pm 0.9$ & $0.5$ & $67.49$ sec
+        & $9,2,1,1,1,0,0,0,0,0$ \\
+        ADR (Medium)
+        & $3.2 \pm 1.2$ & $2.0$ & $29.50$ sec
+        & $12,7,4,3,2,2,1,1,0,0$ \\
+        ADR (Large)
+        & $13.3 \pm 3.6$ & $11.5$ & $4.45$ sec
+        & $38,25,17,16,12,11,5,4,3,2$ \\
+        
+        \midrule
+        
+        ADR (XL)
+        & $16.0 \pm 4.0$ & $12.5$ & $\mathbf{5.10}$ sec
+        & $42,28,27,16,13,12,8,7,5,2$ \\
+        ADR (XXL)
+        & $\mathbf{32.0 \pm 6.4}$ & $\mathbf{42.0}$ & $5.18$ sec
+        & $\mathbf{50},\mathbf{50},\mathbf{50},\mathbf{50},43,41,13,12,6,5$ \\
+
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\begin{table}[h]
+    \caption{Performance of different policies on the Rubik's cube for a fixed fair scramble goal sequence. We evaluate each policy on the real robot for 10 trials. For each individual trial, we report the mean $\pm$ standard error and median number of successes, the time per success in second, as well as the full list of success counts.}
+    \label{table:adr-full-transfer-full}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|rr|rr|l}
+        \toprule
+        \multirow{2}{*}{\textbf{Policy}}
+        & \multirow{2}{*}{\textbf{Sensing}}
+        & \multirow{2}{*}{\textbf{Mean}}
+        & \multirow{2}{*}{\textbf{Median}}
+        & \multicolumn{2}{|c}{\textbf{Time per Success}} 
+        & \multicolumn{1}{|c}{\multirow{2}{*}{\textbf{Trials (sorted)}}} \\
+        & & & & (Flip) & (Rotation) & \\
+
+        \midrule
+        Manual DR & Giiker + Vision 
+        & $1.8 \pm 0.4$ & $2.0$  & $102.92$ sec & $35.60$ sec
+        & $4,3,2,2,2,2,2,1,0,0$ \\
+        ADR & Giiker + Vision 
+        & $3.8 \pm 1.0$ & $3.0$ & $66.97$ sec & $30.65$ sec 
+        & $8,8,8,5,4,2,2,1,0,0$ \\
+        
+        \midrule
+        ADR (XL) & Giiker + Vision 
+        & $17.8 \pm 4.2$ & $12.5$  & $\mathbf{6.44}$ sec & $\mathbf{10.98}$ sec
+        & $44,38,24,17,14,11,9,8,7,6$ \\
+        ADR (XXL) & Giiker + Vision 
+        & $\mathbf{26.8 \pm 4.9}$ & $\mathbf{22.0}$ & $6.55$ sec & $11.79$ sec 
+        & $\mathbf{50},\mathbf{50},42,24,22,22,21,19,13,5$ \\
+        
+        \midrule
+        ADR (XXL) & Vision 
+        & $12.8 \pm 3.4$ & $10.5$ & $9.71$ sec & $13.23$ sec 
+        & $31,25,21,18,17,4,3,3,3,3$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\FloatBarrier
+
+\subsection{Vision Model Performance}
+\label{app:full-results-vision}
+
+Our vision model for estimating the full state of a Rubik's cube outputs five labels. The prediction errors are evaluated on both simulated and real data. Orientation error is computed as rotational distance over a quaternion representation. Position error is the euclidean distance in 3D space, in millimeters. Face angle error is measured in degree ($^\circ$). For active axis, we measure the percentage of incorrect predicted label (equivalent to 1.0 - accuracy). Note that the high error on the active axis prediction is mostly due to the fact that the cube is often aligned with very tiny active face angles and hence the active axis is less pronounced.
+\begin{itemize}
+    \item \textbf{Orientation:} Cube orientation in quaternion.
+    \item \textbf{Position:} Cube position in millimetre.
+    \item \textbf{Top angle:} The full angle of the top face in $[-\pi, \pi]$.
+    \item \textbf{Active axis:} Which one out of three axes is active (i.e., has non-aligned faces).
+    \item \textbf{Active angles:} The angles of two faces relevant for the active axis in $[-\pi/4, \pi/4]$.
+\end{itemize}
+
+\begin{table}[h]
+    \caption{Performance of vision models in all our experiments for the Rubik's cube prediction task, including experiment in the ablation study and models trained at different ADR entropy levels.}
+    \label{table:vision-ablations-full}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|r|rrr|rrr}
+        \toprule
+        \multicolumn{2}{c|}{Errors} & Baseline & No DR & No focal loss & Non-discrete angles & ADR (S) & ADR (M) & ADR (L) \\
+        \midrule
+        \multirow{5}{*}{Sim} 
+        & \textbf{Orientation} & $6.52^\circ$ & $3.95^\circ$ & $15.94^\circ$ & $9.02^\circ$ & $5.02^\circ$ & $15.68^\circ$ & $15.76^\circ$ \\
+        &  \textbf{Position} & $2.63$ mm & $2.97$ mm & $5.02$ mm & $3.78$ mm & $3.36$ mm & $3.02$ mm & $3.58$ mm \\
+        & \textbf{Top angle} & $11.95^\circ$ & $8.56^\circ$ & $10.17^\circ$ & $42.46^\circ$ & $9.34^\circ$ & $20.29^\circ$ & $20.78^\circ$ \\
+        & \textbf{Active axis} & $7.24$ \% & $4.3$ \% & $5.6$ \% & $6.3$ \% & $8.10$ \% & $10.97$ \% & $10.67$ \%\\
+        & \textbf{Active angles} & $3.40^\circ$ & $2.95^\circ$ & $2.86^\circ$ & $9.6^\circ$ & $3.63^\circ$ & $4.46^\circ$ & $4.31^\circ$ \\
+        \midrule
+        \multirow{5}{*}{Real} 
+        & \textbf{Orientation} & $7.81^\circ$ & $128.83^\circ$ & $19.10^\circ$ & $10.40^\circ$ & $8.93^\circ$ & $8.44^\circ$ & $\mathbf{7.48}^\circ$ \\
+        &  \textbf{Position} & $6.47$ mm & $69.40$ mm & $9.42$ mm & $7.97$ mm & $7.61$ mm & $7.30$ mm & $\mathbf{6.24}$ mm \\
+        & \textbf{Top angle} & $15.92^\circ$ & $85.33^\circ$ & $17.54^\circ$ & $35.27^\circ$ & $16.57^\circ$ & $15.81^\circ$ & $\mathbf{13.82}^\circ$ \\
+        & \textbf{Active angles} & $8.89^\circ$ & $33.04^\circ$ & $9.27^\circ$ & $17.68^\circ$ & $9.16^\circ$ & $8.97^\circ$ & $\mathbf{8.84}^\circ$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Meta-Learning}
+\label{app:full-results-meta}
+
+The meta-learning results for face rotations are available in \autoref{fig:meta-exp-2}. The results are comparable to the cube flips presented in the main body of the paper. We include them in the appendix for completeness.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.47\textwidth]{figures/meta-rot-reset-time.pdf}
+        \hfill
+        \includegraphics[width=0.47\textwidth]{figures/meta-rot-reset-failure.pdf}
+        \caption{Resetting the hidden state.}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.47\textwidth]{figures/meta-rot-env-dynamics-time.pdf}
+        \hfill
+        \includegraphics[width=0.47\textwidth]{figures/meta-rot-env-dynamics-failure.pdf}
+        \caption{Re-sampling environment dynamics.}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.47\textwidth]{figures/meta-rot-broken-time.pdf}
+        \hfill
+        \includegraphics[width=0.47\textwidth]{figures/meta-rot-broken-failure.pdf}
+        \caption{Breaking a random joint.}
+    \end{subfigure}
+    \caption{We run $10\,000$ simulated trials with only face rotations until $50$ rotations have been achieved. For each of the face rotations (i.e. the $1$\textsuperscript{st}, $2$\textsuperscript{nd}, $\ldots$, $50$\textsuperscript{th}), we measure the average time to completion (in seconds) and average failure probability over those $10$k trials. Error bars indicate the estimated standard error.  ``Baseline'' refers to a run without any perturbations applied. ``Broken joint baseline'' refers to trials where a joint was randomly disabled from the very beginning. We then compare against trials that start without any perturbations but are perturbed at the marked points after the $10$\textsuperscript{th} and $30$\textsuperscript{th} rotation by (a) resetting the policy hidden state, (b) re-sampling environment dynamics, or (c) breaking a random joint.}
+    \label{fig:meta-exp-2}
+\end{figure}
+
+\FloatBarrier

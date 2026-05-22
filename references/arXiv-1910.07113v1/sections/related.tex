@@ -1,0 +1,59 @@
+\subsection{Dexterous Manipulation}
+Dexterous manipulation has been an active area of research for decades~\citep{DBLP:conf/icra/Fearing86, DBLP:journals/ijrr/Rus99,DBLP:journals/trob/Bicchi00, DBLP:conf/icra/OkamuraSC00, DBLP:conf/icar/MaD11}.
+Many different approaches and strategies have been proposed over the years.
+This includes rolling~\citep{DBLP:conf/icra/BicchiS95, DBLP:conf/icra/HanGLQT97, DBLP:conf/icra/HanT98, DBLP:journals/trob/CherifG99, DBLP:conf/icra/DoulgeriD13}, sliding~\citep{DBLP:journals/trob/CherifG99, DBLP:journals/trob/ShiWUL17}, finger gaiting~\citep{DBLP:conf/icra/HanT98}, finger tracking~\citep{DBLP:conf/icra/Rus92}, pushing~\citep{DBLP:journals/corr/DafleR17}, and re-grasping~\citep{DBLP:conf/icra/TournassoudLM87, DBLP:conf/icra/DafleRPTSEMLSF14}.
+For some hand types, strategies like pivoting~\citep{DBLP:conf/iros/AiyamaII93}, tilting~\citep{DBLP:journals/trob/ErdmannM88}, tumbling~\citep{sawasaki1991tumbling}, tapping~\citep{DBLP:journals/ijrr/HuangM00}, two-point manipulation~\citep{DBLP:conf/iros/AbellE95}, and two-palm manipulation~\citep{DBLP:journals/ijrr/Erdmann98} are also options.
+These approaches use planning and therefore require exact models of both the hand and object.
+After computing a trajectory, the plan is typically executed open-loop, thus making these methods prone to failure if the model is not accurate.\footnote{Some methods use iterative re-planning to partially mitigate this issue.}
+
+Other approaches take a closed-loop approach to dexterous manipulation and incorporate sensor feedback during execution, e.g. tactile sensing~\citep{DBLP:conf/icra/TaharaAY10, DBLP:conf/iros/LiBKB14, DBLP:conf/icra/LiYTB14, DBLP:journals/ijma/0001MHRB13}.
+While those approaches allow for the correction of mistakes at runtime, they still require reasonable models of the robot kinematics and dynamics, which can be challenging to obtain for under-actuated hands with many degrees of freedom.
+
+Deep reinforcement learning has also been used successfully to learn complex manipulation skills on physical robots.
+Guided policy search~\citep{DBLP:conf/icml/LevineK13, DBLP:conf/icra/LevineWA15} learns simple local policies directly on the robot and distills them into a global policy represented by a neural network. Soft Actor-Critic\cite{DBLP:journals/corr/abs-1812-05905} has been recently proposed as a state-of-the-art model-free algorithm optimizing concurrently both expected reward and action entropy, that is capable of learning complex behaviors directly in the real world.
+
+Alternative approaches include using many physical robots simultaneously, in order to be able to collect sufficient experience~\citep{DBLP:conf/icra/GuHLL17, DBLP:journals/ijrr/LevinePKIQ18, 2018arXiv180610293K} or leveraging a model-based learning algorithms, which generally possess much more favorable sample complexity characteristics~\cite{DBLP:journals/corr/abs-1808-09105}. Some researchers have successfully  utilized expert human demonstrations in guiding the training process of the agents~\citep{DBLP:journals/corr/abs-1906-11695,DBLP:journals/corr/abs-1903-01973,DBLP:journals/corr/abs-1810-01845,DBLP:journals/corr/abs-1810-06045}.
+
+\subsection{Dexterous In-Hand Manipulation}
+Since a very large body of past work on dexterous manipulation exists, we limit the more detailed discussion to setups that are most closely related to our work on dexterous in-hand manipulation.
+
+Mordatch et al.~\citep{DBLP:conf/sca/MordatchPT12} and Bai et al.~\citep{DBLP:conf/icra/BaiL14} propose methods to generate trajectories for complex and dynamic in-hand manipulation, but their results are limited to simulation.
+There has also been significant progress in learning complex in-hand dexterous manipulation~\citep{plappert2018multi, DBLP:journals/corr/abs-1804-08617}, tool use~\citep{DBLP:journals/corr/abs-1709-10087} and even solving a smaller model of a Rubik's Cube \cite{2019arXiv190711388L} using deep reinforcement learning, but those approaches were likewise only evaluated in simulation.
+
+In contrast, multiple authors learn policies for dexterous in-hand manipulation directly on the robot.
+Hoof et al.~\citep{DBLP:conf/humanoids/HoofHN015} learn in-hand manipulation for a simple 3-fingered gripper whereas Kumar et al.~\citep{DBLP:conf/icra/KumarTL16, DBLP:journals/corr/KumarGTL16} and Falco et al.~\citep{falco2018policy} learn such policies for more complex humanoid hands. In \cite{PDDM}, the authors learn a forward dynamics model and use model predictive control to manipulate two Baoding balls with a Shadow hand.
+While learning directly on the robot means that modeling the system is not an issue, it also means that learning has to be performed with limited data.
+This is only possible when learning simple (e.g. linear or local) policies that, in turn, do not exhibit sophisticated behaviors.
+
+\subsection{Sim to Real Transfer}
+
+\emph{Domain adaption} methods~\citep{DBLP:journals/corr/TzengDHFPLSD15, DBLP:journals/corr/GuptaDLAL17}, progressive nets~\citep{DBLP:conf/corl/RusuVRHPH17}, and learning inverse dynamics models~\citep{DBLP:journals/corr/ChristianoSMSBT16} were all proposed to help with sim to real transfer.
+All of these methods assume access to real data.
+An alternative approach is to make the policy itself more adaptive during training in simulation using \emph{domain randomization}.
+Domain randomization was used to transfer object pose estimators~\citep{tobin2017domain} and vision policies for fly drones~\citep{DBLP:conf/rss/SadeghiL17}.
+This idea has also been extended to dynamics randomization~\citep{peng2017sim, DBLP:journals/corr/AntonovaCSK17, DBLP:journals/corr/abs-1804-10332, DBLP:conf/rss/YuTLT17, openai2018learning} to learn a robust policy that transfers to similar environments but with different dynamics.
+Domain randomization was also used to plan robust grasps~\citep{DBLP:conf/rss/MahlerLNLDLOG17, DBLP:journals/corr/abs-1709-06670, DBLP:journals/corr/abs-1710-06425} and to transfer learned locomotion~\citep{DBLP:journals/corr/abs-1804-10332} and grasping~\citep{DBLP:journals/corr/abs-1802-09564} policies for relatively simple robots.
+Pinto et al.~\citep{pinto2017robust} propose to use \emph{adversarial training} to obtain more robust policies and show that it also helps with transfer to physical robots~\citep{pinto2017supervision}. Hwangbo et al.~\cite{hwangbo2019learning} used real data to learn an actuation model and combined it with domain randomization to successfully transfer locomotion policies.
+
+A number of recent works have focused on adapting the environment distribution of domain randomization to improve sim-to-real transfer performance. For policy training, one approach viewed the problem as a bi-level optimization~\citep{Vuong2019, Ruiz2018}. Chebotar et al.~\citep{Chebotar2018} used real-world trajectories and a discrepancy metric to guide the distribution search. In~\citep{Mehta2019}, a discriminator was used to guide the distribution in simulation. For vision models, domain randomization has been modified to improve image content diversity~\citep{Kar2019, Prakash2018, Cubuk2018} and to adapt the distribution by using an adversarial network~\citep{Zakharov2019}.
+
+\subsection{Meta-Learning via Reinforcement Learning}
+
+Despite being a very young field, meta-learning in the context of deep reinforcement learning already has a large body of work published. Algorithms such as MAML~\cite{DBLP:journals/corr/FinnAL17} and SNAIL~\cite{DBLP:journals/corr/MishraRCA17} have been developed to improve the sample efficiency of reinforcement learning agents. A common theme in research is to try to exploit a shared structure in a distribution of environments, to quickly identify and adapt to previously unseen cases~\cite{DBLP:journals/corr/abs-1907-04964, Smundsson2018MetaRL,DBLP:journals/corr/abs-1905-06424,Lan2019MetaRL}
+There are works that directly treat meta-learning as identification of a dynamics model of the environment~\cite{DBLP:journals/corr/abs-1803-11347} while others tackle the problem of task discovery for training~\cite{DBLP:journals/corr/abs-1806-04640}.
+Meta-learning has also been studied in a multi-agent setting~\cite{DBLP:journals/corr/abs-1903-02710}.
+
+The approach we've taken is directly based on $RL^2$~\cite{DBLP:journals/corr/DuanSCBSA16,DBLP:journals/corr/WangKTSLMBKB16} where a general-purpose optimization algorithm trains a model augmented with memory to perform independent learning algorithm in the inner loop. The novelty in our results comes from the combination of automated curriculum generation (ADR), a challenging underlying problem (solving Rubik's Cube) and a completely out-of-distribution test environment (sim2real). 
+
+This approach coincides with what Jeff Clune described as AI-GA~\cite{clune2019ai}, the AI-generating algorithms, whose one of three pillars is generating effective and diverse learning environments. In similar spirit to our ADR, related works include  PowerPlay~\cite{DBLP:journals/corr/abs-1112-5309,DBLP:journals/corr/abs-1210-8385}, POET~\cite{wang2019poet} and different varieties of self-play~\cite{alphago,DBLP:journals/corr/abs-1712-01815,five}.
+
+
+\subsection{Robotic Systems Solving Rubik's Cube}
+
+While many robots capable of solving a Rubik's Cube exist today~\cite{rubikguinnes,mindcuber,rcr3d,higo2018rubik}, all of them which we are aware of have been built exclusively for this purpose and cannot generalize to other manipulation tasks.
+
+
+
+
+
+

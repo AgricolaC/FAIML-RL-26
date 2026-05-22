@@ -1,0 +1,1597 @@
+\begin{thebibliography}{189}
+\providecommand{\natexlab}[1]{#1}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\selectlanguage}[1]{\relax}
+\providecommand{\bibAnnoteFile}[1]{%
+  \IfFileExists{#1}{\begin{quotation}\noindent\textsc{Key:} #1\\
+  \textsc{Annotation:}\ \input{#1}\end{quotation}}{}}
+\providecommand{\bibAnnote}[2]{%
+  \begin{quotation}\noindent\textsc{Key:} #1\\
+  \textsc{Annotation:}\ #2\end{quotation}}
+
+\bibitem[{Abdulsamad et~al.(2021)Abdulsamad, Dorau, Belousov, Zhu, and
+  Peters}]{Abdulsamad_Dorau_Peters_21}
+Abdulsamad, H., Dorau, T., Belousov, B., Zhu, J., and Peters, J. (2021).
+\newblock Distributionally robust trajectory optimization under uncertain
+  dynamics via relative-entropy trust regions.
+\newblock \emph{arXiv} 2103.15388
+\bibAnnoteFile{Abdulsamad_Dorau_Peters_21}
+
+\bibitem[{Alghonaim and Johns(2020)}]{Alghonaim_Johns_20}
+Alghonaim, R. and Johns, E. (2020).
+\newblock Benchmarking domain randomisation for visual sim-to-real transfer.
+\newblock \emph{arXiv} 2011.07112
+\bibAnnoteFile{Alghonaim_Johns_20}
+
+\bibitem[{Allevato et~al.(2019)Allevato, Short, Pryor, and
+  Thomaz}]{Allevato_Thomaz_19}
+Allevato, A., Short, E.~S., Pryor, M., and Thomaz, A. (2019).
+\newblock Tunenet: One-shot residual tuning for system identification and
+  sim-to-real robot task transfer.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Osaka, Japan, October
+  30 - November 1} ({PMLR}), vol. 100 of \emph{Proceedings of Machine Learning
+  Research}, 445--455
+\bibAnnoteFile{Allevato_Thomaz_19}
+
+\bibitem[{Amari(1977)}]{Amari_77}
+Amari, S. (1977).
+\newblock Dynamics of pattern formation in lateral-inhibition type neural
+  fields.
+\newblock \emph{Biological Cybernetics} 27, 77--87
+\bibAnnoteFile{Amari_77}
+
+\bibitem[{Andrychowicz et~al.(2017)Andrychowicz, Crow, Ray, Schneider, Fong,
+  Welinder et~al.}]{Andrychowicz_Zaremba_17}
+Andrychowicz, M., Crow, D., Ray, A., Schneider, J., Fong, R., Welinder, P.,
+  et~al. (2017).
+\newblock Hindsight experience replay.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Long Beach, CA, {USA}, December 4-9}. 5048--5058
+\bibAnnoteFile{Andrychowicz_Zaremba_17}
+
+\bibitem[{Antonova et~al.(2019)Antonova, Rai, Li, and
+  Kragic}]{Antonova_Rai_Kragic_19}
+Antonova, R., Rai, A., Li, T., and Kragic, D. (2019).
+\newblock Bayesian optimization in variational latent spaces with dynamic
+  compression.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Osaka, Japan, October
+  30 - November 1} ({PMLR}), vol. 100 of \emph{Proceedings of Machine Learning
+  Research}, 456--465
+\bibAnnoteFile{Antonova_Rai_Kragic_19}
+
+\bibitem[{Asada et~al.(1996)Asada, Noda, Tawaratsumida, and
+  Hosoda}]{Asada_Hosoda_96}
+Asada, M., Noda, S., Tawaratsumida, S., and Hosoda, K. (1996).
+\newblock Purposive behavior acquisition for a real robot by vision-based
+  reinforcement learning.
+\newblock \emph{Mach. Learn.} 23, 279--303.
+\newblock \doi{10.1023/A:1018237008823}
+\bibAnnoteFile{Asada_Hosoda_96}
+
+\bibitem[{{\AA}str{\"o}m and Wittenmark(2008)}]{Astrom_Wittenmark_08}
+{\AA}str{\"o}m, K.~J. and Wittenmark, B. (2008).
+\newblock \emph{Adaptive Control} (Dover Publications), 2 edn.
+\bibAnnoteFile{Astrom_Wittenmark_08}
+
+\bibitem[{Atkeson et~al.(1986)Atkeson, H, and
+  Hollerbach}]{Atkeson_Hollerbach_86}
+Atkeson, C.~G., H, C.~A., and Hollerbach, J.~M. (1986).
+\newblock Estimation of inertial parameters of manipulator loads and links.
+\newblock \emph{The International Journal of Robotics Research} 5, 101--119
+\bibAnnoteFile{Atkeson_Hollerbach_86}
+
+\bibitem[{Baker et~al.(2020)Baker, Kanitscheider, Markov, Wu, Powell, McGrew
+  et~al.}]{Baker_Mordatch_20}
+Baker, B., Kanitscheider, I., Markov, T.~M., Wu, Y., Powell, G., McGrew, B.,
+  et~al. (2020).
+\newblock Emergent tool use from multi-agent autocurricula.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, Addis Ababa, Ethiopia, April 26-30} (OpenReview.net)
+\bibAnnoteFile{Baker_Mordatch_20}
+
+\bibitem[{Barcelos et~al.(2021)Barcelos, Lambert, Oliveira, Borges, Boots, and
+  Ramos}]{Barcelos_Ramos_21}
+Barcelos, L., Lambert, A., Oliveira, R., Borges, P., Boots, B., and Ramos, F.
+  (2021).
+\newblock Dual online stein variational inference for control and dynamics.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Virtual Event, July
+  12-16}.
+\newblock \doi{10.15607/RSS.2021.XVII.068}
+\bibAnnoteFile{Barcelos_Ramos_21}
+
+\bibitem[{Barcelos et~al.(2020)Barcelos, Oliveira, Possas, Ott, and
+  Ramos}]{Barcelos_Ramos_20}
+Barcelos, L., Oliveira, R., Possas, R., Ott, L., and Ramos, F. (2020).
+\newblock {DISCO:} double likelihood-free inference stochastic control.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Paris, France, May 31 - August 31} ({IEEE}), 10969--10975.
+\newblock \doi{10.1109/ICRA40945.2020.9196931}
+\bibAnnoteFile{Barcelos_Ramos_20}
+
+\bibitem[{Battaglia et~al.(2013)Battaglia, Hamrick, and
+  Tenenbaum}]{Battaglia_Tenenbaum_13}
+Battaglia, P.~W., Hamrick, J.~B., and Tenenbaum, J.~B. (2013).
+\newblock Simulation as an engine of physical scene understanding.
+\newblock \emph{Proceedings of the National Academy of Sciences} 110,
+  18327--18332
+\bibAnnoteFile{Battaglia_Tenenbaum_13}
+
+\bibitem[{Battaglia et~al.(2016)Battaglia, Pascanu, Lai, Rezende, and
+  Kavukcuoglu}]{Battaglia_Kavukcuoglu_16}
+Battaglia, P.~W., Pascanu, R., Lai, M., Rezende, D.~J., and Kavukcuoglu, K.
+  (2016).
+\newblock Interaction networks for learning about objects, relations and
+  physics.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Barcelona, Spain, December 5-10}. 4502--4510
+\bibAnnoteFile{Battaglia_Kavukcuoglu_16}
+
+\bibitem[{Bayraksan and Morton(2006)}]{Bayraksan_Morton_2006}
+Bayraksan, G. and Morton, D.~P. (2006).
+\newblock Assessing solution quality in stochastic programs.
+\newblock \emph{Math. Program.} 108, 495--514.
+\newblock \doi{10.1007/s10107-006-0720-x}
+\bibAnnoteFile{Bayraksan_Morton_2006}
+
+\bibitem[{Beaumont et~al.(2009)Beaumont, Cornuet, Marin, and
+  Robert}]{Beaumont_Robert_09}
+Beaumont, M.~A., Cornuet, J.-M., Marin, J.-M., and Robert, C.~P. (2009).
+\newblock {Adaptive approximate Bayesian computation}.
+\newblock \emph{Biometrika} 96, 983--990.
+\newblock \doi{10.1093/biomet/asp052}
+\bibAnnoteFile{Beaumont_Robert_09}
+
+\bibitem[{Bengio et~al.(2009)Bengio, Louradour, Collobert, and
+  Weston}]{Bengio_Weston_09}
+Bengio, Y., Louradour, J., Collobert, R., and Weston, J. (2009).
+\newblock Curriculum learning.
+\newblock In \emph{International Conference on Machine Learning {(ICML)},
+  Montreal, Quebec, Canada, June 14-18} ({ACM}), vol. 382 of \emph{{ACM}
+  International Conference Proceeding Series}, 41--48.
+\newblock \doi{10.1145/1553374.1553380}
+\bibAnnoteFile{Bengio_Weston_09}
+
+\bibitem[{Bongard et~al.(2006)Bongard, Zykov, and Lipson}]{Bongard_etal_2006}
+Bongard, J., Zykov, V., and Lipson, H. (2006).
+\newblock Resilient machines through continuous self-modeling.
+\newblock \emph{Science} 314, 1118--1121
+\bibAnnoteFile{Bongard_etal_2006}
+
+\bibitem[{Bousmalis et~al.(2018)Bousmalis, Irpan, Wohlhart, Bai, Kelcey,
+  Kalakrishnan et~al.}]{Bousmalis_Irpan_Wohlhart_Vanhoucke_18}
+Bousmalis, K., Irpan, A., Wohlhart, P., Bai, Y., Kelcey, M., Kalakrishnan, M.,
+  et~al. (2018).
+\newblock Using simulation and domain adaptation to improve efficiency of deep
+  robotic grasping.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Brisbane, Australia, May 21-25}. 4243--4250.
+\newblock \doi{10.1109/ICRA.2018.8460875}
+\bibAnnoteFile{Bousmalis_Irpan_Wohlhart_Vanhoucke_18}
+
+\bibitem[{Brockman et~al.(2016)Brockman, Cheung, Pettersson, Schneider,
+  Schulman, Tang et~al.}]{Brockman_Zaremba_16}
+Brockman, G., Cheung, V., Pettersson, L., Schneider, J., Schulman, J., Tang,
+  J., et~al. (2016).
+\newblock Openai gym.
+\newblock \emph{arXiv} 1606.01540
+\bibAnnoteFile{Brockman_Zaremba_16}
+
+\bibitem[{Brogliato et~al.(2007)Brogliato, Lozano, Maschke, and
+  Egeland}]{Brogliato_07}
+Brogliato, B., Lozano, R., Maschke, B., and Egeland, O. (2007).
+\newblock Dissipative systems analysis and control.
+\newblock \emph{Theory and Applications} 2.
+\newblock \doi{10.1007/978-1-84628-517-2}
+\bibAnnoteFile{Brogliato_07}
+
+\bibitem[{Brooks(1992)}]{Brooks_92}
+Brooks, R.~A. (1992).
+\newblock Artificial life and real robots.
+\newblock In \emph{European Conference on Artificial Life {(ECAL)}, Paris,
+  France, December 11-13}. 3--10
+\bibAnnoteFile{Brooks_92}
+
+\bibitem[{Brosseit et~al.(2021)Brosseit, Hahner, Muratore, Gienger, and
+  Peters}]{Brosseit_Hahner_Muratore_Peters_21}
+Brosseit, J., Hahner, B., Muratore, F., Gienger, M., and Peters, J. (2021).
+\newblock Destilled domain randomization.
+\newblock vol. 2112.03149
+\bibAnnoteFile{Brosseit_Hahner_Muratore_Peters_21}
+
+\bibitem[{Calandra et~al.(2015)Calandra, Ivaldi, Deisenroth, Rueckert, and
+  Peters}]{Calandra_Peters_15}
+Calandra, R., Ivaldi, S., Deisenroth, M.~P., Rueckert, E., and Peters, J.
+  (2015).
+\newblock Learning inverse dynamics models with contacts.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Seattle, WA, USA, 26-30 May} ({IEEE}), 3186--3191.
+\newblock \doi{10.1109/ICRA.2015.7139638}
+\bibAnnoteFile{Calandra_Peters_15}
+
+\bibitem[{Carlini and Wagner(2017)}]{Carlini_Wagner_17}
+Carlini, N. and Wagner, D.~A. (2017).
+\newblock Adversarial examples are not easily detected: Bypassing ten detection
+  methods.
+\newblock In \emph{Workshop on Artificial Intelligence and Security {(AISec)},
+  Dallas, TX, USA, November 3} ({ACM}), 3--14.
+\newblock \doi{10.1145/3128572.3140444}
+\bibAnnoteFile{Carlini_Wagner_17}
+
+\bibitem[{Chatzilygeroudis and Mouret(2018)}]{Chatzilygeroudis_Mouret_18}
+Chatzilygeroudis, K.~I. and Mouret, J. (2018).
+\newblock Using parameterized black-box priors to scale up model-based policy
+  search for robotics.
+\newblock In \emph{International Conference on Robotics and Automation
+  ({ICRA}), Brisbane, Australia, May 21-25} ({IEEE}), 1--9.
+\newblock \doi{10.1109/ICRA.2018.8461083}
+\bibAnnoteFile{Chatzilygeroudis_Mouret_18}
+
+\bibitem[{Chatzilygeroudis et~al.(2017)Chatzilygeroudis, Rama, Kaushik, Goepp,
+  Vassiliades, and Mouret}]{Chatzilygeroudis_Mouret_17}
+Chatzilygeroudis, K.~I., Rama, R., Kaushik, R., Goepp, D., Vassiliades, V., and
+  Mouret, J. (2017).
+\newblock Black-box data-efficient policy search for robotics.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Vancouver, BC, Canada, September 24-28} ({IEEE}), 51--58.
+\newblock \doi{10.1109/IROS.2017.8202137}
+\bibAnnoteFile{Chatzilygeroudis_Mouret_17}
+
+\bibitem[{Chatzilygeroudis et~al.(2020)Chatzilygeroudis, Vassiliades, Stulp,
+  Calinon, and Mouret}]{Chatzilygeroudis_Mouret_20}
+Chatzilygeroudis, K.~I., Vassiliades, V., Stulp, F., Calinon, S., and Mouret,
+  J. (2020).
+\newblock A survey on policy search algorithms for learning robot controllers
+  in a handful of trials.
+\newblock \emph{{IEEE} Trans. Robotics} 36, 328--347.
+\newblock \doi{10.1109/TRO.2019.2958211}
+\bibAnnoteFile{Chatzilygeroudis_Mouret_20}
+
+\bibitem[{Chebotar et~al.(2019)Chebotar, Handa, Makoviychuk, Macklin, Issac,
+  Ratliff et~al.}]{Chebotar_Fox_19}
+Chebotar, Y., Handa, A., Makoviychuk, V., Macklin, M., Issac, J., Ratliff,
+  N.~D., et~al. (2019).
+\newblock Closing the sim-to-real loop: Adapting simulation randomization with
+  real world experience.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Montreal, QC, Canada, May 20-24}. 8973--8979.
+\newblock \doi{10.1109/ICRA.2019.8793789}
+\bibAnnoteFile{Chebotar_Fox_19}
+
+\bibitem[{Chen et~al.(2017)Chen, Choi, Yu, Han, and
+  Chandraker}]{Chen_Chandraker_17}
+Chen, G., Choi, W., Yu, X., Han, T.~X., and Chandraker, M. (2017).
+\newblock Learning efficient object detection models with knowledge
+  distillation.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Long Beach, CA, {USA}, December 4-9}. 742--751
+\bibAnnoteFile{Chen_Chandraker_17}
+
+\bibitem[{Chow and Robbins(1963)}]{Chow_Robbins_63}
+Chow, Y.~S. and Robbins, H. (1963).
+\newblock On optimal stopping rules.
+\newblock \emph{Zeitschrift f{\"u}r Wahrscheinlichkeitstheorie und verwandte
+  Gebiete} 2, 33--49
+\bibAnnoteFile{Chow_Robbins_63}
+
+\bibitem[{Christiano et~al.(2016)Christiano, Shah, Mordatch, Schneider,
+  Blackwell, Tobin et~al.}]{Christiano_Zaremba_16}
+Christiano, P.~F., Shah, Z., Mordatch, I., Schneider, J., Blackwell, T., Tobin,
+  J., et~al. (2016).
+\newblock Transfer from simulation to real world through learning deep inverse
+  dynamics model.
+\newblock \emph{arXiv} 1610.03518
+\bibAnnoteFile{Christiano_Zaremba_16}
+
+\bibitem[{Chung and Pollard(2016)}]{Chung_Pollard_16}
+Chung, S. and Pollard, N.~S. (2016).
+\newblock Predictable behavior during contact simulation: a comparison of
+  selected physics engines.
+\newblock \emph{Comput. Animat. Virtual Worlds} 27, 262--270.
+\newblock \doi{10.1002/cav.1712}
+\bibAnnoteFile{Chung_Pollard_16}
+
+\bibitem[{Ciresan et~al.(2012)Ciresan, Meier, and
+  Schmidhuber}]{Ciresan_Schmidhuber_12}
+Ciresan, D.~C., Meier, U., and Schmidhuber, J. (2012).
+\newblock Multi-column deep neural networks for image classification.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  {(CVPR)}, RI, USA, June 16-21} ({IEEE} Computer Society), 3642--3649.
+\newblock \doi{10.1109/CVPR.2012.6248110}
+\bibAnnoteFile{Ciresan_Schmidhuber_12}
+
+\bibitem[{Collins et~al.(2019)Collins, Howard, and
+  Leitner}]{Collins_Leitner_19}
+Collins, J., Howard, D., and Leitner, J. (2019).
+\newblock Quantifying the reality gap in robotic manipulation tasks.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Montreal, QC, Canada, May 20-24} ({IEEE}), 6706--6712.
+\newblock \doi{10.1109/ICRA.2019.8793591}
+\bibAnnoteFile{Collins_Leitner_19}
+
+\bibitem[{Coumans(2020)}]{Coumans_TinyDiffSim}
+[Dataset] Coumans, E. (2020).
+\newblock Tiny differentiable simulator.
+\newblock
+  \url{https://github.com/google-research/tiny-differentiable-simulator}
+\bibAnnoteFile{Coumans_TinyDiffSim}
+
+\bibitem[{Craik(1943)}]{Craik_43}
+[Dataset] Craik, K. J.~W. (1943).
+\newblock The nature of explanation
+\bibAnnoteFile{Craik_43}
+
+\bibitem[{Cranmer et~al.(2020)Cranmer, Brehmer, and Louppe}]{Cranmer_Louppe_19}
+Cranmer, K., Brehmer, J., and Louppe, G. (2020).
+\newblock The frontier of simulation-based inference.
+\newblock \emph{Proceedings of the National Academy of Sciences} 117,
+  30055--30062
+\bibAnnoteFile{Cranmer_Louppe_19}
+
+\bibitem[{Cui et~al.(2017)Cui, Kingsbury, Ramabhadran, Saon, Sercu, Audhkhasi
+  et~al.}]{Cui_Rosenberg_17}
+Cui, J., Kingsbury, B., Ramabhadran, B., Saon, G., Sercu, T., Audhkhasi, K.,
+  et~al. (2017).
+\newblock Knowledge distillation across ensembles of multilingual models for
+  low-resource languages.
+\newblock In \emph{{ICASSP}, New Orleans, LA, USA, March 5-9} ({IEEE}),
+  4825--4829.
+\newblock \doi{10.1109/ICASSP.2017.7953073}
+\bibAnnoteFile{Cui_Rosenberg_17}
+
+\bibitem[{Cully et~al.(2015)Cully, Clune, Tarapore, and
+  Mouret}]{Cully_etal_2015}
+Cully, A., Clune, J., Tarapore, D., and Mouret, J.-B. (2015).
+\newblock Robots that can adapt like animals.
+\newblock \emph{Nature} 521, 503--507.
+\newblock \doi{10.1038/nature14422}
+\bibAnnoteFile{Cully_etal_2015}
+
+\bibitem[{Cutler and How(2015)}]{Cutler_How_15}
+Cutler, M. and How, J.~P. (2015).
+\newblock Efficient reinforcement learning for robots using informative
+  simulated priors.
+\newblock In \emph{International Conference on Robotics and Automation
+  ({ICRA}), Seattle, WA, USA, 26-30 May} ({IEEE}), 2605--2612.
+\newblock \doi{10.1109/ICRA.2015.7139550}
+\bibAnnoteFile{Cutler_How_15}
+
+\bibitem[{Cutler and How(2016)}]{Cutler_How_16}
+Cutler, M. and How, J.~P. (2016).
+\newblock Autonomous drifting using simulation-aided reinforcement learning.
+\newblock In \emph{International Conference on Robotics and Automation
+  ({ICRA}), Stockholm, Sweden, May 16-21} ({IEEE}), 5442--5448.
+\newblock \doi{10.1109/ICRA.2016.7487756}
+\bibAnnoteFile{Cutler_How_16}
+
+\bibitem[{Czarnecki et~al.(2019)Czarnecki, Pascanu, Osindero, Jayakumar,
+  Swirszcz, and Jaderberg}]{Czarnecki_Jaderberg_19}
+Czarnecki, W.~M., Pascanu, R., Osindero, S., Jayakumar, S.~M., Swirszcz, G.,
+  and Jaderberg, M. (2019).
+\newblock Distilling policy distillation.
+\newblock In \emph{International Conference on Artificial Intelligence and
+  Statistics {(AISTATS)}, Naha, Okinawa, Japan, 16-18 April} ({PMLR}), vol.~89
+  of \emph{Proceedings of Machine Learning Research}, 1331--1340
+\bibAnnoteFile{Czarnecki_Jaderberg_19}
+
+\bibitem[{Dai et~al.(2021)Dai, Landry, Yang, Pavone, and
+  Tedrake}]{Dai_Tedrake_21}
+Dai, H., Landry, B., Yang, L., Pavone, M., and Tedrake, R. (2021).
+\newblock Lyapunov-stable neural-network control.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Virtual Event, July
+  12-16}.
+\newblock \doi{10.15607/RSS.2021.XVII.063}
+\bibAnnoteFile{Dai_Tedrake_21}
+
+\bibitem[{Dai et~al.(2019)Dai, Arulkumaran, Tukra, Behbahani, and
+  Bharath}]{Dai_Arulkumaran_Bharath_19}
+Dai, T., Arulkumaran, K., Tukra, S., Behbahani, F., and Bharath, A.~A. (2019).
+\newblock Analysing deep reinforcement learning agents trained with domain
+  randomisation.
+\newblock \emph{arXiv} 1912.08324
+\bibAnnoteFile{Dai_Arulkumaran_Bharath_19}
+
+\bibitem[{Degrave et~al.(2019)Degrave, Hermans, Dambre, and
+  Wyffels}]{Degrave_Wyffels_19}
+Degrave, J., Hermans, M., Dambre, J., and Wyffels, F. (2019).
+\newblock A differentiable physics engine for deep learning in robotics.
+\newblock \emph{Frontiers Neurorobotics} 13, 6.
+\newblock \doi{10.3389/fnbot.2019.00006}
+\bibAnnoteFile{Degrave_Wyffels_19}
+
+\bibitem[{Deisenroth et~al.(2013)Deisenroth, Neumann, and
+  Peters}]{Deisenroth_Peters_13}
+Deisenroth, M.~P., Neumann, G., and Peters, J. (2013).
+\newblock A survey on policy search for robotics.
+\newblock \emph{Foundations and Trends in Robotics} 2, 1--142.
+\newblock \doi{10.1561/2300000021}
+\bibAnnoteFile{Deisenroth_Peters_13}
+
+\bibitem[{Deisenroth and Rasmussen(2011)}]{Deisenroth_Rasmussen_11}
+Deisenroth, M.~P. and Rasmussen, C.~E. (2011).
+\newblock {PILCO:} a model-based and data-efficient approach to policy search.
+\newblock In \emph{International Conference on Machine Learning {(ICML)},
+  Bellevue, Washington, USA, June 28 - July 2}. 465--472
+\bibAnnoteFile{Deisenroth_Rasmussen_11}
+
+\bibitem[{Delage and Ye(2010)}]{Delage_Ye_10}
+Delage, E. and Ye, Y. (2010).
+\newblock Distributionally robust optimization under moment uncertainty with
+  application to data-driven problems.
+\newblock \emph{Operations Research} 58, 595--612.
+\newblock \doi{10.1287/opre.1090.0741}
+\bibAnnoteFile{Delage_Ye_10}
+
+\bibitem[{Dennett(1975)}]{Dennett_75}
+Dennett, D.~C. (1975).
+\newblock Why the law of effect will not go away.
+\newblock \emph{Journal for the Theory of Social Behaviour}
+\bibAnnoteFile{Dennett_75}
+
+\bibitem[{Du et~al.(2021)Du, Watkins, Darrell, Abbeel, and
+  Pathak}]{Du_Watkins_Pathak_21}
+Du, Y., Watkins, O., Darrell, T., Abbeel, P., and Pathak, D. (2021).
+\newblock Auto-tuned sim-to-real transfer.
+\newblock \emph{arXiv} 2104.07662
+\bibAnnoteFile{Du_Watkins_Pathak_21}
+
+\bibitem[{Durkan et~al.(2020)Durkan, Murray, and
+  Papamakarios}]{Durkan_Papamakarios_20}
+Durkan, C., Murray, I., and Papamakarios, G. (2020).
+\newblock On contrastive learning for likelihood-free inference.
+\newblock In \emph{International Conference on Machine Learning {(ICML)},
+  Virtual Event, July 13-18} ({PMLR}), vol. 119 of \emph{Proceedings of Machine
+  Learning Research}, 2771--2781
+\bibAnnoteFile{Durkan_Papamakarios_20}
+
+\bibitem[{Erez and Smart(2008)}]{Erez_Smart_08}
+Erez, T. and Smart, W.~D. (2008).
+\newblock What does shaping mean for computational reinforcement learning?
+\newblock In \emph{International Conference on Development and Learning
+  {(ICDL)}, Monterey, CA, USA} (IEEE), 215--219
+\bibAnnoteFile{Erez_Smart_08}
+
+\bibitem[{Erez et~al.(2015)Erez, Tassa, and Todorov}]{Erez_Todorov_15}
+Erez, T., Tassa, Y., and Todorov, E. (2015).
+\newblock Simulation tools for model-based robotics: Comparison of bullet,
+  havok, mujoco, {ODE} and physx.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Seattle, WA, USA, May 26-30}. 4397--4404.
+\newblock \doi{10.1109/ICRA.2015.7139807}
+\bibAnnoteFile{Erez_Todorov_15}
+
+\bibitem[{Fawzi et~al.(2015)Fawzi, Fawzi, and Frossard}]{Fawzi_Frossard_15}
+Fawzi, A., Fawzi, O., and Frossard, P. (2015).
+\newblock Fundamental limits on adversarial robustness.
+\newblock In \emph{International Conference on Machine Learning {(ICML)},
+  Workshop on Deep Learning}
+\bibAnnoteFile{Fawzi_Frossard_15}
+
+\bibitem[{Fearnhead and Prangle(2012)}]{Fearnhead_Prangle_12}
+Fearnhead, P. and Prangle, D. (2012).
+\newblock Constructing summary statistics for approximate bayesian computation:
+  Semi-automatic approximate bayesian computation.
+\newblock \emph{Journal of the Royal Statistical Society} 74, 419--474
+\bibAnnoteFile{Fearnhead_Prangle_12}
+
+\bibitem[{Feldbaum(1960)}]{Feldbaum_60}
+Feldbaum, A.~A. (1960).
+\newblock Dual control theory. i.
+\newblock \emph{Avtomatika i Telemekhanika} 21, 1240--1249
+\bibAnnoteFile{Feldbaum_60}
+
+\bibitem[{Finn et~al.(2017)Finn, Abbeel, and Levine}]{Finn_Levine_17}
+Finn, C., Abbeel, P., and Levine, S. (2017).
+\newblock Model-agnostic meta-learning for fast adaptation of deep networks.
+\newblock In \emph{International Conference on Machine Learning {(ICML)},
+  Sydney, NSW, Australia, 6-11 August}. 1126--1135
+\bibAnnoteFile{Finn_Levine_17}
+
+\bibitem[{Forrester et~al.(2007)Forrester, S{\'o}bester, and
+  Keane}]{Forrester_Keane_07}
+Forrester, A.~I., S{\'o}bester, A., and Keane, A.~J. (2007).
+\newblock Multi-fidelity optimization via surrogate modelling.
+\newblock \emph{Proceedings of the Royal Society} 463, 3251--3269
+\bibAnnoteFile{Forrester_Keane_07}
+
+\bibitem[{Goodfellow et~al.(2015)Goodfellow, Shlens, and
+  Szegedy}]{Goodfellow_Szegedy_14}
+Goodfellow, I.~J., Shlens, J., and Szegedy, C. (2015).
+\newblock Explaining and harnessing adversarial examples.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, San Diego, CA, USA, May 7-9, Conference Track}
+\bibAnnoteFile{Goodfellow_Szegedy_14}
+
+\bibitem[{Grant et~al.(2018)Grant, Finn, Levine, Darrell, and
+  Griffiths}]{Grant_Griffiths_18}
+Grant, E., Finn, C., Levine, S., Darrell, T., and Griffiths, T.~L. (2018).
+\newblock Recasting gradient-based meta-learning as hierarchical bayes.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, Vancouver, BC, Canada, April 30 - May 3, 2018, Conference Track}
+  (OpenReview.net)
+\bibAnnoteFile{Grant_Griffiths_18}
+
+\bibitem[{Greenberg et~al.(2019)Greenberg, Nonnenmacher, and
+  Macke}]{Greenberg_Macke_19}
+Greenberg, D.~S., Nonnenmacher, M., and Macke, J.~H. (2019).
+\newblock Automatic posterior transformation for likelihood-free inference.
+\newblock In \emph{International Conference on Machine Learning {(ICML)}, Long
+  Beach, California, {USA}, 9-15 June} ({PMLR}), vol.~97 of \emph{Proceedings
+  of Machine Learning Research}, 2404--2414
+\bibAnnoteFile{Greenberg_Macke_19}
+
+\bibitem[{Greydanus et~al.(2019)Greydanus, Dzamba, and
+  Yosinski}]{Greydanus_Yosinski_19}
+Greydanus, S., Dzamba, M., and Yosinski, J. (2019).
+\newblock Hamiltonian neural networks.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NeurIPS)}, Vancouver, BC, Canada, December 8-14}. 15353--15363
+\bibAnnoteFile{Greydanus_Yosinski_19}
+
+\bibitem[{Haefner et~al.(2018)Haefner, Qu{\'{e}}au, M{\"{o}}llenhoff, and
+  Cremers}]{Haefner_etal_2018}
+Haefner, B., Qu{\'{e}}au, Y., M{\"{o}}llenhoff, T., and Cremers, D. (2018).
+\newblock Fight ill-posedness with ill-posedness: Single-shot variational depth
+  super-resolution from shading.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  {(CVPR)}, Salt Lake City, UT, USA, June 18-22} ({IEEE} Computer Society),
+  164--174.
+\newblock \doi{10.1109/CVPR.2018.00025}
+\bibAnnoteFile{Haefner_etal_2018}
+
+\bibitem[{Hanna and Stone(2017)}]{Hanna_Stone_17}
+Hanna, J.~P. and Stone, P. (2017).
+\newblock Grounded action transformation for robot learning in simulation.
+\newblock In \emph{AAAI Conference on Artificial Intelligence, San Francisco,
+  California, USA, February 4-9}. 3834--3840
+\bibAnnoteFile{Hanna_Stone_17}
+
+\bibitem[{Heiden et~al.(2021)Heiden, Millard, Coumans, Sheng, and
+  Sukhatme}]{Heiden_Millard_21}
+Heiden, E., Millard, D., Coumans, E., Sheng, Y., and Sukhatme, G.~S. (2021).
+\newblock {NeuralSim}: Augmenting differentiable simulators with neural
+  networks.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Xi'an, China, May 30 - June 5}
+\bibAnnoteFile{Heiden_Millard_21}
+
+\bibitem[{Hermans et~al.(2020)Hermans, Begy, and Louppe}]{Hermans_Louppe_20}
+Hermans, J., Begy, V., and Louppe, G. (2020).
+\newblock Likelihood-free {MCMC} with amortized approximate ratio estimators.
+\newblock In \emph{International Conference on Machine Learning {(ICML)},
+  Virtual Event, 13-18 July} ({PMLR}), vol. 119 of \emph{Proceedings of Machine
+  Learning Research}, 4239--4248
+\bibAnnoteFile{Hermans_Louppe_20}
+
+\bibitem[{Hinton et~al.(2015)Hinton, Vinyals, and Dean}]{Hinton_Dean_15}
+Hinton, G.~E., Vinyals, O., and Dean, J. (2015).
+\newblock Distilling the knowledge in a neural network.
+\newblock \emph{arXiv} 1503.02531
+\bibAnnoteFile{Hinton_Dean_15}
+
+\bibitem[{H{\"{o}}fer et~al.(2020)H{\"{o}}fer, Bekris, Handa, Higuera, Golemo,
+  Mozifian et~al.}]{Hofner_White_20}
+H{\"{o}}fer, S., Bekris, K.~E., Handa, A., Higuera, J. C.~G., Golemo, F.,
+  Mozifian, M., et~al. (2020).
+\newblock Perspectives on sim2real transfer for robotics: {A} summary of the
+  {R:SS} 2020 workshop.
+\newblock \emph{arXiv} 2012.03806
+\bibAnnoteFile{Hofner_White_20}
+
+\bibitem[{Hu et~al.(2019)Hu, Liu, Spielberg, Tenenbaum, Freeman, Wu
+  et~al.}]{Hu_Matusik_19}
+Hu, Y., Liu, J., Spielberg, A., Tenenbaum, J.~B., Freeman, W.~T., Wu, J.,
+  et~al. (2019).
+\newblock Chainqueen: {A} real-time differentiable physical simulator for soft
+  robotics.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Montreal, QC, Canada, May 20-24} ({IEEE}), 6265--6271.
+\newblock \doi{10.1109/ICRA.2019.8794333}
+\bibAnnoteFile{Hu_Matusik_19}
+
+\bibitem[{Huang et~al.(2017)Huang, Papernot, Goodfellow, Duan, and
+  Abbeel}]{Huang_Abbeel_17}
+Huang, S.~H., Papernot, N., Goodfellow, I.~J., Duan, Y., and Abbeel, P. (2017).
+\newblock Adversarial attacks on neural network policies, workshop track.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)} Toulon, France, April 24-26} (OpenReview.net)
+\bibAnnoteFile{Huang_Abbeel_17}
+
+\bibitem[{Ilyas et~al.(2019)Ilyas, Santurkar, Tsipras, Engstrom, Tran, and
+  Madry}]{Ilyas_Madry_19}
+Ilyas, A., Santurkar, S., Tsipras, D., Engstrom, L., Tran, B., and Madry, A.
+  (2019).
+\newblock Adversarial examples are not bugs, they are features.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NeurIPS)}, Vancouver, BC, Canada, December 8-14}. 125--136
+\bibAnnoteFile{Ilyas_Madry_19}
+
+\bibitem[{Ivaldi et~al.(2014)Ivaldi, Peters, Padois, and Nori}]{Ivaldi_Nori_14}
+Ivaldi, S., Peters, J., Padois, V., and Nori, F. (2014).
+\newblock Tools for simulating humanoid robot dynamics: {A} survey based on
+  user feedback.
+\newblock In \emph{{Humanoids}, Madrid, Spain, November 18-20} ({IEEE}),
+  842--849.
+\newblock \doi{10.1109/HUMANOIDS.2014.7041462}
+\bibAnnoteFile{Ivaldi_Nori_14}
+
+\bibitem[{Jakobi(1997)}]{Jakobi_97}
+Jakobi, N. (1997).
+\newblock Evolutionary robotics and the radical envelope-of-noise hypothesis.
+\newblock \emph{Adaptive Behaviour} 6, 325--368.
+\newblock \doi{10.1177/105971239700600205}
+\bibAnnoteFile{Jakobi_97}
+
+\bibitem[{Jakobi et~al.(1995)Jakobi, Husbands, and Harvey}]{Jakobi_Harvey_95}
+Jakobi, N., Husbands, P., and Harvey, I. (1995).
+\newblock Noise and the reality gap: The use of simulation in evolutionary
+  robotics.
+\newblock In \emph{Advances in Artificial Life, Granada, Spain, June 4-6}.
+  704--720.
+\newblock \doi{10.1007/3-540-59496-5_337}
+\bibAnnoteFile{Jakobi_Harvey_95}
+
+\bibitem[{James et~al.(2017)James, Davison, and Johns}]{James_Johns_17}
+James, S., Davison, A.~J., and Johns, E. (2017).
+\newblock Transferring end-to-end visuomotor control from simulation to real
+  world for a multi-stage task.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Mountain View,
+  California, USA, November 13-15} ({PMLR}), vol.~78 of \emph{Proceedings of
+  Machine Learning Research}, 334--343
+\bibAnnoteFile{James_Johns_17}
+
+\bibitem[{James et~al.(2019)James, Wohlhart, Kalakrishnan, Kalashnikov, Irpan,
+  Ibarz et~al.}]{James_Bousmalis_19}
+James, S., Wohlhart, P., Kalakrishnan, M., Kalashnikov, D., Irpan, A., Ibarz,
+  J., et~al. (2019).
+\newblock Sim-to-real via sim-to-sim: Data-efficient robotic grasping via
+  randomized-to-canonical adaptation networks.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  {(CVPR)}, Long Beach, CA, USA, June 16-20} (Computer Vision Foundation /
+  {IEEE}), 12627--12637.
+\newblock \doi{10.1109/CVPR.2019.01291}
+\bibAnnoteFile{James_Bousmalis_19}
+
+\bibitem[{Jiang et~al.(2021)Jiang, Zhang, Ho, Bai, Liu, Levine
+  et~al.}]{Jiang_Tan_21}
+Jiang, Y., Zhang, T., Ho, D., Bai, Y., Liu, C.~K., Levine, S., et~al. (2021).
+\newblock Simgan: Hybrid simulator identification for domain adaptation via
+  adversarial reinforcement learning.
+\newblock \emph{arXiv} 2101.06005
+\bibAnnoteFile{Jiang_Tan_21}
+
+\bibitem[{Kadian et~al.(2020)Kadian, Truong, Gokaslan, Clegg, Wijmans, Lee
+  et~al.}]{Kadian_Truong_Batra_20}
+Kadian, A., Truong, J., Gokaslan, A., Clegg, A., Wijmans, E., Lee, S., et~al.
+  (2020).
+\newblock Sim2real predictivity: Does evaluation in simulation predict
+  real-world performance?
+\newblock \emph{{IEEE} Robotics and Automation Letters} 5, 6670--6677.
+\newblock \doi{10.1109/LRA.2020.3013848}
+\bibAnnoteFile{Kadian_Truong_Batra_20}
+
+\bibitem[{Kahn and Marshall(1953)}]{Kahn_Marshall_53}
+Kahn, H. and Marshall, A.~W. (1953).
+\newblock Methods of reducing sample size in monte carlo computations.
+\newblock \emph{Operations Research} 1, 263--278.
+\newblock \doi{10.1287/opre.1.5.263}
+\bibAnnoteFile{Kahn_Marshall_53}
+
+\bibitem[{Kakade(2001)}]{Kakade_2001}
+Kakade, S.~M. (2001).
+\newblock A natural policy gradient.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Vancouver, British Columbia, Canada, December 3-8}. 1531--1538
+\bibAnnoteFile{Kakade_2001}
+
+\bibitem[{Kaspar et~al.(2020)Kaspar, Osorio, and Bock}]{Kaspar_Bock_20}
+Kaspar, M., Osorio, J. D.~M., and Bock, J. (2020).
+\newblock Sim2real transfer for reinforcement learning without dynamics
+  randomization.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Las Vegas, NV, USA, October 24 - January 24} ({IEEE}), 4383--4388.
+\newblock \doi{10.1109/IROS45743.2020.9341260}
+\bibAnnoteFile{Kaspar_Bock_20}
+
+\bibitem[{Kishimoto and Amari(1979)}]{Kishimoto_Amari_79}
+Kishimoto, K. and Amari, S. (1979).
+\newblock Existence and stability of local excitations in homogeneous neural
+  fields.
+\newblock \emph{Journal of Mathematical Biology} 7, 303--318
+\bibAnnoteFile{Kishimoto_Amari_79}
+
+\bibitem[{Klink et~al.(2021)Klink, Abdulsamad, Belousov, D'Eramo, Peters, and
+  Pajarinen}]{Klink_Pajarinen_21}
+Klink, P., Abdulsamad, H., Belousov, B., D'Eramo, C., Peters, J., and
+  Pajarinen, J. (2021).
+\newblock A probabilistic interpretation of self-paced learning with
+  applications to reinforcement learning.
+\newblock \emph{arXiv} 2102.13176
+\bibAnnoteFile{Klink_Pajarinen_21}
+
+\bibitem[{Klink et~al.(2019)Klink, Abdulsamad, Belousov, and
+  Peters}]{Klink_Peters_19}
+Klink, P., Abdulsamad, H., Belousov, B., and Peters, J. (2019).
+\newblock Self-paced contextual reinforcement learning.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Osaka, Japan, October
+  30 - November 1} ({PMLR}), vol. 100 of \emph{Proceedings of Machine Learning
+  Research}, 513--529
+\bibAnnoteFile{Klink_Peters_19}
+
+\bibitem[{Kober et~al.(2013)Kober, Bagnell, and Peters}]{Kober_Peters_13}
+Kober, J., Bagnell, J.~A., and Peters, J. (2013).
+\newblock Reinforcement learning in robotics: A survey.
+\newblock \emph{The International Journal of Robotics Research} 32, 1238--1274.
+\newblock \doi{10.1177/0278364913495721}
+\bibAnnoteFile{Kober_Peters_13}
+
+\bibitem[{Kolev et~al.(2009)Kolev, Klodt, Brox, and Cremers}]{Kolev_etal_2009}
+Kolev, K., Klodt, M., Brox, T., and Cremers, D. (2009).
+\newblock Continuous global optimization in multiview 3d reconstruction.
+\newblock \emph{International Journal of Computer Vision} 84, 80--96
+\bibAnnoteFile{Kolev_etal_2009}
+
+\bibitem[{Koos et~al.(2010)Koos, Mouret, and Doncieux}]{Koos_Doncieux_10}
+Koos, S., Mouret, J.-B., and Doncieux, S. (2010).
+\newblock Crossing the reality gap in evolutionary robotics by promoting
+  transferable controllers.
+\newblock In \emph{Genetic and Evolutionary Computation Conference {(GECCO)},
+  Portland, Oregon, USA, July 7-11} ({ACM}), 119--126.
+\newblock \doi{10.1145/1830483.1830505}
+\bibAnnoteFile{Koos_Doncieux_10}
+
+\bibitem[{Koos et~al.(2013)Koos, Mouret, and Doncieux}]{Koos_Doncieux_13}
+Koos, S., Mouret, J.-B., and Doncieux, S. (2013).
+\newblock The transferability approach: Crossing the reality gap in
+  evolutionary robotics.
+\newblock \emph{{IEEE} Transactions on Evolutionary Computation} 17, 122--145.
+\newblock \doi{10.1109/TEVC.2012.2185849}
+\bibAnnoteFile{Koos_Doncieux_13}
+
+\bibitem[{K{\"{o}}rber et~al.(2021)K{\"{o}}rber, Lange, Rediske, Steinmann, and
+  Gl{\"{u}}ck}]{Korber_Gluck_21}
+K{\"{o}}rber, M., Lange, J., Rediske, S., Steinmann, S., and Gl{\"{u}}ck, R.
+  (2021).
+\newblock Comparing popular simulation environments in the scope of robotics
+  and reinforcement learning.
+\newblock \emph{arXiv} 2103.04616
+\bibAnnoteFile{Korber_Gluck_21}
+
+\bibitem[{Krizhevsky et~al.(2012)Krizhevsky, Sutskever, and
+  Hinton}]{Krizhevsky_Hinton_12}
+Krizhevsky, A., Sutskever, I., and Hinton, G.~E. (2012).
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Lake Tahoe, Nevada, United States, December 3-6}. 1106--1114
+\bibAnnoteFile{Krizhevsky_Hinton_12}
+
+\bibitem[{Krotkov et~al.(2017)Krotkov, Hackett, Jackel, Perschbacher, Pippine,
+  Strauss et~al.}]{Krotkov_Orlowski_17}
+Krotkov, E., Hackett, D., Jackel, L.~D., Perschbacher, M., Pippine, J.,
+  Strauss, J., et~al. (2017).
+\newblock The {DARPA} robotics challenge finals: Results and perspectives.
+\newblock \emph{Journal of Field Robotics} 34, 229--240.
+\newblock \doi{10.1002/rob.21683}
+\bibAnnoteFile{Krotkov_Orlowski_17}
+
+\bibitem[{Kumar et~al.(2021)Kumar, Fu, Pathak, and Malik}]{Kumar_Malik_21}
+Kumar, A., Fu, Z., Pathak, D., and Malik, J. (2021).
+\newblock {RMA:} rapid motor adaptation for legged robots.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Virtual Event, July
+  12-16}.
+\newblock \doi{10.15607/RSS.2021.XVII.011}
+\bibAnnoteFile{Kumar_Malik_21}
+
+\bibitem[{Kumar et~al.(2010)Kumar, Packer, and Koller}]{Kumar_Koller_10}
+Kumar, M.~P., Packer, B., and Koller, D. (2010).
+\newblock Self-paced learning for latent variable models.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Vancouver, British Columbia, Canada, 6-9 December}. 1189--1197
+\bibAnnoteFile{Kumar_Koller_10}
+
+\bibitem[{Kurakin et~al.(2017)Kurakin, Goodfellow, and
+  Bengio}]{Kurakin_Bengio_17}
+Kurakin, A., Goodfellow, I.~J., and Bengio, S. (2017).
+\newblock Adversarial examples in the physical world.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)} Toulon, France, April 24-26, Workshop Track} (OpenReview.net)
+\bibAnnoteFile{Kurakin_Bengio_17}
+
+\bibitem[{Landau et~al.(2011)Landau, Lozano, {M'Saad}, and
+  Karimi}]{Landau_Karimi_11}
+Landau, I.~D., Lozano, R., {M'Saad}, M., and Karimi, A. (2011).
+\newblock \emph{Adaptive Control: Algorithms, Analysis and Applications}
+  (Springer Science \& Business Media), 2 edn.
+\bibAnnoteFile{Landau_Karimi_11}
+
+\bibitem[{Levine and Koltun(2013)}]{Levine_Koltun_13}
+Levine, S. and Koltun, V. (2013).
+\newblock Variational policy search via trajectory optimization.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Lake Tahoe, Nevada, USA, December 5-8}. 207--215
+\bibAnnoteFile{Levine_Koltun_13}
+
+\bibitem[{Levine et~al.(2018)Levine, Pastor, Krizhevsky, Ibarz, and
+  Quillen}]{Levine_Quillen_16}
+Levine, S., Pastor, P., Krizhevsky, A., Ibarz, J., and Quillen, D. (2018).
+\newblock Learning hand-eye coordination for robotic grasping with deep
+  learning and large-scale data collection.
+\newblock \emph{The International Journal of Robotics Research} 37, 421--436.
+\newblock \doi{10.1177/0278364917710318}
+\bibAnnoteFile{Levine_Quillen_16}
+
+\bibitem[{Lillicrap et~al.(2016)Lillicrap, Hunt, Pritzel, Heess, Erez, Tassa
+  et~al.}]{Lillicrap_Wierstra_15}
+Lillicrap, T.~P., Hunt, J.~J., Pritzel, A., Heess, N., Erez, T., Tassa, Y.,
+  et~al. (2016).
+\newblock Continuous control with deep reinforcement learning.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, San Juan, Puerto Rico, May 2-4, Conference Track} (OpenReview.net)
+\bibAnnoteFile{Lillicrap_Wierstra_15}
+
+\bibitem[{Liu et~al.(2017)Liu, Ramachandran, Liu, and Peng}]{Liu_etal_2017}
+Liu, Y., Ramachandran, P., Liu, Q., and Peng, J. (2017).
+\newblock Stein variational policy gradient.
+\newblock In \emph{Association for Uncertainty in Artificial Intelligence
+  {(UAI)}, Sydney, Australia, August 11-15}
+\bibAnnoteFile{Liu_etal_2017}
+
+\bibitem[{Lowrey et~al.(2018)Lowrey, Kolev, Dao, Rajeswaran, and
+  Todorov}]{Lowrey_etal_2018}
+Lowrey, K., Kolev, S., Dao, J., Rajeswaran, A., and Todorov, E. (2018).
+\newblock Reinforcement learning for non-prehensile manipulation: Transfer from
+  simulation to physical system.
+\newblock In \emph{Simulation, Modeling, and Programming for Autonomous Robots
+  {(SIMPAR)}, Brisbane, Australia, May 16-19}. 35--42.
+\newblock \doi{10.1109/SIMPAR.2018.8376268}
+\bibAnnoteFile{Lowrey_etal_2018}
+
+\bibitem[{Lueckmann et~al.(2017)Lueckmann, Gon{\c{c}}alves, Bassetto,
+  {\"{O}}cal, Nonnenmacher, and Macke}]{Lueckmann_Macke_17}
+Lueckmann, J., Gon{\c{c}}alves, P.~J., Bassetto, G., {\"{O}}cal, K.,
+  Nonnenmacher, M., and Macke, J.~H. (2017).
+\newblock Flexible statistical inference for mechanistic models of neural
+  dynamics.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Long Beach, CA, {USA}, December 4-9}. 1289--1299
+\bibAnnoteFile{Lueckmann_Macke_17}
+
+\bibitem[{Luksch et~al.(2012)Luksch, Gienger, M{\"u}hlig, and
+  Yoshiike}]{Luksch_Yoshiike_12}
+Luksch, T., Gienger, M., M{\"u}hlig, M., and Yoshiike, T. (2012).
+\newblock Adaptive movement sequences and predictive decisions based on
+  hierarchical dynamical systems.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Vilamoura, Algarve, Portugal, October 7-12} (IEEE), 2082--2088
+\bibAnnoteFile{Luksch_Yoshiike_12}
+
+\bibitem[{Lutter et~al.(2021{\natexlab{a}})Lutter, Mannor, Peters, Fox, and
+  Garg}]{Lutter_Garg_21_RSS}
+Lutter, M., Mannor, S., Peters, J., Fox, D., and Garg, A. (2021{\natexlab{a}}).
+\newblock Robust value iteration for continuous control tasks.
+\newblock \emph{arXiv} 2105.12189
+\bibAnnoteFile{Lutter_Garg_21_RSS}
+
+\bibitem[{Lutter et~al.(2019)Lutter, Ritter, and Peters}]{Lutter_Peters_19}
+Lutter, M., Ritter, C., and Peters, J. (2019).
+\newblock Deep lagrangian networks: Using physics as model prior for deep
+  learning.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, New Orleans, LA, USA, May 6-9, Conference Track} (OpenReview.net)
+\bibAnnoteFile{Lutter_Peters_19}
+
+\bibitem[{Lutter et~al.(2021{\natexlab{b}})Lutter, Silberbauer, Watson, and
+  Peters}]{Lutter_Silberbauer_Peters_21}
+Lutter, M., Silberbauer, J., Watson, J., and Peters, J. (2021{\natexlab{b}}).
+\newblock Differentiable physics models for real-world offline model-based
+  reinforcement learning.
+\newblock \emph{arXiv} 2011.01734
+\bibAnnoteFile{Lutter_Silberbauer_Peters_21}
+
+\bibitem[{Mak et~al.(1999)Mak, Morton, and Wood}]{Mak_etal_1999}
+Mak, W.-K., Morton, D.~P., and Wood, R.~K. (1999).
+\newblock Monte carlo bounding techniques for determining solution quality in
+  stochastic programs.
+\newblock \emph{Operations Research Lett.} 24, 47--56.
+\newblock \doi{10.1016/S0167-6377(98)00054-6}
+\bibAnnoteFile{Mak_etal_1999}
+
+\bibitem[{Mandlekar et~al.(2017)Mandlekar, Zhu, Garg, Fei-Fei, and
+  Savarese}]{Mandlekar_Savarese_17}
+Mandlekar, A., Zhu, Y., Garg, A., Fei-Fei, L., and Savarese, S. (2017).
+\newblock Adversarially robust policy learning: Active construction of
+  physically-plausible perturbations.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Vancouver, BC, Canada, September 24-28}. 3932--3939.
+\newblock \doi{10.1109/IROS.2017.8206245}
+\bibAnnoteFile{Mandlekar_Savarese_17}
+
+\bibitem[{Marco et~al.(2017)Marco, Berkenkamp, Hennig, Schoellig, Krause,
+  Schaal et~al.}]{Marco_Trimpe_17}
+Marco, A., Berkenkamp, F., Hennig, P., Schoellig, A.~P., Krause, A., Schaal,
+  S., et~al. (2017).
+\newblock Virtual vs. real: Trading off simulations and physical experiments in
+  reinforcement learning with bayesian optimization.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Marina Bay Sands, Singapore, May 29 - Jun 3}
+\bibAnnoteFile{Marco_Trimpe_17}
+
+\bibitem[{Marjoram et~al.(2003)Marjoram, Molitor, Plagnol, and
+  Tavar{\'e}}]{Marjoram_Tavare_03}
+Marjoram, P., Molitor, J., Plagnol, V., and Tavar{\'e}, S. (2003).
+\newblock Markov chain monte carlo without likelihoods.
+\newblock \emph{Proceedings of the National Academy of Sciences} 100,
+  15324--15328.
+\newblock \doi{10.1073/pnas.0306899100}
+\bibAnnoteFile{Marjoram_Tavare_03}
+
+\bibitem[{Martin-Martin and Brock(2014)}]{MartinMartin_Brock_2014}
+Martin-Martin, R. and Brock, O. (2014).
+\newblock Online interactive perception of articulated objects with multi-level
+  recursive estimation based on task-specific priors.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Chicago, IL, USA, September 14-18} ({IEEE}), 2494--2501.
+\newblock \doi{10.1109/IROS.2014.6942902}
+\bibAnnoteFile{MartinMartin_Brock_2014}
+
+\bibitem[{Matas et~al.(2018)Matas, James, and Davison}]{Matas_Davison_18}
+Matas, J., James, S., and Davison, A.~J. (2018).
+\newblock Sim-to-real reinforcement learning for deformable object
+  manipulation.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Z{\"{u}}rich,
+  Switzerland, October 29-31} ({PMLR}), vol.~87 of \emph{Proceedings of Machine
+  Learning Research}, 734--743
+\bibAnnoteFile{Matas_Davison_18}
+
+\bibitem[{Matl et~al.(2020)Matl, Narang, Bajcsy, Ramos, and Fox}]{Matl_Fox_20}
+Matl, C., Narang, Y.~S., Bajcsy, R., Ramos, F., and Fox, D. (2020).
+\newblock Inferring the material properties of granular media for robotic
+  tasks.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Paris, France, May 31 - August 31} ({IEEE}), 2770--2777.
+\newblock \doi{10.1109/ICRA40945.2020.9197063}
+\bibAnnoteFile{Matl_Fox_20}
+
+\bibitem[{Mehta et~al.(2019)Mehta, Diaz, Golemo, Pal, and
+  Paull}]{Mehta_Paull_19}
+Mehta, B., Diaz, M., Golemo, F., Pal, C.~J., and Paull, L. (2019).
+\newblock Active domain randomization.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Osaka, Japan, October
+  30 - November 1} ({PMLR}), vol. 100 of \emph{Proceedings of Machine Learning
+  Research}, 1162--1176
+\bibAnnoteFile{Mehta_Paull_19}
+
+\bibitem[{Mehta et~al.(2020)Mehta, Handa, Fox, and Ramos}]{Mehta_Ramos_20}
+Mehta, B., Handa, A., Fox, D., and Ramos, F. (2020).
+\newblock A user`s guide to calibrating robotics simulators.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Virtual Event,
+  November 16 - 18} ({PMLR}), Proceedings of Machine Learning Research
+\bibAnnoteFile{Mehta_Ramos_20}
+
+\bibitem[{Metropolis and Ulam(1949)}]{Metropolis_Ulam_49}
+Metropolis, N. and Ulam, S. (1949).
+\newblock The monte carlo method.
+\newblock \emph{Journal of the American Statistical Association} 44, 335--341
+\bibAnnoteFile{Metropolis_Ulam_49}
+
+\bibitem[{Mnih et~al.(2015)Mnih, Kavukcuoglu, Silver, Rusu, Veness, Bellemare
+  et~al.}]{Mnih_Hassabis_15}
+Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A.~A., Veness, J., Bellemare,
+  M.~G., et~al. (2015).
+\newblock Human-level control through deep reinforcement learning.
+\newblock \emph{Nature} 518, 529--533.
+\newblock \doi{10.1038/nature14236}
+\bibAnnoteFile{Mnih_Hassabis_15}
+
+\bibitem[{Molchanov et~al.(2019)Molchanov, Chen, H{\"{o}}nig, Preiss, Ayanian,
+  and Sukhatme}]{Molchanov_Chen_Sukhatme_19}
+Molchanov, A., Chen, T., H{\"{o}}nig, W., Preiss, J.~A., Ayanian, N., and
+  Sukhatme, G.~S. (2019).
+\newblock Sim-to-(multi)-real: Transfer of low-level robust control policies to
+  multiple quadrotors.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Macau, SAR, China, November 3-8} ({IEEE}), 59--66.
+\newblock \doi{10.1109/IROS40897.2019.8967695}
+\bibAnnoteFile{Molchanov_Chen_Sukhatme_19}
+
+\bibitem[{Mordatch et~al.(2015)Mordatch, Lowrey, and
+  Todorov}]{Mordatch_Todorov_15}
+Mordatch, I., Lowrey, K., and Todorov, E. (2015).
+\newblock Ensemble-cio: Full-body dynamic motion planning that transfers to
+  physical humanoids.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Hamburg, Germany, September 28 - October 2}. 5307--5314.
+\newblock \doi{10.1109/IROS.2015.7354126}
+\bibAnnoteFile{Mordatch_Todorov_15}
+
+\bibitem[{Morere et~al.(2019)Morere, Ott, and Ramos}]{Morere_Ramos_19}
+Morere, P., Ott, L., and Ramos, F. (2019).
+\newblock Learning to plan hierarchically from curriculum.
+\newblock \emph{{IEEE} Robotics and Automation Letters} 4, 2815--2822.
+\newblock \doi{10.1109/LRA.2019.2920285}
+\bibAnnoteFile{Morere_Ramos_19}
+
+\bibitem[{Mozifian et~al.(2020)Mozifian, Higuera, Meger, and
+  Dudek}]{Mozifian_Dudek_20}
+Mozifian, M., Higuera, J. C.~G., Meger, D., and Dudek, G. (2020).
+\newblock Learning domain randomization distributions for training robust
+  locomotion policies.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)} Las Vegas, NV, USA, October 24 - January 24} ({IEEE}), 6112--6117.
+\newblock \doi{10.1109/IROS45743.2020.9341019}
+\bibAnnoteFile{Mozifian_Dudek_20}
+
+\bibitem[{Muratore et~al.(2021{\natexlab{a}})Muratore, Eilers, Gienger, and
+  Peters}]{Muratore_Peters_21_RAL}
+Muratore, F., Eilers, C., Gienger, M., and Peters, J. (2021{\natexlab{a}}).
+\newblock Data-efficient domain randomization with bayesian optimization.
+\newblock \emph{{IEEE} Robotics and Automation Letters} 6, 911--918.
+\newblock \doi{10.1109/LRA.2021.3052391}
+\bibAnnoteFile{Muratore_Peters_21_RAL}
+
+\bibitem[{Muratore et~al.(2021{\natexlab{b}})Muratore, Gienger, and
+  Peters}]{Muratore_Peters_21_PAMI}
+Muratore, F., Gienger, M., and Peters, J. (2021{\natexlab{b}}).
+\newblock Assessing transferability from simulation to reality for
+  reinforcement learning.
+\newblock \emph{{IEEE} Transactions on Pattern Analysis and Machine
+  Intelligence} 43, 1172--1183.
+\newblock \doi{10.1109/TPAMI.2019.2952353}
+\bibAnnoteFile{Muratore_Peters_21_PAMI}
+
+\bibitem[{Muratore et~al.(2021{\natexlab{c}})Muratore, Gruner, Wiese, Gienger,
+  and Peters}]{Muratore_Peters_21_CoRL}
+Muratore, F., Gruner, T., Wiese, F., Gienger, B. B.~M., and Peters, J.
+  (2021{\natexlab{c}}).
+\newblock Neural posterior domain randomization.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Virtual Event,
+  London, England, November 8-11}
+\bibAnnoteFile{Muratore_Peters_21_CoRL}
+
+\bibitem[{Muratore et~al.(2018)Muratore, Treede, Gienger, and
+  Peters}]{Muratore_Peters_18_CoRL}
+Muratore, F., Treede, F., Gienger, M., and Peters, J. (2018).
+\newblock Domain randomization for simulation-based policy optimization with
+  transferability assessment.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Z{\"{u}}rich,
+  Switzerland, October 29-31} ({PMLR}), vol.~87 of \emph{Proceedings of Machine
+  Learning Research}, 700--713
+\bibAnnoteFile{Muratore_Peters_18_CoRL}
+
+\bibitem[{Nagabandi et~al.(2019)Nagabandi, Clavera, Liu, Fearing, Abbeel,
+  Levine et~al.}]{Nagabandi_Clavera_Finn_19}
+Nagabandi, A., Clavera, I., Liu, S., Fearing, R.~S., Abbeel, P., Levine, S.,
+  et~al. (2019).
+\newblock Learning to adapt in dynamic, real-world environments through
+  meta-reinforcement learning.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)} New Orleans, LA, USA, May 6-9} (OpenReview.net)
+\bibAnnoteFile{Nagabandi_Clavera_Finn_19}
+
+\bibitem[{Ng and Jordan(2000)}]{Ng_Jordan_00}
+Ng, A.~Y. and Jordan, M.~I. (2000).
+\newblock {PEGASUS:} a policy search method for large mdps and pomdps.
+\newblock In \emph{UAI, Stanford, California, USA, June 30 - July 3} (Morgan
+  Kaufmann), 406--415
+\bibAnnoteFile{Ng_Jordan_00}
+
+\bibitem[{OpenAI et~al.(2019)OpenAI, Akkaya, Andrychowicz, Chociej, Litwin,
+  McGrew et~al.}]{OpenAI_19}
+OpenAI, Akkaya, I., Andrychowicz, M., Chociej, M., Litwin, M., McGrew, B.,
+  et~al. (2019).
+\newblock Solving rubik's cube with a robot hand.
+\newblock \emph{arXiv} \allowbreak 1910.07113
+\bibAnnoteFile{OpenAI_19}
+
+\bibitem[{OpenAI et~al.(2020)OpenAI, Andrychowicz, Baker, Chociej,
+  J{\'{o}}zefowicz, McGrew et~al.}]{OpenAI_18}
+OpenAI, Andrychowicz, M., Baker, B., Chociej, M., J{\'{o}}zefowicz, R., McGrew,
+  B., et~al. (2020).
+\newblock Learning dexterous in-hand manipulation.
+\newblock \emph{The International Journal of Robotics Research} 39.
+\newblock \doi{10.1177/0278364919887447}
+\bibAnnoteFile{OpenAI_18}
+
+\bibitem[{Pan and Yang(2010)}]{Pan_Yang_10}
+Pan, S.~J. and Yang, Q. (2010).
+\newblock A survey on transfer learning.
+\newblock \emph{{IEEE} Transactions on Knowledge and Data Engineering} 22,
+  1345--1359.
+\newblock \doi{10.1109/TKDE.2009.191}
+\bibAnnoteFile{Pan_Yang_10}
+
+\bibitem[{Papamakarios and Murray(2016)}]{Papamakarios_Murray_16}
+Papamakarios, G. and Murray, I. (2016).
+\newblock Fast {\(\epsilon\)}-free inference of simulation models with bayesian
+  conditional density estimation.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Barcelona, Spain, December 5-10}. 1028--1036
+\bibAnnoteFile{Papamakarios_Murray_16}
+
+\bibitem[{Papamakarios et~al.(2019)Papamakarios, Sterratt, and
+  Murray}]{Papamakarios_Murray_19}
+Papamakarios, G., Sterratt, D.~C., and Murray, I. (2019).
+\newblock Sequential neural likelihood: Fast likelihood-free inference with
+  autoregressive flows.
+\newblock In \emph{International Conference on Artificial Intelligence and
+  Statistics {(AISTATS)}, Naha, Okinawa, Japan, April 16-18} ({PMLR}), vol.~89
+  of \emph{Proceedings of Machine Learning Research}, 837--848
+\bibAnnoteFile{Papamakarios_Murray_19}
+
+\bibitem[{Parisotto et~al.(2016)Parisotto, Ba, and
+  Salakhutdinov}]{Parisotto_Salakhutdinov_15}
+Parisotto, E., Ba, L.~J., and Salakhutdinov, R. (2016).
+\newblock Actor-mimic: Deep multitask and transfer reinforcement learning.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)} San Juan, Puerto Rico, May 2-4, Conference Track}
+\bibAnnoteFile{Parisotto_Salakhutdinov_15}
+
+\bibitem[{Paul et~al.(2019)Paul, Osborne, and Whiteson}]{Paul_etal_2018}
+Paul, S., Osborne, M.~A., and Whiteson, S. (2019).
+\newblock Fingerprint policy optimisation for robust reinforcement learning.
+\newblock In \emph{International Conference on Machine Learning {(ICML)}, Long
+  Beach California, USA, 9-15 June} (PMLR), vol.~97
+\bibAnnoteFile{Paul_etal_2018}
+
+\bibitem[{Peng et~al.(2018)Peng, Andrychowicz, Zaremba, and
+  Abbeel}]{Peng_Abbeel_18}
+Peng, X.~B., Andrychowicz, M., Zaremba, W., and Abbeel, P. (2018).
+\newblock Sim-to-real transfer of robotic control with dynamics randomization.
+\newblock In \emph{International Conference on Robotics and Automation
+  {(ICRA)}, Brisbane, Australia, May 21-25}. 1--8.
+\newblock \doi{10.1109/ICRA.2018.8460528}
+\bibAnnoteFile{Peng_Abbeel_18}
+
+\bibitem[{Peng et~al.(2020)Peng, Coumans, Zhang, Lee, Tan, and
+  Levine}]{Peng_Levine_20}
+Peng, X.~B., Coumans, E., Zhang, T., Lee, T.~E., Tan, J., and Levine, S.
+  (2020).
+\newblock Learning agile robotic locomotion skills by imitating animals.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Virtual Event /
+  Corvalis, Oregon, USA, July 12-16}.
+\newblock \doi{10.15607/RSS.2020.XVI.064}
+\bibAnnoteFile{Peng_Levine_20}
+
+\bibitem[{Perlin(2002)}]{Perlin_02}
+Perlin, K. (2002).
+\newblock Improving noise.
+\newblock \emph{{ACM} Transactions on Graphics} 21, 681--682.
+\newblock \doi{10.1145/566654.566636}
+\bibAnnoteFile{Perlin_02}
+
+\bibitem[{Peters et~al.(2010)Peters, M{\"{u}}lling, and
+  Altun}]{Peters_etal_2010}
+Peters, J., M{\"{u}}lling, K., and Altun, Y. (2010).
+\newblock Relative entropy policy search.
+\newblock In \emph{AAAI Conference on Artificial Intelligence, Atlanta,
+  Georgia, USA, July 11-15}
+\bibAnnoteFile{Peters_etal_2010}
+
+\bibitem[{Pinto et~al.(2018)Pinto, Andrychowicz, Welinder, Zaremba, and
+  Abbeel}]{Pinto_Abbeel_17}
+Pinto, L., Andrychowicz, M., Welinder, P., Zaremba, W., and Abbeel, P. (2018).
+\newblock Asymmetric actor critic for image-based robot learning.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Pittsburgh,
+  Pennsylvania, USA, June 26-30}.
+\newblock \doi{10.15607/RSS.2018.XIV.008}
+\bibAnnoteFile{Pinto_Abbeel_17}
+
+\bibitem[{Pinto et~al.(2017)Pinto, Davidson, Sukthankar, and
+  Gupta}]{Pinto_Gupta_17}
+Pinto, L., Davidson, J., Sukthankar, R., and Gupta, A. (2017).
+\newblock Robust adversarial reinforcement learning.
+\newblock In \emph{International Conference on Machine Learning {(ICML)},
+  Sydney, NSW, Australia, August 6-11} ({PMLR}), 2817--2826
+\bibAnnoteFile{Pinto_Gupta_17}
+
+\bibitem[{Polvara et~al.(2020)Polvara, Patacchiola, Hanheide, and
+  Neumann}]{Polvara_Patacchiola_Neumann_20}
+Polvara, R., Patacchiola, M., Hanheide, M., and Neumann, G. (2020).
+\newblock Sim-to-real quadrotor landing via sequential deep q-networks and
+  domain randomization.
+\newblock \emph{Robotics} 9, 8.
+\newblock \doi{10.3390/robotics9010008}
+\bibAnnoteFile{Polvara_Patacchiola_Neumann_20}
+
+\bibitem[{Possas et~al.(2020)Possas, Barcelos, Oliveira, Fox, and
+  Ramos}]{Possas_Ramos_20}
+Possas, R., Barcelos, L., Oliveira, R., Fox, D., and Ramos, F. (2020).
+\newblock Online bayessim for combined simulator parameter inference and policy
+  improvement.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)} Las Vegas, NV, USA, October 24 - January 24} ({IEEE}), 5445--5452.
+\newblock \doi{10.1109/IROS45743.2020.9341401}
+\bibAnnoteFile{Possas_Ramos_20}
+
+\bibitem[{Radford et~al.(2019)Radford, Wu, Child, Luan, Amodei, and
+  Sutskever}]{Radford_etal_2019}
+[Dataset] Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., and Sutskever,
+  I. (2019).
+\newblock Language models are unsupervised multitask learners
+\bibAnnoteFile{Radford_etal_2019}
+
+\bibitem[{Rajeswaran et~al.(2017)Rajeswaran, Ghotra, Ravindran, and
+  Levine}]{Rajeswaran_Levine_16}
+Rajeswaran, A., Ghotra, S., Ravindran, B., and Levine, S. (2017).
+\newblock Epopt: Learning robust neural network policies using model ensembles.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, Toulon, France, April 24-26, Conference Track} (OpenReview.net)
+\bibAnnoteFile{Rajeswaran_Levine_16}
+
+\bibitem[{Rajeswaran et~al.(2020)Rajeswaran, Mordatch, and
+  Kumar}]{Rajeswaran_Kumar_20}
+Rajeswaran, A., Mordatch, I., and Kumar, V. (2020).
+\newblock A game theoretic framework for model based reinforcement learning.
+\newblock In \emph{International Conference on Machine Learning ({ICML}),
+  Virtual Event, 13-18 July} ({PMLR}), vol. 119 of \emph{Proceedings of Machine
+  Learning Research}, 7953--7963
+\bibAnnoteFile{Rajeswaran_Kumar_20}
+
+\bibitem[{Ramos et~al.(2019)Ramos, Possas, and Fox}]{Ramos_Fox_19}
+Ramos, F., Possas, R., and Fox, D. (2019).
+\newblock Bayessim: Adaptive domain randomization via probabilistic inference
+  for robotics simulators.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Freiburg im Breisgau,
+  Germany, June 22-26}.
+\newblock \doi{10.15607/RSS.2019.XV.029}
+\bibAnnoteFile{Ramos_Fox_19}
+
+\bibitem[{Rasmussen and Williams(2006)}]{Rasmussen_Williams_2006}
+Rasmussen, C.~E. and Williams, C. K.~I. (2006).
+\newblock \emph{Gaussian processes for machine learning}.
+\newblock Adaptive computation and machine learning ({MIT} Press)
+\bibAnnoteFile{Rasmussen_Williams_2006}
+
+\bibitem[{Rawlik et~al.(2012)Rawlik, Toussaint, and
+  Vijayakumar}]{Rawlik_Vijayakumar_13}
+Rawlik, K., Toussaint, M., and Vijayakumar, S. (2012).
+\newblock On stochastic optimal control and reinforcement learning by
+  approximate inference.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Sydney, NSW,
+  Australia, July 9-13}.
+\newblock \doi{10.15607/RSS.2012.VIII.045}
+\bibAnnoteFile{Rawlik_Vijayakumar_13}
+
+\bibitem[{Ruiz et~al.(2019)Ruiz, Schulter, and Chandraker}]{Ruiz_Chandraker_19}
+Ruiz, N., Schulter, S., and Chandraker, M. (2019).
+\newblock Learning to simulate.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, New Orleans, LA, USA, May 6-9} (OpenReview.net)
+\bibAnnoteFile{Ruiz_Chandraker_19}
+
+\bibitem[{Russakovsky et~al.(2015)Russakovsky, Deng, Su, Krause, Satheesh, Ma
+  et~al.}]{Russakovsky_etal_2015}
+Russakovsky, O., Deng, J., Su, H., Krause, J., Satheesh, S., Ma, S., et~al.
+  (2015).
+\newblock Imagenet large scale visual recognition challenge.
+\newblock \emph{International Journal of Computer Vision} 115, 211--252.
+\newblock \doi{10.1007/s11263-015-0816-y}
+\bibAnnoteFile{Russakovsky_etal_2015}
+
+\bibitem[{Rusu et~al.(2016{\natexlab{a}})Rusu, Colmenarejo,
+  G{\"{u}}l{\c{c}}ehre, Desjardins, Kirkpatrick, Pascanu
+  et~al.}]{Rusu_Hadsell_16_ICLR}
+Rusu, A.~A., Colmenarejo, S.~G., G{\"{u}}l{\c{c}}ehre, {\c{C}}., Desjardins,
+  G., Kirkpatrick, J., Pascanu, R., et~al. (2016{\natexlab{a}}).
+\newblock Policy distillation.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, San Juan, Puerto Rico, May 2-4, Conference Track}
+\bibAnnoteFile{Rusu_Hadsell_16_ICLR}
+
+\bibitem[{Rusu et~al.(2016{\natexlab{b}})Rusu, Rabinowitz, Desjardins, Soyer,
+  Kirkpatrick, Kavukcuoglu et~al.}]{Rusu_Hadsell_16}
+Rusu, A.~A., Rabinowitz, N.~C., Desjardins, G., Soyer, H., Kirkpatrick, J.,
+  Kavukcuoglu, K., et~al. (2016{\natexlab{b}}).
+\newblock Progressive neural networks.
+\newblock \emph{arXiv} 1606.04671
+\bibAnnoteFile{Rusu_Hadsell_16}
+
+\bibitem[{Rusu et~al.(2017)Rusu, Vecerik, Roth{\"{o}}rl, Heess, Pascanu, and
+  Hadsell}]{Rusu_Hadsell_17}
+Rusu, A.~A., Vecerik, M., Roth{\"{o}}rl, T., Heess, N., Pascanu, R., and
+  Hadsell, R. (2017).
+\newblock Sim-to-real robot learning from pixels with progressive nets.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Mountain View,
+  California, USA, November 13-15} ({PMLR}), vol.~78 of \emph{Proceedings of
+  Machine Learning Research}, 262--270
+\bibAnnoteFile{Rusu_Hadsell_17}
+
+\bibitem[{Sadeghi and Levine(2017)}]{Sadeghi_Levine_17}
+Sadeghi, F. and Levine, S. (2017).
+\newblock {CAD2RL:} real single-image flight without a single real image.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Cambridge,
+  Massachusetts, USA, July 12-16}.
+\newblock \doi{10.15607/RSS.2017.XIII.034}
+\bibAnnoteFile{Sadeghi_Levine_17}
+
+\bibitem[{Santoro et~al.(2016)Santoro, Bartunov, Botvinick, Wierstra, and
+  Lillicrap}]{Santoro_Lillicrap_16}
+Santoro, A., Bartunov, S., Botvinick, M., Wierstra, D., and Lillicrap, T.~P.
+  (2016).
+\newblock Meta-learning with memory-augmented neural networks.
+\newblock In \emph{International Conference on Machine Learning {(ICML)}, New
+  York City, NY, USA, June 19-24} (JMLR.org), vol.~48, 1842--1850
+\bibAnnoteFile{Santoro_Lillicrap_16}
+
+\bibitem[{Schulman et~al.(2017)Schulman, Wolski, Dhariwal, Radford, and
+  Klimov}]{Schulman_Klimov_17}
+Schulman, J., Wolski, F., Dhariwal, P., Radford, A., and Klimov, O. (2017).
+\newblock Proximal policy optimization algorithms.
+\newblock \emph{arXiv} \allowbreak 1707.06347
+\bibAnnoteFile{Schulman_Klimov_17}
+
+\bibitem[{Siekmann et~al.(2021)Siekmann, Green, Warila, Fern, and
+  Hurst}]{Siekmann_Hurst_21}
+Siekmann, J., Green, K., Warila, J., Fern, A., and Hurst, J.~W. (2021).
+\newblock Blind bipedal stair traversal via sim-to-real reinforcement learning.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Virtual Event, July
+  12-16}.
+\newblock \doi{10.15607/RSS.2021.XVII.061}
+\bibAnnoteFile{Siekmann_Hurst_21}
+
+\bibitem[{Silver et~al.(2016)Silver, Huang, Maddison, Guez, Sifre, van~den
+  Driessche et~al.}]{Silver_Hassabis_16}
+Silver, D., Huang, A., Maddison, C.~J., Guez, A., Sifre, L., van~den Driessche,
+  G., et~al. (2016).
+\newblock Mastering the game of go with deep neural networks and tree search.
+\newblock \emph{Nature} 529, 484--489.
+\newblock \doi{10.1038/nature16961}
+\bibAnnoteFile{Silver_Hassabis_16}
+
+\bibitem[{Sunn{\aa}ker et~al.(2013)Sunn{\aa}ker, Busetto, Numminen, Corander,
+  Foll, and Dessimoz}]{Sunnaker_Dessimoz_13}
+Sunn{\aa}ker, M., Busetto, A.~G., Numminen, E., Corander, J., Foll, M., and
+  Dessimoz, C. (2013).
+\newblock Approximate bayesian computation.
+\newblock \emph{PLoS Comput. Biol.} 9.
+\newblock \doi{10.1371/journal.pcbi.1002803}
+\bibAnnoteFile{Sunnaker_Dessimoz_13}
+
+\bibitem[{Sutanto et~al.(2020)Sutanto, Wang, Lin, Mukadam, Sukhatme, Rai
+  et~al.}]{Sutanto_Meier_20}
+Sutanto, G., Wang, A.~S., Lin, Y., Mukadam, M., Sukhatme, G.~S., Rai, A.,
+  et~al. (2020).
+\newblock Encoding physical constraints in differentiable newton-euler
+  algorithm.
+\newblock In \emph{{L4DC}, Virtual Event, Berkeley, CA, USA, 11-12 June}
+  ({PMLR}), vol. 120 of \emph{Proceedings of Machine Learning Research},
+  804--813
+\bibAnnoteFile{Sutanto_Meier_20}
+
+\bibitem[{Sutton(1991)}]{Sutton_91}
+Sutton, R.~S. (1991).
+\newblock Dyna, an integrated architecture for learning, planning, and
+  reacting.
+\newblock \emph{{SIGART} Bull.} 2, 160--163.
+\newblock \doi{10.1145/122344.122377}
+\bibAnnoteFile{Sutton_91}
+
+\bibitem[{Sutton et~al.(1999)Sutton, Precup, and Singh}]{Sutton_Singh_99}
+Sutton, R.~S., Precup, D., and Singh, S.~P. (1999).
+\newblock Between mdps and semi-mdps: {A} framework for temporal abstraction in
+  reinforcement learning.
+\newblock \emph{Artificial Intelligence} 112, 181--211.
+\newblock \doi{10.1016/S0004-3702(99)00052-1}
+\bibAnnoteFile{Sutton_Singh_99}
+
+\bibitem[{Szegedy et~al.(2014)Szegedy, Zaremba, Sutskever, Bruna, Erhan,
+  Goodfellow et~al.}]{Szegedy_Fergus_13}
+Szegedy, C., Zaremba, W., Sutskever, I., Bruna, J., Erhan, D., Goodfellow,
+  I.~J., et~al. (2014).
+\newblock Intriguing properties of neural networks.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, Banff, Canada, April 14-16, Conference Track}
+\bibAnnoteFile{Szegedy_Fergus_13}
+
+\bibitem[{Tan et~al.(2018)Tan, Zhang, Coumans, Iscen, Bai, Hafner
+  et~al.}]{Tan_Vanhoucke_18}
+Tan, J., Zhang, T., Coumans, E., Iscen, A., Bai, Y., Hafner, D., et~al. (2018).
+\newblock Sim-to-real: Learning agile locomotion for quadruped robots.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Pittsburgh,
+  Pennsylvania, USA, June 26-30}.
+\newblock \doi{10.15607/RSS.2018.XIV.010}
+\bibAnnoteFile{Tan_Vanhoucke_18}
+
+\bibitem[{Teh et~al.(2017)Teh, Bapst, Czarnecki, Quan, Kirkpatrick, Hadsell
+  et~al.}]{Teh_Pascanu_17}
+Teh, Y.~W., Bapst, V., Czarnecki, W.~M., Quan, J., Kirkpatrick, J., Hadsell,
+  R., et~al. (2017).
+\newblock Distral: Robust multitask reinforcement learning.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Long Beach, CA, {USA}}. 4496--4506
+\bibAnnoteFile{Teh_Pascanu_17}
+
+\bibitem[{Ting et~al.(2011)Ting, D'Souza, and Schaal}]{Ting_Schaal_11}
+Ting, J., D'Souza, A., and Schaal, S. (2011).
+\newblock Bayesian robot system identification with input and output noise.
+\newblock \emph{Neural Networks} 24, 99--108.
+\newblock \doi{10.1016/j.neunet.2010.08.011}
+\bibAnnoteFile{Ting_Schaal_11}
+
+\bibitem[{Ting et~al.(2006)Ting, Mistry, Peters, Schaal, and
+  Nakanishi}]{Ting_Nakanishi_06}
+Ting, J., Mistry, M.~N., Peters, J., Schaal, S., and Nakanishi, J. (2006).
+\newblock A bayesian approach to nonlinear parameter identification for rigid
+  body dynamics.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Philadelphia,
+  Pennsylvania, {USA}, August 16-19} (The {MIT} Press).
+\newblock \doi{10.15607/RSS.2006.II.032}
+\bibAnnoteFile{Ting_Nakanishi_06}
+
+\bibitem[{Tobin et~al.(2017)Tobin, Fong, Ray, Schneider, Zaremba, and
+  Abbeel}]{Tobin_Abbeel_17}
+Tobin, J., Fong, R., Ray, A., Schneider, J., Zaremba, W., and Abbeel, P.
+  (2017).
+\newblock Domain randomization for transferring deep neural networks from
+  simulation to the real world.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Vancouver, BC, Canada, September 24-28}. 23--30.
+\newblock \doi{10.1109/IROS.2017.8202133}
+\bibAnnoteFile{Tobin_Abbeel_17}
+
+\bibitem[{van~den Oord et~al.(2018)van~den Oord, Li, and
+  Vinyals}]{Oord_Vinyals_18}
+van~den Oord, A., Li, Y., and Vinyals, O. (2018).
+\newblock Representation learning with contrastive predictive coding.
+\newblock \emph{arXiv} 1807.03748
+\bibAnnoteFile{Oord_Vinyals_18}
+
+\bibitem[{{Van~Parys} et~al.(2016){Van~Parys}, Kuhn, Goulart, and
+  Morari}]{VanPary_Morari_16}
+{Van~Parys}, B. P.~G., Kuhn, D., Goulart, P.~J., and Morari, M. (2016).
+\newblock Distributionally robust control of constrained stochastic systems.
+\newblock \emph{{IEEE} Transactions on Automatic Control} 61, 430--442.
+\newblock \doi{10.1109/TAC.2015.2444134}
+\bibAnnoteFile{VanPary_Morari_16}
+
+\bibitem[{Wang et~al.(2017)Wang, Kurth{-}Nelson, Soyer, Leibo, Tirumala, Munos
+  et~al.}]{Wang_Botvinick_17}
+Wang, J., Kurth{-}Nelson, Z., Soyer, H., Leibo, J.~Z., Tirumala, D., Munos, R.,
+  et~al. (2017).
+\newblock Learning to reinforcement learn.
+\newblock In \emph{Cognitive Science, London, UK, 16-29 July}
+  (cognitivesciencesociety.org)
+\bibAnnoteFile{Wang_Botvinick_17}
+
+\bibitem[{Wang et~al.(2010)Wang, Fleet, and Hertzmann}]{Wang_Hertzmann_10}
+Wang, J.~M., Fleet, D.~J., and Hertzmann, A. (2010).
+\newblock Optimizing walking controllers for uncertain inputs and environments.
+\newblock \emph{{ACM} Transactions on Graphics} 29, 73:1--73:8.
+\newblock \doi{10.1145/1833351.1778810}
+\bibAnnoteFile{Wang_Hertzmann_10}
+
+\bibitem[{Watson et~al.(2021)Watson, Abdulsamad, Findeisen, and
+  Peters}]{Watson_Peters_21}
+Watson, J., Abdulsamad, H., Findeisen, R., and Peters, J. (2021).
+\newblock Stochastic control through approximate bayesian input inference.
+\newblock \emph{arXiv} 2105.07693
+\bibAnnoteFile{Watson_Peters_21}
+
+\bibitem[{Williams(1992)}]{Williams_92}
+Williams, R.~J. (1992).
+\newblock Simple statistical gradient-following algorithms for connectionist
+  reinforcement learning.
+\newblock \emph{Machine Learning} 8, 229--256.
+\newblock \doi{10.1007/BF00992696}
+\bibAnnoteFile{Williams_92}
+
+\bibitem[{Wittenmark(1995)}]{Wittenmark_95}
+Wittenmark, B. (1995).
+\newblock Adaptive dual control methods: An overview.
+\newblock In \emph{Adaptive Systems in Control and Signal Processing 1995}
+  (Elsevier). 67--72
+\bibAnnoteFile{Wittenmark_95}
+
+\bibitem[{Wright and T.~E.~Ramsay(1979)}]{Wright_Ramsay_79}
+Wright, R.~D. and T.~E.~Ramsay, J. (1979).
+\newblock On the effectiveness of common random numbers.
+\newblock \emph{Management Science} 25, 649--656
+\bibAnnoteFile{Wright_Ramsay_79}
+
+\bibitem[{Wu et~al.(2015)Wu, Yildirim, Lim, Freeman, and
+  Tenenbaum}]{Wu_Tenenbaum_15}
+Wu, J., Yildirim, I., Lim, J.~J., Freeman, B., and Tenenbaum, J.~B. (2015).
+\newblock Galileo: Perceiving physical object properties by integrating a
+  physics engine with deep learning.
+\newblock In \emph{Conference on Neural Information Processing Systems
+  {(NIPS)}, Montreal, Quebec, Canada, December 7-12}. 127--135
+\bibAnnoteFile{Wu_Tenenbaum_15}
+
+\bibitem[{Xie et~al.(2019)Xie, Clary, Dao, Morais, Hurst, and van~de
+  Panne}]{Xie_VanDePanne_19}
+Xie, Z., Clary, P., Dao, J., Morais, P., Hurst, J.~W., and van~de Panne, M.
+  (2019).
+\newblock Learning locomotion skills for cassie: Iterative design and
+  sim-to-real.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Osaka, Japan, October
+  30 - November 1} ({PMLR}), vol. 100 of \emph{Proceedings of Machine Learning
+  Research}, 317--329
+\bibAnnoteFile{Xie_VanDePanne_19}
+
+\bibitem[{Xie et~al.(2020)Xie, Da, van~de Panne, Babich, and
+  Garg}]{Xie_Garg_20}
+Xie, Z., Da, X., van~de Panne, M., Babich, B., and Garg, A. (2020).
+\newblock Dynamics randomization revisited: {A} case study for quadrupedal
+  locomotion.
+\newblock \emph{arXiv} 2011.02404
+\bibAnnoteFile{Xie_Garg_20}
+
+\bibitem[{Yan et~al.(2020)Yan, Vangipuram, Abbeel, and Pinto}]{Yan_Pinto_20}
+Yan, W., Vangipuram, A., Abbeel, P., and Pinto, L. (2020).
+\newblock Learning predictive representations for deformable objects using
+  contrastive estimation.
+\newblock In \emph{Conference on Robot Learning {(CoRL)}, Virtual Event,
+  November 16 - 18, Virtual Event / Cambridge, MA, {USA}} ({PMLR}), vol. 155 of
+  \emph{Proceedings of Machine Learning Research}, 564--574
+\bibAnnoteFile{Yan_Pinto_20}
+
+\bibitem[{Yang et~al.(2013)Yang, Sun, Zhang, and Ma}]{Yang_Ma_13}
+Yang, C., Sun, J., Zhang, Q., and Ma, X. (2013).
+\newblock Lyapunov stability and strong passivity analysis for nonlinear
+  descriptor systems.
+\newblock \emph{{IEEE} Transactions on Circuits and Systems} 60-I, 1003--1012.
+\newblock \doi{10.1109/TCSI.2012.2215396}
+\bibAnnoteFile{Yang_Ma_13}
+
+\bibitem[{Yu et~al.(2019{\natexlab{a}})Yu, Kumar, Turk, and Liu}]{Yu_Liu_19}
+Yu, W., Kumar, V. C.~V., Turk, G., and Liu, C.~K. (2019{\natexlab{a}}).
+\newblock Sim-to-real transfer for biped locomotion.
+\newblock In \emph{International Conference on Intelligent Robots and Systems
+  {(IROS)}, Macau, SAR, China, November 3-8} ({IEEE}), 3503--3510.
+\newblock \doi{10.1109/IROS40897.2019.8968053}
+\bibAnnoteFile{Yu_Liu_19}
+
+\bibitem[{Yu et~al.(2019{\natexlab{b}})Yu, Liu, and Turk}]{Yu_Turk_19}
+Yu, W., Liu, C.~K., and Turk, G. (2019{\natexlab{b}}).
+\newblock Policy transfer with strategy optimization.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, New Orleans, LA, USA, May 6-9, Conference Track} (OpenReview.net)
+\bibAnnoteFile{Yu_Turk_19}
+
+\bibitem[{Yu et~al.(2017)Yu, Tan, Liu, and Turk}]{Yu_Turk_17}
+Yu, W., Tan, J., Liu, C.~K., and Turk, G. (2017).
+\newblock Preparing for the unknown: Learning a universal policy with online
+  system identification.
+\newblock In \emph{Robotics: Science and Systems {(RSS)}, Cambridge,
+  Massachusetts, USA, July 12-16}.
+\newblock \doi{10.15607/RSS.2017.XIII.048}
+\bibAnnoteFile{Yu_Turk_17}
+
+\bibitem[{Zhang et~al.(2021)Zhang, Chen, Boning, and
+  Hsieh}]{Zhang_Chen_Hsieh_21}
+Zhang, H., Chen, H., Boning, D.~S., and Hsieh, C. (2021).
+\newblock Robust reinforcement learning on state observations with learned
+  optimal adversary.
+\newblock In \emph{International Conference on Learning Representations
+  {(ICLR)}, Virtual Event, Austria, May 3-7} (OpenReview.net)
+\bibAnnoteFile{Zhang_Chen_Hsieh_21}
+
+\bibitem[{Zhang et~al.(2020)Zhang, Plappert, and Zaremba}]{Zhang_Zaremba_20}
+Zhang, L.~M., Plappert, M., and Zaremba, W. (2020).
+\newblock Predicting sim-to-real transfer with probabilistic dynamics models.
+\newblock \emph{arXiv} 2009.12864
+\bibAnnoteFile{Zhang_Zaremba_20}
+
+\bibitem[{Zhen et~al.(2021)Zhen, Kuhn, and Wiesemann}]{Zhen_Wiesemann_21}
+Zhen, J., Kuhn, D., and Wiesemann, W. (2021).
+\newblock Mathematical foundations of robust and distributionally robust
+  optimization.
+\newblock \emph{arXiv} 2105.00760
+\bibAnnoteFile{Zhen_Wiesemann_21}
+
+\bibitem[{Zhou and Doyle(1998)}]{Zhou_Doyle_98}
+Zhou, K. and Doyle, J.~C. (1998).
+\newblock \emph{Essentials of Robust Control}, vol. 104 (Prentice Hall)
+\bibAnnoteFile{Zhou_Doyle_98}
+
+\bibitem[{Zhuang et~al.(2021)Zhuang, Qi, Duan, Xi, Zhu, Zhu
+  et~al.}]{Zhuang_He_21}
+Zhuang, F., Qi, Z., Duan, K., Xi, D., Zhu, Y., Zhu, H., et~al. (2021).
+\newblock A comprehensive survey on transfer learning.
+\newblock \emph{Proc. {IEEE}} 109, 43--76.
+\newblock \doi{10.1109/JPROC.2020.3004555}
+\bibAnnoteFile{Zhuang_He_21}
+
+\end{thebibliography}

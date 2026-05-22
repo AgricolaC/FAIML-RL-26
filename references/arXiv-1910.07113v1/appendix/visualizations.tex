@@ -1,0 +1,33 @@
+\section{Visualizations}
+\label{app:visualizations}
+
+\subsection{Policy Recurrent States}
+\label{app:policy_visualizations}
+We visualize the LSTM cell and hidden states of a Rubik's cube policy during rollouts. The techniques we use have been successfully applied to study the interpretability of deep neural networks used for hand-writing generation and vision~\cite{carter2016experiments, olah2018the}.
+
+We collected data from a Rubik's cube policy rollout in simulation. The data spans 1500 time steps (2 minutes) and contains a sequence of successful cube re-orientations and face rotations. We collected the policy LSTM hidden and cell states at each time step, along with policy observations and actions. Each hidden or cell state vector contained 1024 units.
+
+We arranged the cell (or hidden) state data into a matrix of 1024 rows by 1500 columns. We applied 1D t-SNE~\cite{vanDerMaaten2008} to the rows of this matrix in order to group cell state units (``neurons'') that have similar activation patterns across time. We also applied similar tricks as in~\cite{carter2016experiments} to further enhance the appearance of the grouped neurons. The resulting visualization is shown in~\autoref{fig:policy_visualization}~(a). 
+
+We marked the time steps when the policy successfully completed a block re-orientation (dashed) and a face rotation (solid). We see a clear distinction in activation patterns of groups of neurons in the time before a successful re-orientation vs.~face rotation. We can also clearly see when the policy struggles with face rotations (both near the beginning and end of the rollout) where the same group of neurons are active over an extended time.
+
+We performed Non-negative Matrix Factorization (NMF)~\cite{olah2018the} on the activations matrix to identify factors that can be used to group neurons. We used 6 factors and assigned a distinct color to each factor. We colored each neuron by first projecting the row vector onto each factor then linearly combining the factor colors using the projection weights. The results are shown in~\autoref{fig:policy_visualization}~(b).
+
+With coloring by NMF factors, we observe 4 distinct groups of neuron activations: yellow, orange, blue, and pink. By matching the activation time of these neuron groups with actions, we found that each group of activations corresponds to a sequence of complex joint actuations, in other words, a skill. For example, the yellow activation group corresponds to flipping the cube back towards the palm of the hand\footnote{See \url{https://openai.com/blog/solving-rubiks-cube} for the skills corresponding to the other activation groups.}. It is quite surprising to see such high-level skills being clearly identifiable in the cell state representation.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[trim=24 24 24 24, clip, width=\textwidth]{figures/visualization-policy-cell-state-tsne.jpg}
+        \caption{}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/visualization-policy-cell-state-nmf.jpg}
+        \caption{}
+    \end{subfigure}
+    \caption{Visualization of Rubik's cube policy LSTM cell states. Each row corresponds to the activation values of a cell state (1024 in total) over 1500 time steps. (a) after t-SNE reordering, dashed lines mark a successful block re-orientation, solid lines mark a successful face rotation. (b) after coloring by NMF factors.}
+    \label{fig:policy_visualization}
+\end{figure}

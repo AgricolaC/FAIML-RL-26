@@ -1,0 +1,21 @@
+\section{Panel Discussion}
+
+The workshop was concluded with a panel discussion. During the panel, the debaters were allowed to express their personal opinions and a few debaters noticed that their opinions had reshaped after defending extreme positions during the debates. The lively panel was a free-form discussion with some recurring topics which we summarize in this section.
+
+{\bf Task-agnostic vs. task-specific simulation.}
+An important question to the panel was whether simulators should be task-agnostic or task-specific.
+The panelists agreed that there are diminishing returns in improving task-agnostic simulation as we ultimately care about task performance, not simulation accuracy. Moreover, certain domains such as underwater robotics or scenarios involving human interaction are still beyond the scope of state-of-the-art simulators. At the same time, task-agnostic simulators are regarded as the only means to provide tools that generalize across a sufficiently large range of problems. The panelists mentioned \emph{domain randomization} as a success story that shows how task-agnostic state-of-the-art simulation tools allow to learn real-world policies. At the same time, there was agreement that it remains an open question how to apply this technique at scale.
+
+Several alternatives to task-agnostic simulation were considered. One proposition was to invest in \emph{task-agnostic but customizable} simulators. Such a simulator could be obtained by closing the loop and iteratively tuning the simulation to the world using Real2Sim and system identification.
+
+The panelists identified \emph{differentiable simulators} as another promising research direction. The main benefit of this direction is that it moves simulation closer to models which can be used in model-based optimization, allowing for computing derivatives and thus improving the controller directly. There were doubts whether full differentiability is needed since many real world phenomena are not differentiable and this would inevitably make simulator design more complex.
+
+\emph{Meta learning} was identified as an promising orthogonal direction. The key idea is to learn to adapt to a changing world (in simulation) rather than attempting to learn all the characteristics of the world.
+
+%% JCGH: there's a bit of a disconnect in style between the next two paragraphs and the previous text
+
+{\bf Sim2Real as a research discipline on its own (with its own symposia and academic curriculum).}  
+The panelists acknowledged the importance of Sim2Real in its own right, hypothesizing that Sim2Real could be a way of building bridges between disciplines across non-traditional paths, potentially through a Sim2Real grand challenge. The panel agreed that we should refrain from introducing new symposia and conferences to avoid further fragmentation of the robotics community, and to continue exploring Sim2Real in scientific workshops.
+
+{\bf The value of robotics research performed exclusively in simulation (Sim2Sim).} There was wide agreement that the ultimate goal is to design robotic systems that live in the real-world. Nevertheless, simulation-only results can provide valuable insights, for examples by providing repeatable benchmarks on standardized tasks.
+Therefore, there should not be a rejection by default of papers that do not contain real-world experiments. At the same time, authors need to do due diligence and provide convincing evidence about the real-world applicability of new approaches that are only validated in simulation. Moreover, the community should invest into creating simulators that simplify the job of researchers as well as practitioners and allow for better Sim2Real transfer. 

@@ -1,0 +1,86 @@
+In this section we describe how we train control policies using Proximal Policy Optimization~\cite{ppo} and reinforcement learning. Our setup is similar to~\cite{openai2018learning}. However, we use ADR as described in \autoref{sec:adr} to train on a large distribution over randomized environments.
+
+\subsection{Actions, Rewards, and Goals}
+Our setup for the action space and rewards is unchanged from~\cite{openai2018learning} so we only briefly recap them here. We use a discretized action space with $11$~bins per actuated joint (of which there are $20$). We use a multi-categorical distribution. Actions are relative changes in generalized joint position coordinates.
+
+There are three types of rewards we provide to our agent during training:
+\begin{enumerate*}[label=(\alph*)]
+    \item The difference between the previous and the current distance of the system state from the goal state,
+    \item an additional reward of $5$ whenever a goal is achieved,
+    \item and a penalty of $-20$ whenever a cube/block is dropped.
+\end{enumerate*}
+
+We generate random goals during training. For the block, the target rotation is randomly sampled but constrained such that any face points directly upwards. For the Rubik's cube the task generation is slightly more convoluted as it depends on the state of the cube at the time when the goal is generated. If the cube faces are not aligned, we make sure to align them and additionally rotate the whole cube according to a sampled random orientation just like with the block (called a flip). Alternatively, if the faces \emph{are} aligned, we rotate the top cube face with 50\% probability either clockwise or counter-clockwise. Otherwise we again perform a flip. Detailed listings of the goal generation algorithms can be found in the \autoref{app:goal-generation}.
+
+We consider a training episode to be finished whenever one of the following conditions is satisfied:
+\begin{enumerate*}[label=(\alph*)]
+    \item the agent achieves 50 consecutive successes (of reaching a goal within the required threshold),
+    \item the agent drops the cube,
+    \item or the agent times out when trying to reach the next goal. Time out limits are 400 timesteps for block reorientation and 800 timesteps\footnote{We use $1600$~timesteps when training from scratch.} for the Rubik's Cube.
+\end{enumerate*}
+
+
+\subsection{Policy Architecture}
+
+We base our policy architecture on~\citep{openai2018learning} but extend it in a few important ways. The policy is still recurrent since only a policy with access to some form of memory can perform meta-learning. We still use a single feed-forward layer with a ReLU activation~\citep{relu} followed by a single LSTM layer~\citep{lstm}. However, we increase the capacity of the network by doubling the number of units: the feed-forward layer now has $2048$~units and the LSTM layer has $1024$~units. 
+
+
+The value network is separate from the policy network (but uses the same architecture) and we project the output of the LSTM onto a scalar value. We also add L2 regularization with a coefficient of $10^{-6}$ to avoid ever-growing weight norms for long-running experiments.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/policy-network-architecture.pdf}
+    \caption{Neural network architecture for (a) value network and (b) policy network.}
+    \label{fig:policy-arch}
+\end{figure}
+
+\begin{table}[h!]
+    \footnotesize
+    \centering
+    \caption{Inputs for the Rubik's cube task of the policy and value networks, respectively.}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}llcc@{}}
+        \toprule
+        \textbf{Input} & \textbf{Dimensionality} & \textbf{Policy network} & \textbf{Value network} \\
+        \midrule
+        Fingertip positions & 15D & $\times$ & \checkmark \\
+        Noisy fingertip positions & 15D & \checkmark & \checkmark \\
+        Cube position & 3D & $\times$ & \checkmark \\
+        Noisy cube position & 3D & \checkmark & \checkmark \\
+        Cube orientation & 4D (quaternion) & $\times$ & \checkmark \\
+        Noisy cube orientation & 4D (quaternion) & \checkmark & \checkmark \\
+        Goal orientation & 4D (quaternion) & \checkmark & \checkmark \\
+        Relative goal orientation & 4D (quaternion) & $\times$ & \checkmark \\
+        Noisy relative goal orientation & 4D (quaternion) & \checkmark & \checkmark \\
+        Goal face angles & 12D\footnote{\label{footnote:angles2}Angles are encoded as $\sin$ and $\cos$, i.e. this doubles the dimensionality of the underlying angle.} & \checkmark & \checkmark \\
+        Relative goal face angles & 12D\footref{footnote:angles2} & $\times$ & \checkmark \\
+        Noisy relative goal face angles & 12D\footref{footnote:angles2} & \checkmark & \checkmark \\
+        Hand joint angles & 48D\footref{footnote:angles2} & $\times$ & \checkmark \\
+        All simulation positions \& orientations (\texttt{qpos}) & 170D & $\times$ & \checkmark \\
+        All simulation velocities (\texttt{qvel}) & 168D & $\times$ & \checkmark \\
+        \bottomrule
+    \end{tabular}
+\label{table:policy-inputs-full2}
+\end{table}
+
+An important difference between our architecture and the architecture used in~\citep{openai2018learning} is how inputs are handled. In \citep{openai2018learning}, the inputs for the policy and value networks consisted of different observations (e.g. fingertip positions, block pose,~\ldots) in noisy and non-noisy versions. For each network, all observation fields were concatenated into a single vector. Noisy observations were provided to the policy network while the value network had access to non-noisy observations (since the value network is not needed when rolling out the policy on the robot and can thus use privileged information, as described in \citep{pinto2017asymmetric}). We still use the same Asymmetric Actor-Critic architecture~\citep{pinto2017asymmetric} but replace the concatenation with what we call an ``embed-and-add'' approach. More concretely, we first embed each type of observation separately (without any weight sharing) into a latent space of dimensionality $512$. We then combine all inputs by adding the latent representation of each and applying a ReLU non-linearity after.
+The main motivation behind this change was to easily add new observations to an existing policy and to share embeddings between value and policy network for inputs that feed into both. The network architecture of our control policy is illustrated in \autoref{fig:policy-arch}. More details of what inputs are fed into the networks can be found in \autoref{app:hyperparameters} and \autoref{table:policy-inputs-full2}. We list the inputs for the block reorientation task in \autoref{app:hyper-neural-net}.
+
+
+\subsection{Distributed Training with Rapid}
+We use our own internal distributed training framework, Rapid. Rapid was previously used to train OpenAI Five~\citep{five} and was also used in~\cite{openai2018learning}.
+
+For the block reorientation task, we use $4 \times 8 = 32$ NVIDIA V100 GPUs and $4 \times 100 = 400$ worker machines with $32$ CPU cores each. For the Rubik's cube task, we use $8\times8=64$ NVIDIA V100 GPUs and $8\times115 = 920$ worker machines with $32$ CPU cores each. We've been training the Rubik's Cube policy continuously for several months  at this scale while concurrently improving the simulation fidelity, ADR algorithm, tuning hyperparameters, and even changing the network architecture. The cumulative amount of experience over that period used for training on the Rubik's cube is roughly $13$~thousand years, which is on the same order of magnitude as the $40$~thousand years used by OpenAI Five~\cite{five}.
+
+The hyperparameters that we used and more details on optimization can be found in \autoref{app:hyperparameters}.
+
+
+\subsection{Policy Cloning}
+With ADR, we found that training the same policy for a very long time is helpful since ADR allows us to always have a challenging training distribution. We therefore rarely trained experiments from scratch but instead updated existing experiments and initialized from previous checkpoints for both the ADR and policy parameters. 
+Our new "embed-and-add" approach in \autoref{fig:policy-arch} makes it easier to change the observation space of the agent, but doesn't allow us to experiment with changes to the policy architecture, e.g. modify the number of units in each layer or add a second LSTM layer. 
+Restarting training from an uninitialized model would have caused us to lose weeks or months of training progress, making such changes prohibitively expensive. 
+Therefore, we successfully implemented behavioral cloning in the spirit of the DAGGER~\citep{ross2010dagger} algorithm (sometimes also called policy distillation~\citep{Czarnecki2019DistillingPD}) to efficiently initialize new policies with a level of performance very close to the teacher policy.
+
+Our setup for cloning closely mimics reinforcement learning, except that we now have both teacher and student policies loaded in memory. During a rollout, we use the student actions to interact with the environment, while minimizing the difference between the student and the teacher's action distributions (by minimizing KL divergence) and value predictions (by minimizing L2 loss). This has worked surprisingly well, allowing us to iterate on the policy architecture quickly without losing the accumulated training progress. Our cloning approach works with arbitrary policy architecture changes as long as the action space remains unchanged.
+
+The best ADR policies used in this work were obtained using this approach. We trained them for multiple months while making multiple changes to the model architecture, training environment, and hyperparameters.

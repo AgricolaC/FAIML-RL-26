@@ -1,0 +1,279 @@
+\FloatBarrier
+\section{Implementation Details}
+\label{app:hyper}
+
+\subsection{Goal Generation}
+\label{app:goal-generation}
+
+Algorithm listings for goal generations for both tasks are given here.
+It is important to note that in both cases random orientation is sampled in such way that one face of the block or cube is pointing directly upwards. For reference, as was described earlier, the cube or block orientations are considered aligned if any face is pointing upwards within a tolerance of 0.4 radians. Cube faces are considered aligned if all six are within 0.1 radians from a straight angle configuration.
+
+
+\begin{algorithm}
+\caption{Block reorientation goal generation}
+\label{algorithm:block_goal_generation}
+\begin{algorithmic}
+\State $goal\_orientation \gets$ \Call{RandomUniformUpwardOrientation}{} \Comment{Sample random quaternion}
+\State \Call{SetOrientationGoal}{$goal\_orientation$} 
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}
+\caption{Rubik's cube goal generation}
+\label{algorithm:rubik_goal_generation}
+\begin{algorithmic}
+\Require $cube\_quat$ \Comment{Quaternion describing current cube orientation}
+\Require $face\_angles$ \Comment{Current rotation angles of six faces of the cube}
+
+\State $is\_aligned \gets$ \Call{IsOrientationAligned}{$cube\_quat$} \textbf{and} \Call{IsFaceAligned}{$face\_angles$}
+\Statex \Comment{Check if cube is in the \emph{aligned} state}
+
+\State $u \gets U(0, 1)$ \Comment{Sample random number uniformly between 0 and 1}
+\Statex
+
+\If{$is\_aligned$ \textbf{and} $(u < 0.5)$} \Comment{If cube is aligned then with 50\% probability we perform face rotation}
+    \State $side \gets $ \Call{Random}{\{\texttt{CW}, \texttt{CCW}\}} \Comment{Choose clockwise or counterclockwise}
+    \State $goal\_face\_angles \gets$ \Call{RotateTopFace}{$side$, $face\_angles$} \Comment{Rotate top face by 90 degrees}
+    \State \Call{SetFaceGoal}{$goal\_face\_angles$}
+    \State \Call{SetOrientationGoal}{$NULL$}
+\Else \Comment{Otherwise, perform cube flip}
+    \State $aligned\_face\_angles \gets$ \Call{Align}{$face\_angles$} \Comment{Align face angles to closest straight angle configuration}
+    \State $goal\_orientation \gets$ \Call{RandomUniformUpwardOrientation}{} \Comment{Sample random quaternion}
+    \State \Call{SetFaceGoal}{$aligned\_face\_angles$}
+    \State \Call{SetOrientationGoal}{$goal\_orientation$}
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\FloatBarrier
+
+\subsection{Neural Network Inputs}
+\label{app:hyper-neural-net}
+
+\autoref{table:policy-inputs-locked} lists the policy and value function inputs for the block reorientation task, respectively. The number of parameters for the Rubik's cube task network is given in \autoref{table:network-size}.
+
+
+\begin{table}[h!]
+    \footnotesize
+    \centering
+    \caption{Observations for the block reorientation task of the policy and value networks, respectively.}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}llcc@{}}
+        \toprule
+        \textbf{Input} & \textbf{Dimensionality} & \textbf{Policy network} & \textbf{Value network} \\
+        \midrule
+        Fingertip positions & 15D & $\times$ & \checkmark \\
+        Noisy fingertip positions & 15D & \checkmark & \checkmark \\
+        Cube position & 3D & $\times$ & \checkmark \\
+        Noisy block position & 3D & \checkmark & \checkmark \\
+        Block orientation & 4D (quaternion) & $\times$ & \checkmark \\
+        Noisy block orientation & 4D (quaternion) & \checkmark & \checkmark \\
+        Goal orientation & 4D (quaternion) & \checkmark & \checkmark \\
+        Relative goal orientation & 4D (quaternion) & $\times$ & \checkmark \\
+        Noisy relative goal orientation & 4D (quaternion) & \checkmark & \checkmark \\
+        Hand joint angles & 48D\footnote{\label{footnote:angles}Angles are encoded as $\sin$ and $\cos$, i.e. this doubles the dimensionality of the underlying angle.} & $\times$ & \checkmark \\
+        All simulation positions \& orientations (\texttt{qpos}) & 38D & $\times$ & \checkmark \\
+        All simulation velocities (\texttt{qvel}) & 36D & $\times$ & \checkmark \\
+        \bottomrule
+    \end{tabular}
+\label{table:policy-inputs-locked}
+\end{table}
+
+
+
+\begin{table}[h!]
+    \footnotesize
+    \centering
+    \caption{Network size measured by the number of parameters for the Rubik's cube network (parameters for the block reorientation task are the same except for the input embeddings).}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{lr}
+        \toprule
+        \textbf{Type} & \textbf{Number of parameters} \\ 
+        \midrule
+        Nontrainable parameters & 1539  \\
+        Policy network & 13,863,132 \\ 
+        Value function network & 13,638,657 \\
+        Input embeddings & 267,776 \\
+        \bottomrule
+    \end{tabular}
+
+    \label{table:network-size}
+\end{table}
+
+\FloatBarrier
+
+\subsection{Hyperparameters}
+\label{app:hyperparameters}
+
+Hyperparameters used in our PPO policy are listed in \autoref{tbl:ppo}.
+
+\autoref{tbl:adr-hparams} shows hyperparameters used in ADR for policy training.
+
+Vision training hyperparameters are given in \autoref{tbl:vision-hyp} and the details of the model architecture are given in \autoref{tbl:vision-hyper-arch}. The target errors for our loss weight auto-balancer and vision ADR are listed in \autoref{tbl:vision-auto-balancer}. The increase and decrease thresholds in vision ADR are 70\% and 30\% respectively.
+
+We also apply data augmentation for vision training. More specifically, we leave the object pose as is with $20\%$ probability, rotate the object by $90^{\circ}$ around its main axes with $40\%$ probability, and ``jitter'' the object by adding Gaussian noise to both the position and rotation independently with $40\%$ probability.
+
+
+\begin{table}[h!]
+    \footnotesize
+    \centering
+    \caption{Hyperparameters used for PPO.}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Hyperparameter} & \textbf{Value} \\ 
+        \midrule
+        hardware configuration - block & 32 NVIDIA V100 GPUs + 12'800 CPU cores \\ 
+        hardware configuration - Rubik's Cube & 64 NVIDIA V100 GPUs + 29'440 CPU cores \\ 
+        action distribution & categorical with $11$ bins for each one of 20 action coordinates \\
+        discount factor $\gamma$ & $0.998$ \\
+        Generalized Advantage Estimation $\lambda$ & $0.95$ \\
+        entropy regularization coefficient & varying $0.01$ -- $0.0025$ \\
+        PPO clipping parameter $\epsilon$ & $0.2$ \\
+        optimizer & Adam~\citep{Kingma2014AdamAM} \\
+        learning rate & varying $3 \times 10^{-4}$ -- $1 \times 10^{-4}$  \\
+        batch size (per GPU) & $5120$ chunks x $10$ transitions = $51'200$ frames \\
+        Sample reuse (experience replay) & 3 \\
+        Value loss weight & $1.0$ \\
+        L2 regularization weight & $10^{-6}$ \\
+    \bottomrule\end{tabular}
+    \label{tbl:ppo}
+\end{table}
+
+\begin{table}[h!]
+    \footnotesize
+    \centering
+    \caption{Hyperparameters used for ADR.}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Hyperparameter} & \textbf{Value} \\ \midrule
+        Maximum value of a $\phi$ & $4.0$ \\
+        Boundary sampling probability & $0.5$ \\
+        ADR step size $\Delta$ & $0.02$ \\
+        ADR increase threshold $t_H$ & $20$ \\
+        ADR decrease threshold $t_L$ & $10$ \\
+        Performance queue length $m$ & $240$ \\
+    \bottomrule\end{tabular}
+    \label{tbl:adr-hparams}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \footnotesize
+    \caption{Hyperparameters used for the vision model training.}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Hyperparameter} & \textbf{Value} \\ \midrule
+        optimization hardware & 8 NVIDIA V100 GPUs + 64 vCPU cores \\
+        rendering hardware & $16 \times 1$ NVIDIA V100 GPU + 8 vCPU core machines \\
+        optimizer & LARS~\citep{LARS} \\
+        learning rate & $0.5$, halved every $40\,000$ batches \\
+        minibatch size &  $256 \times 3 = 768$ RGB images \\
+        image size & $200 \times 200$ pixels \\
+        weight decay regularization & $0.0001$ \\
+        number of training batches & $300\,000$ \\
+        network architecture & shown in \autoref{fig:vision-arch} \\
+    \bottomrule\end{tabular}
+    \label{tbl:vision-hyp}
+\end{table}
+
+
+\begin{table}[h!]
+    \centering
+    \footnotesize
+    \caption{Hyperparameters for the vision model architecture.}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Layer} & \textbf{Details} \\ \midrule
+        Input RGB Image & $200\times200\times3$ \\
+        Batch Norm & \\
+        Conv2D & 64 filters, $5\times5$, stride 2, no padding \\
+        Dropout & keep probability = 0.9 \\
+        Max Pooling & $2\times2$, stride 1, no padding \\
+        Batch Norm & \\
+        ResNet~\citep{He2016DeepRL} Bottleneck & 3 blocks, 64 filters, $1\times1$, stride 1 \\
+        Dropout & keep probability = 0.9 \\
+        ResNet~\citep{He2016DeepRL} Bottleneck & 4 blocks, 128 filters, $2\times2$, stride 2 \\
+        ResNet~\citep{He2016DeepRL} Bottleneck & 6 blocks, 256 filters, $2\times2$, stride 2 \\
+        ResNet~\citep{He2016DeepRL} Bottleneck & 3 blocks, 512 filters, $2\times2$, stride 2 \\
+        Max Pooling & $2\times2$, stride 1, no padding \\
+        Flatten & \\
+        Concatenate & all 3 image towers combined\\ \midrule
+        Dropout & keep probability = 0.9 \\
+        Fully Connected & 512 units \\
+        Batch Norm & \\
+        Fully Connected & 256 units \\
+        Batch Norm & \\
+        Fully Connected & output, $3$ pos. + $4$ quat. + $180$ top face angle + $90$ active angles + $3$ active axis = 280 units \\
+    \bottomrule\end{tabular}
+    \label{tbl:vision-hyper-arch}
+\end{table}
+
+\begin{table}[h!]
+    \footnotesize
+    \centering
+    \caption{Target error thresholds for different prediction labels in the loss weight auto-balancer and ADR of the vision model. The active axis target error is set to 0.5 because the error is binary for each individual sample.}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}lrr@{}}
+        \toprule
+        \multirow{2}{*}{\textbf{Label}} & \multicolumn{2}{c}{\textbf{Target Errors}} \\
+        & Auto Balancer & Vision ADR \\
+        \midrule
+        Orientation & $3^\circ$ & $5^\circ$ \\
+        Position & $3$ mm & $5$ mm \\
+        Top face angle & $3^\circ$ & $5^\circ$ \\
+        Active axis & $0.5$ & $0.5$ \\
+        Active face angles & $3^\circ$ & $5^\circ$ \\
+    \bottomrule\end{tabular}
+    \label{tbl:vision-auto-balancer}
+\end{table}
+
+\FloatBarrier
+
+\subsection{Vision Post-Processing}
+
+Algorithm~\ref{algorithm:vision_post_processing} describes the post-processing logic that we apply when using the vision model for face angle predictions.
+ 
+\begin{algorithm}
+\caption{Vision model post-processing logic for tracking the full state of a Rubik's cube on the physical robot.}
+\label{algorithm:vision_post_processing}
+\begin{algorithmic}
+\Require $base\_angles[0..5]$ \Comment{6 angles in total}
+\Require $tracked\_angles[0..5]$
+\Require $cube\_quat$ \Comment{Predicted cube orientation}
+\Require $active\_axis$ \Comment{Predicted active axis, $\in (0, 1, 2)$}
+\Require $active\_angles[0,1]$ \Comment{Predicted two active face angles in $[-\pi/4, \pi/4]$}
+\Require $top\_angle$ \Comment{Predicted top face angle in $[-\pi, \pi]$}
+\State $k \gets$ \Call{ExtractTopFaceId}{$cube\_quat$}
+\State $is\_aligned \gets$ \Call{IsOrientationAligned}{$cube\_quat$}
+\For{$i:=0 \text{ to } 5$}
+    \If{$i = k \textbf{ and } is\_aligned$} \Comment{If this face is placed on top}
+        \State $base\_angles[i] \gets top\_angle$
+        \State $tracked\_angles[i] \gets top\_angle$
+    \Else
+        \State {$a, b \gets \text{divmod}(i, 2)$}
+        \If{$a = active\_axis$} \Comment{If this is a active face}
+            \State $tracked\_angles[i] \gets$ \Call{MoveAngle}{$base\_angles[i]$, $active\_angles[b]$} \Comment{See Algorithm~\ref{algorithm:vision_move_angle}}
+        \EndIf
+    \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{\protect\Call{MoveAngle}{}: Move the base face angle to the target by a modulo $\pi/2$ delta angle.}
+\label{algorithm:vision_move_angle}
+\begin{algorithmic}
+\Require $a$ \Comment{Base face angle}
+\Require $b$ \Comment{Target face angle}
+\State $\delta \gets \text{mod}(b - a + \pi/4, \pi/2) - \pi/4$
+\State \textbf{return} $a + \delta$
+\end{algorithmic}
+\end{algorithm}
+
+\FloatBarrier

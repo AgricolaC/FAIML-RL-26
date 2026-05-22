@@ -1,0 +1,182 @@
+\begin{thebibliography}{10}
+
+\bibitem{Antonova:2020ab}
+R.~Antonova, M.~Maydanskiy, D.~Kragic, S.~Devlin, and K.~Hofmann.
+\newblock Modular latent space transfer with analytic manifold learning.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Antonova:2020aa}
+R.~Antonova, A.~Rai, and D.~Kragic.
+\newblock How to sim2real with gaussian processes: Prior mean versus kernels as
+  priors.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Dao:2020aa}
+J.~Dao, H.~Duan, K.~Green, J.~Hurst, and A.~Fern.
+\newblock Learning to walk without dynamics randomization.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Denninger:2020aa}
+M.~Denninger, M.~Sundermeyer, D.~Winkelbauer, D.~Olefir, T.~Hodan, Y.~Zidan,
+  M.~Elbadrawy, M.~Knauer, H.~Katam, and A.~Lodhi.
+\newblock Blenderproc: Reducing the reality gap with photorealistic rendering.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Desai:2020aa}
+S.~Desai, I.~Durugkar, H.~Karnan, G.~Warnell, J.~Hanna, and P.~Stone.
+\newblock An imitation from observation approach to sim-to-real transfer.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Heiden:2020aa}
+E.~Heiden, D.~Millard, E.~Coumans, and G.~Sukhatme.
+\newblock Augmenting differentiable simulators with neural networks to close
+  the sim2real gap.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{hwangbo_learning_2019}
+Jemin Hwangbo, Joonho Lee, Alexey Dosovitskiy, Dario Bellicoso, Vassilios
+  Tsounis, Vladlen Koltun, and Marco Hutter.
+\newblock Learning agile and dynamic motor skills for legged robots.
+\newblock {\em Science Robotics}, 4(26):eaau5872, January 2019.
+
+\bibitem{Josifovski:2020aa}
+J.~Josifovski, M.~Malmir, N.~Klarmann, and A.~Knoll.
+\newblock Continual learning on incremental simulations for real-world robotic
+  manipulation tasks.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Kadian:2020aa}
+A.~Kadian, J.~Truong, A.~Gokaslan, A.~Clegg, E.~Wijmans, S.~Lee, M.~Savva,
+  S.~Chernova, and D.~Batra.
+\newblock Sim2real predictivity: Does evaluation in simulation predict
+  real-world performance?
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Kaufmann:etal:2020RSS}
+Elia Kaufmann, Antonio Loquercio, Ren{\'e} Ranftl, Matthias M{\"u}ller, Vladlen
+  Koltun, and Davide Scaramuzza.
+\newblock Deep drone acrobatics.
+\newblock {\em R:SS}, 2020.
+
+\bibitem{Liang:2020aa}
+J.~Liang, U.~Patel, A.~J. Sathyamoorthy, and D.~Manocha.
+\newblock Accurate high fidelity simulations for training robot navigation
+  policies for dense crowds using deep reinforcement learning.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS 2020, 2020.
+
+\bibitem{mahler_learning_2019}
+Jeffrey Mahler, Matthew Matl, Vishal Satish, Michael Danielczuk, Bill DeRose,
+  Stephen McKinley, and Ken Goldberg.
+\newblock Learning ambidextrous robot grasping policies.
+\newblock {\em Science Robotics}, 4(26), January 2019.
+
+\bibitem{Malmir:2020aa}
+M.~Malmir, J.~Josifovski, N.~Klarmann, and A.~Knoll.
+\newblock Robust sim2real transfer by learning inverse dynamics of simulated
+  systems.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Matl:etal:ICRA2020}
+Carolyn Matl, Yashraj Narang, Ruzena Bajcsy, Fabio Ramos, and Dieter Fox.
+\newblock Inferring the material properties of granular media for robotic
+  tasks, 2020.
+
+\bibitem{openai:etal:2019}
+OpenAI, Ilge Akkaya, Marcin Andrychowicz, Maciek Chociej, Mateusz Litwin, Bob
+  McGrew, Arthur Petron, Alex Paino, Matthias Plappert, Glenn Powell, Raphael
+  Ribas, Jonas Schneider, Nikolas Tezak, Jerry Tworek, Peter Welinder, Lilian
+  Weng, Qiming Yuan, Wojciech Zaremba, and Lei Zhang.
+\newblock Solving rubik's cube with a robot hand, 2019.
+
+\bibitem{Openai2019:Solving}
+OpenAI, Ilge Akkaya, Marcin Andrychowicz, Maciek Chociej, Mateusz Litwin, Bob
+  McGrew, Arthur Petron, Alex Paino, Matthias Plappert, Glenn Powell, Raphael
+  Ribas, Jonas Schneider, Nikolas Tezak, Jerry Tworek, Peter Welinder, Lilian
+  Weng, Qiming Yuan, Wojciech Zaremba, and Lei Zhang.
+\newblock Solving rubik's cube with a robot hand, 2019.
+
+\bibitem{Paull:2020aa}
+L.~Paull and A.~Courchesne.
+\newblock On assessing the value of simulation for robotics.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Peng:etal2020}
+Xue~Bin Peng, Erwin Coumans, Tingnan Zhang, Tsang-Wei Lee, Jie Tan, and Sergey
+  Levine.
+\newblock Learning agile robotic locomotion skills by imitating animals, 2020.
+
+\bibitem{Possas:2020aa}
+R.~Possas, F.~Ramos, D.~Fox, L.~Barcelos, and R.~Oliveira.
+\newblock Online bayessim for combined simulator parameter inference and policy
+  improvement.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Rao:etal2020:RLCyclegan}
+Kanishka Rao, Chris Harris, Alex Irpan, Sergey Levine, Julian Ibarz, and Mohi
+  Khansari.
+\newblock Rl-cyclegan: Reinforcement learning aware simulation-to-real, 2020.
+
+\bibitem{Raparthy:2020aa}
+S.~C. Raparthy, M.~Mozifian, L.~Paull, and F.~Golemo.
+\newblock Cunas - curiosity-driven neural-augmented simulator.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Rizzardo:2020aa}
+C.~Rizzardo, S.~Katyara, M.~Fernandes, and F.~Chen.
+\newblock The importance and the limitations of sim2real for robotic
+  manipulation in precision agriculture.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Wu:2020aa}
+Y.~Wu, W~Yan, T.~Kurutach, L.~Pinto, and P.~Abbeel.
+\newblock Learning to manipulate deformable objects without demonstrations.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Yan:2020aa}
+W.~Yan, A.~Vangipuram, P.~Abbeel, and L.~Pinto.
+\newblock Learning predictive representations for deformable objects with
+  contrastive estimation.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Zhang:2020ab}
+K.~Zhang, T.~Zhang, J.~Lin, and L.~Bi.
+\newblock Sim2real learning of vision-based obstacle avoidance for robotic
+  manipulators.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{Zhang:2020aa}
+M.~Zhang.
+\newblock Necessity for more realistic contact simulation.
+\newblock In {\em 2nd Workshop on Closing the Reality Gap in Sim2Real Transfer
+  for Robotics}. RSS, 2020.
+
+\bibitem{zhao2020simtoreal}
+Wenshuai Zhao, Jorge~Peña Queralta, and Tomi Westerlund.
+\newblock Sim-to-real transfer in deep reinforcement learning for robotics: a
+  survey, 2020.
+
+\bibitem{zhu2020unpaired}
+Jun-Yan Zhu, Taesung Park, Phillip Isola, and Alexei~A. Efros.
+\newblock Unpaired image-to-image translation using cycle-consistent
+  adversarial networks.
+\newblock In {\em 2017 International Conference on Computer Vision (ICCV)},
+  2017.
+
+\end{thebibliography}
