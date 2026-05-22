@@ -160,9 +160,11 @@ def main():
             next_state, reward, terminated, truncated, _ = env.step(
                 action.detach().cpu().numpy())
 
-            # store_outcome receives *terminated* only — NOT terminated|truncated.
-            # This is essential for the TD bootstrap: truncation != true end-of-MDP.
-            agent.store_outcome(state, next_state, log_prob, reward, terminated)
+            # store_outcome receives both terminated (MDP-only, for TD
+            # bootstrap) and episode_done (terminated|truncated, for
+            # discount_rewards episode boundary reset).
+            agent.store_outcome(state, next_state, log_prob, reward,
+                                terminated, terminated or truncated)
 
             state = next_state
             ep_return += reward
@@ -212,7 +214,7 @@ def main():
         if ep % args.eval_every == 0:
             eval_mean, eval_std, eval_len = evaluate_agent(
                 agent, 'Hopper-v4', args.eval_episodes,
-                base_seed=args.seed)
+                base_seed=args.seed + 100_000)  # offset to avoid overlap with training seeds
             eval_writer.writerow({
                 'episode_checkpoint': ep,
                 'eval_mean_return': round(eval_mean, 2),

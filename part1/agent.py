@@ -51,9 +51,14 @@ class Policy(torch.nn.Module):
 
 
     def init_weights(self):
+        # The original template used normal_(std=1.0). With 64 hidden units
+        # and tanh activations, this produces pre-activation variance ≈ fan_in
+        # (≈64), driving tanh into saturation and causing vanishing gradients.
+        # Xavier uniform (Glorot & Bengio, 2010) keeps the signal variance
+        # ≈1 across layers, which is the standard init for tanh networks.
         for m in self.modules():
             if type(m) is torch.nn.Linear:
-                torch.nn.init.normal_(m.weight)
+                torch.nn.init.xavier_uniform_(m.weight)
                 torch.nn.init.zeros_(m.bias)
         # Critic head: smaller init to prevent wild initial value predictions
         torch.nn.init.normal_(self.fc3_critic.weight, std=0.1)
@@ -129,7 +134,9 @@ class Agent(object):
         self.next_states = []
         self.action_log_probs = []
         self.rewards = []
-        self.done = []
+        self.done = []          # MDP termination only (for TD bootstrap)
+        self.episode_done = []  # episode boundary: terminated OR truncated
+                                # (for discount_rewards return reset)
 
 
     def update_policy(self):
@@ -138,20 +145,26 @@ class Agent(object):
         next_states = torch.stack(self.next_states, dim=0).to(self.train_device).squeeze(-1)
         rewards = torch.stack(self.rewards, dim=0).to(self.train_device).squeeze(-1)
         done = torch.Tensor(self.done).to(self.train_device)
+        episode_done = torch.Tensor(self.episode_done).to(self.train_device)
 
-        self.states, self.next_states, self.action_log_probs, self.rewards, self.done = [], [], [], [], []
+        self.states, self.next_states, self.action_log_probs, self.rewards, self.done, self.episode_done = [], [], [], [], [], []
 
         # Dispatch to the appropriate variant
+        # REINFORCE variants use episode_done (terminated|truncated) for
+        # discount_rewards so returns don't bleed across episodes when
+        # update_every > 1.  ac_mc also uses episode_done for MC returns.
+        # ac_td uses the MDP-only 'done' for the bootstrap mask (truncation
+        # is NOT a true terminal state for the value function).
         if self.algorithm == 'reinforce':
-            return self._update_reinforce(action_log_probs, rewards, done)
+            return self._update_reinforce(action_log_probs, rewards, episode_done)
         elif self.algorithm == 'reinforce_batch':
-            return self._update_reinforce_batch(action_log_probs, rewards, done)
+            return self._update_reinforce_batch(action_log_probs, rewards, episode_done)
         elif self.algorithm == 'reinforce_ema':
-            return self._update_reinforce_ema(action_log_probs, rewards, done)
+            return self._update_reinforce_ema(action_log_probs, rewards, episode_done)
         elif self.algorithm == 'reinforce_fixed':
-            return self._update_reinforce_fixed(action_log_probs, rewards, done)
+            return self._update_reinforce_fixed(action_log_probs, rewards, episode_done)
         elif self.algorithm == 'ac_mc':
-            return self._update_ac_mc(action_log_probs, states, rewards, done)
+            return self._update_ac_mc(action_log_probs, states, rewards, episode_done)
         elif self.algorithm == 'ac_td':
             return self._update_ac_td(action_log_probs, states, next_states,
                                       rewards, done)
@@ -328,12 +341,13 @@ class Agent(object):
         """ state -> action (3-d), action_log_densities """
         x = torch.from_numpy(state).float().to(self.train_device)
 
-        normal_dist = self.policy(x)
-
-        if evaluation:  # Return mean
+        if evaluation:  # Return mean — no graph needed
+            with torch.no_grad():
+                normal_dist = self.policy(x)
             return normal_dist.mean, None
 
         else:   # Sample from the distribution
+            normal_dist = self.policy(x)
             action = normal_dist.sample()
 
             # Compute Log probability of the action [ log(p(a[0] AND a[1] AND a[2])) = log(p(a[0])*p(a[1])*p(a[2])) = log(p(a[0])) + log(p(a[1])) + log(p(a[2])) ]
@@ -342,9 +356,11 @@ class Agent(object):
             return action, action_log_prob
 
 
-    def store_outcome(self, state, next_state, action_log_prob, reward, done):
+    def store_outcome(self, state, next_state, action_log_prob, reward,
+                      done, episode_done):
         self.states.append(torch.from_numpy(state).float())
         self.next_states.append(torch.from_numpy(next_state).float())
         self.action_log_probs.append(action_log_prob)
         self.rewards.append(torch.Tensor([reward]))
-        self.done.append(done)
+        self.done.append(done)                # MDP termination (for TD bootstrap)
+        self.episode_done.append(episode_done) # episode boundary (for return reset)
