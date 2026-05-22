@@ -36,7 +36,7 @@ import numpy as np
 # -----------------------------------------------------------------------
 # Grid definition
 # -----------------------------------------------------------------------
-LR_VALUES     = [3e-4,1e-3,3e-3]
+LR_VALUES     = [1e-4, 1e-3, 1e-2]
 UPDATE_VALUES = [1,5]
 SEEDS         = [1,2,3,4,5]
 EPISODES      = 3000
@@ -74,6 +74,7 @@ def run_one(algorithm, lr, update_every, seed, episodes, results_dir, skip_exist
         '--print-every', '500',
         '--eval-every',  '50',
         '--eval-episodes', '10',
+        '--critic-lr',   '1e-3',
     ]
     print(f"  [run]   " + ' '.join(cmd[2:]))
     t0 = time.time()
