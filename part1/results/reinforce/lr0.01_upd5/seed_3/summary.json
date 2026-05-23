@@ -1,0 +1,14 @@
+{
+  "total_episodes": 2000,
+  "wall_time_s": 744.0,
+  "n_eval_checkpoints": 40,
+  "best_eval_mean": 913.32,
+  "best_eval_episode": 1550,
+  "smoothed_best_eval": 593.48,
+  "smoothed_best_episode": 1550,
+  "smoothing_window": 5,
+  "topk_eval_mean": 794.7,
+  "topk_k": 5,
+  "final_eval_mean": 138.61,
+  "final_k": 5
+}
