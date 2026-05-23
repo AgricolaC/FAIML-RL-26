@@ -6,7 +6,6 @@ __pycache__/
 part1/results/**/*.pt
 part1/results/**/log.csv
 part1/results/plots/
-videos/
 
 # Claude Code / AI tooling (private, do not push)
 .claude/
