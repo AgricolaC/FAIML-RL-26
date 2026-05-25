@@ -10,5 +10,6 @@
   "topk_eval_mean": 231.14,
   "topk_k": 5,
   "final_eval_mean": 164.7,
-  "final_k": 5
+  "final_k": 5,
+  "standardized": true
 }

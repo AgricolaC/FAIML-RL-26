@@ -16,5 +16,6 @@
   "smooth_window": 5,
   "topk": 5,
   "final_k": 5,
-  "render": false
+  "render": false,
+  "standardized": true
 }
