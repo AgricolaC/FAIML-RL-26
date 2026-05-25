@@ -59,11 +59,10 @@ def main():
     else:
         env = gym.make('Hopper-v4')
 
-    # ---- evaluation loop ----
     returns, lengths = [], []
 
     for i in range(args.episodes):
-        state, _ = env.reset(seed=args.seed + i)
+        state, _ = env.reset(seed=args.seed + 100_000 + i)
         done = False
         ep_return = 0.0
         ep_length = 0

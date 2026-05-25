@@ -6,6 +6,7 @@ Usage examples:
 """
 import argparse
 import csv
+import inspect
 import json
 import os
 import time
@@ -246,6 +247,11 @@ def main():
                   gamma=args.gamma,
                   ema_alpha=args.ema_alpha,
                   fixed_baseline=args.fixed_baseline)
+
+    # Prevent provenance hazards: assert the agent has the correct 6-arg store_outcome signature.
+    # Older intermediate agent.py generations had a 5-arg signature and will crash here.
+    assert len(inspect.signature(agent.store_outcome).parameters) >= 6, \
+        "Stale agent.py detected: store_outcome must accept at least 6 arguments (including self). Please ensure you are using the final agent.py version."
 
     # ---- LR schedulers (per-update; see --lr-schedule help for caveat) ----
     num_updates = args.episodes // args.update_every

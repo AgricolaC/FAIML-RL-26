@@ -28,6 +28,20 @@ def _standardize(advantage, eps=1e-8):
         return advantage - mean
     return (advantage - mean) / (std + eps)
 
+def _scale_only(advantage, eps=1e-8):
+    """Normalize advantage SCALE without re-centering.
+
+    Constant-baseline variants (reinforce_ema / reinforce_fixed) must NOT be
+    run through _standardize: subtracting the batch mean cancels the constant
+    baseline entirely (std(G-b)==std(G)), collapsing them into reinforce_batch.
+    Dividing by std alone fixes the scale (the cause of LR-sensitivity)
+    while preserving each baseline's distinct centering.
+    """
+    std = advantage.std()
+    if std < eps:
+        return advantage
+    return advantage / (std + eps)
+
 
 VALID_ALGORITHMS = ['reinforce', 'reinforce_batch', 'reinforce_ema', 'reinforce_fixed', 'ac_mc', 'ac_td']
 
@@ -232,7 +246,7 @@ class Agent(object):
         """REINFORCE + per-batch mean baseline."""
         G = discount_rewards(rewards, self.gamma, done)
         baseline = G.mean()
-        advantage = G - baseline
+        advantage = _standardize(G - baseline)
 
         actor_loss = -(action_log_probs * advantage).mean()
 
@@ -256,7 +270,7 @@ class Agent(object):
 
         # Lazy init on first call; standard EMA thereafter.
         baseline = self._update_ema(G.mean().item())
-        advantage = G - baseline
+        advantage = _scale_only(G - baseline)
 
         actor_loss = -(action_log_probs * advantage).mean()
 
@@ -276,7 +290,7 @@ class Agent(object):
     def _update_reinforce_fixed(self, action_log_probs, rewards, done):
         """REINFORCE + constant baseline (set once at construction)."""
         G = discount_rewards(rewards, self.gamma, done)
-        advantage = G - self.fixed_baseline
+        advantage = _scale_only(G - self.fixed_baseline)
 
         actor_loss = -(action_log_probs * advantage).mean()
 

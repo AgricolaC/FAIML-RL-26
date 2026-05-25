@@ -431,6 +431,16 @@ def derive_findings(per_config, cfg):
     best = ranked[0]
     runner_up = ranked[1] if len(ranked) > 1 else None
 
+    # D3: gate the headline on statistical separation. If the top two configs
+    # overlap within one pooled std, report a TIE rather than a noisy winner.
+    best_vs_runner = (
+        _compare(_label(best), best, _label(runner_up), runner_up, cfg)
+        if runner_up is not None else None)
+    if best_vs_runner is not None and best_vs_runner['overlapping_within_1std']:
+        best_overall_label = f"TIE: {_label(best)}  ≈  {_label(runner_up)}"
+    else:
+        best_overall_label = _label(best)
+
     by_algo = defaultdict(list)
     for c in per_config:
         by_algo[c['algorithm']].append(c)
@@ -483,7 +493,7 @@ def derive_findings(per_config, cfg):
     findings = {
         'n_configs': len(per_config),
         'n_single_seed_configs': sum(1 for c in per_config if c['single_seed']),
-        'best_overall': _label(best),
+        'best_overall': best_overall_label,
         'best_overall_final_eval': best['final_eval_mean'],
         'best_overall_std': best['final_eval_std'],
         'best_per_algorithm': best_per_algo_summary,
@@ -505,10 +515,8 @@ def derive_findings(per_config, cfg):
     }
 
     # Top-1 vs top-2 with significance
-    if runner_up is not None:
-        findings['best_vs_runner_up'] = _compare(
-            _label(best), best, _label(runner_up), runner_up, cfg
-        )
+    if best_vs_runner is not None:
+        findings['best_vs_runner_up'] = best_vs_runner
 
     findings['most_stable'] = (
         {'config': _label(most_stable), 'cv': most_stable['seed_sensitivity_cv']}
