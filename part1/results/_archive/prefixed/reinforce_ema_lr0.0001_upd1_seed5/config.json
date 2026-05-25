@@ -7,7 +7,7 @@
   "ema_alpha": 0.05,
   "fixed_baseline": 20.0,
   "seed": 5,
-  "print_every": 50,
+  "print_every": 500,
   "eval_every": 50,
   "eval_episodes": 10,
   "results_dir": "C:\\Users\\ahmet\\Downloads\\FAIML-RL-26-main\\FAIML-RL-26-main\\part1\\results",
