@@ -2,10 +2,24 @@ venv/
 .DS_Store
 __pycache__/
 *.pyc
+
+# IDE and Project Settings
+.vscode/
+.idea/
+.pytest_cache/
+.ipynb_checkpoints/
+
 # Part 1 results — allow lightweight metadata, exclude binaries and large logs
 part1/results/plots/
+
+# Part 2 results — exclude large model subdirectories, TensorBoard logs, and videos
+# (This keeps the lightweight results/summary.json tracked by Git)
+part2/results/*/
+part2/runs/
+part2/videos/
 
 # Claude Code / AI tooling (private, do not push)
 .claude/
 CLAUDE.md
 docs/superpowers/
+
