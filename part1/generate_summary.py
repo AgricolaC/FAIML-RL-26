@@ -50,7 +50,7 @@ _trapz = getattr(np, 'trapezoid', None) or getattr(np, 'trapz')
 class SummaryConfig:
     def __init__(
         self,
-        convergence_threshold=1200.0,
+        convergence_threshold=1500.0,
         hold_fraction=0.10,            # fraction of remaining episodes the crossing must hold 
         smooth_window=100,             # rolling window (used for curves + convergence ONLY)
         final_eval_checkpoints=10,     # last N eval checkpoints -> "final" window
@@ -62,7 +62,7 @@ class SummaryConfig:
         min_mean_for_cv=200.0,          # below this mean, report std instead of CV (avoid blow-up)
         overlap_sigma=1.0,             # how many pooled std's defines "overlapping" in findings
         meaningful_floor=200.0,         # configs below this final_eval excluded from stability findings
-        survival_threshold=900.0,      # steps above this -> "survived" (Hopper truncation ~1000)
+        survival_threshold=900.0,      # steps above this -> "survived" (Hopper truncation = 1000)
         velocity_threshold=0.5,        # velocity above this -> "hopping" (alive bonus is 1.0)
         self_relative_frac=0.90,       # t_reach: fraction of own peak for self-relative convergence
         n_bootstrap=2000,              # bootstrap resamples for IQM confidence intervals
