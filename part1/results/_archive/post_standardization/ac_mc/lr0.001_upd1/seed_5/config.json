@@ -1,0 +1,20 @@
+{
+  "algorithm": "ac_mc",
+  "episodes": 2000,
+  "gamma": 0.99,
+  "lr": 0.001,
+  "critic_lr": 0.001,
+  "ema_alpha": 0.05,
+  "fixed_baseline": 20.0,
+  "seed": 5,
+  "print_every": 500,
+  "eval_every": 50,
+  "eval_episodes": 10,
+  "results_dir": "/Users/berkcalisir/BerkCalisir/School&Career/school-docs/current-courses/Fundamentals of Artificial Intelligence, Machine and Deep Learning /FAIMDL RL Project/FAIML-RL-26-main/part1/results",
+  "update_every": 1,
+  "lr_schedule": "none",
+  "smooth_window": 5,
+  "topk": 5,
+  "final_k": 5,
+  "render": false
+}

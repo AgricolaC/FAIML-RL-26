@@ -127,6 +127,28 @@ def run_part1(args, checkpoint_path=None, suppress_print=False):
         print(f"Mean length : {np.mean(lengths):>8.1f}")
         print(f"{'='*55}")
 
+    if args.save_video and getattr(args, 'keep_best_only', False) and returns:
+        best_idx = int(np.argmax(returns))
+        import glob
+        
+        # 1. Rename the best episode
+        for f in glob.glob(os.path.join(args.save_video, f'rl-video-episode-{best_idx}.*')):
+            if f.endswith('.mp4') or f.endswith('.meta.json'):
+                new_name = f.replace(f"rl-video-episode-{best_idx}", "best_episode")
+                try:
+                    os.replace(f, new_name)
+                except OSError:
+                    pass
+                    
+        # 2. Delete all other videos and meta files
+        for ext in ('*.mp4', '*.meta.json'):
+            for f in glob.glob(os.path.join(args.save_video, ext)):
+                if not (f.endswith('best_episode.mp4') or f.endswith('best_episode.meta.json')):
+                    try:
+                        os.remove(f)
+                    except OSError:
+                        pass
+
     return returns, lengths, meta
 
 
@@ -217,6 +239,28 @@ def run_part2(args, checkpoint_path=None, suppress_print=False):
         print(f"Success rate : {np.mean(successes):.1%}")
         print(f"{'='*55}")
 
+    if args.save_video and getattr(args, 'keep_best_only', False) and returns:
+        best_idx = int(np.argmax(returns))
+        import glob
+        
+        # 1. Rename the best episode
+        for f in glob.glob(os.path.join(args.save_video, f'rl-video-episode-{best_idx}.*')):
+            if f.endswith('.mp4') or f.endswith('.meta.json'):
+                new_name = f.replace(f"rl-video-episode-{best_idx}", "best_episode")
+                try:
+                    os.replace(f, new_name)
+                except OSError:
+                    pass
+                    
+        # 2. Delete all other videos and meta files
+        for ext in ('*.mp4', '*.meta.json'):
+            for f in glob.glob(os.path.join(args.save_video, ext)):
+                if not (f.endswith('best_episode.mp4') or f.endswith('best_episode.meta.json')):
+                    try:
+                        os.remove(f)
+                    except OSError:
+                        pass
+
     return returns, lengths, meta
 
 
@@ -293,6 +337,8 @@ def parse_args():
                         help='Load model_best.pt from the same directory if it exists (default: on)')
     parser.add_argument('--no-best', dest='use_best', action='store_false',
                         help='Load exactly the specified checkpoint, ignoring model_best.pt')
+    parser.add_argument('--keep-best-only', action='store_true',
+                        help='If saving video, keep only the episode with the highest return')
     return parser.parse_args()
 
 

@@ -26,15 +26,28 @@ HERE = Path(__file__).resolve().parent
 
 def best_hp_per_algo(results_dir, algorithm, final_k):
     """Return (hp_tag, [seed_dirs], score) for the highest-scoring HP config."""
-    seed_dirs = sorted(
-        glob.glob(str(results_dir / algorithm / 'lr*_upd*' / 'seed_*'))
-    )
+    seed_dirs = []
+    for p in results_dir.rglob('model_best.pt'):
+        path_str = str(p.parent)
+        found_algos = [a for a in ALL_ALGORITHMS if a in path_str]
+        if not found_algos:
+            continue
+        best_algo = max(found_algos, key=len)
+        if best_algo == algorithm:
+            seed_dirs.append(path_str)
+
     if not seed_dirs:
         return None
 
+    import re
     hp_groups = {}
     for sd in seed_dirs:
-        hp_tag = Path(sd).parent.name
+        m_lr = re.search(r'lr([\d.eE+\-]+)', sd)
+        m_upd = re.search(r'upd(\d+)', sd)
+        if m_lr and m_upd:
+            hp_tag = f"lr{float(m_lr.group(1)):g}_upd{m_upd.group(1)}"
+        else:
+            hp_tag = Path(sd).name
         hp_groups.setdefault(hp_tag, []).append(sd)
 
     best_tag, best_score = None, -float('inf')
@@ -67,8 +80,6 @@ def main():
     p = argparse.ArgumentParser(
         description='Render model_best.pt videos for the best HP per algorithm')
     p.add_argument('--results-dir', default=str(HERE / 'results'))
-    p.add_argument('--output-dir',
-                   default=str(HERE.parent / 'videos' / 'model_best'))
     p.add_argument('--algorithms', nargs='+', default=ALL_ALGORITHMS,
                    choices=ALL_ALGORITHMS)
     p.add_argument('--episodes', type=int, default=3)
@@ -80,7 +91,6 @@ def main():
     args = p.parse_args()
 
     results_dir = Path(args.results_dir)
-    output_dir = Path(args.output_dir)
     render_script = HERE / 'render_local.py'
 
     plan = []
@@ -97,10 +107,10 @@ def main():
             if not ckpt.exists():
                 print(f"  [miss] {ckpt}")
                 continue
-            out_subdir = output_dir / algo / hp_tag / Path(sd).name
+            out_subdir = Path(sd)
             plan.append((algo, hp_tag, Path(sd).name, ckpt, out_subdir))
 
-    print(f"\n{len(plan)} renders queued -> {output_dir}\n")
+    print(f"\n{len(plan)} renders queued (in-place)\n")
     if args.dry_run:
         for algo, hp, seed, ckpt, out in plan:
             print(f"  {algo}/{hp}/{seed} -> {out}")
@@ -118,6 +128,7 @@ def main():
             '--no-best',
             '--episodes', str(args.episodes),
             '--seed', str(args.seed),
+            '--keep-best-only',
         ]
         result = subprocess.run(cmd)
         if result.returncode != 0:

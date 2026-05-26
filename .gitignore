@@ -3,9 +3,6 @@ venv/
 __pycache__/
 *.pyc
 # Part 1 results — allow lightweight metadata, exclude binaries and large logs
-part1/results/**/*.pt
-!part1/results/_archive/prefixed/**/*.pt
-part1/results/**/log.csv
 part1/results/plots/
 
 # Claude Code / AI tooling (private, do not push)

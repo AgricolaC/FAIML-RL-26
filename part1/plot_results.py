@@ -16,6 +16,8 @@ import argparse
 import csv
 import glob
 import os
+import re
+from pathlib import Path
 
 import matplotlib
 matplotlib.use('Agg')  # non-interactive backend
@@ -141,18 +143,32 @@ def main():
     # ── One-time HP selection per algorithm ───────────────────────────────
     # Both plots and the summary table iterate over `algo_configs` so they
     # are guaranteed to show the same curves.
-    algo_configs = {}  # algo → [(hp_tag, [seed_dirs])]
+    algo_configs = {}  # algo -> [(hp_tag, [seed_dirs])]
     for algo in args.algorithms:
-        seed_dirs = sorted(
-            glob.glob(os.path.join(args.results_dir, algo, 'lr*_upd*', 'seed_*')) +
-            glob.glob(os.path.join(args.results_dir, algo, 'seed_*')))
+        seed_dirs = []
+        for p in Path(args.results_dir).rglob('eval_log.csv'):
+            path_str = str(p.parent)
+            found_algos = [a for a in LABELS.keys() if a in path_str]
+            if not found_algos:
+                continue
+            best_algo = max(found_algos, key=len)
+            if best_algo == algo:
+                seed_dirs.append(path_str)
+
         if not seed_dirs:
             print(f"[skip] no data for '{algo}'")
             continue
+            
         hp_groups = {}
         for sd in seed_dirs:
-            hp_tag = os.path.basename(os.path.dirname(sd))
+            m_lr = re.search(r'lr([\d.eE+\-]+)', sd)
+            m_upd = re.search(r'upd(\d+)', sd)
+            if m_lr and m_upd:
+                hp_tag = f"lr{float(m_lr.group(1)):g}_upd{m_upd.group(1)}"
+            else:
+                hp_tag = os.path.basename(sd)
             hp_groups.setdefault(hp_tag, []).append(sd)
+            
         algo_configs[algo] = select_configs(
             hp_groups, args.best_config_only, args.final_eval_checkpoints)
         if args.best_config_only and algo_configs[algo]:

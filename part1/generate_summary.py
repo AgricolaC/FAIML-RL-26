@@ -52,7 +52,7 @@ _trapz = getattr(np, 'trapezoid', None) or getattr(np, 'trapz')
 class SummaryConfig:
     def __init__(
         self,
-        convergence_threshold=400.0,
+        convergence_threshold=1200.0,
         hold_fraction=0.10,            # fraction of remaining episodes the crossing must hold 
         smooth_window=100,             # rolling window (used for curves + convergence ONLY)
         final_eval_checkpoints=10,     # last N eval checkpoints -> "final" window
@@ -61,9 +61,9 @@ class SummaryConfig:
         plateau_window=500,            # look-ahead window (episodes) for plateau detection
         plateau_rel_eps=0.02,          # improvement < this * return_range -> plateau
         curve_points=25,               # downsampled points per eval curve
-        min_mean_for_cv=150.0,          # below this mean, report std instead of CV (avoid blow-up)
+        min_mean_for_cv=200.0,          # below this mean, report std instead of CV (avoid blow-up)
         overlap_sigma=1.0,             # how many pooled std's defines "overlapping" in findings
-        meaningful_floor=150.0,         # configs below this final_eval excluded from stability findings
+        meaningful_floor=200.0,         # configs below this final_eval excluded from stability findings
     ):
         self.convergence_threshold = convergence_threshold
         self.hold_fraction = hold_fraction
@@ -135,8 +135,13 @@ def _rolling_best_window_mean(arr, n):
 # ===========================================================================
 
 def summarize_run(log_df, eval_df, cfg):
-    returns = log_df['return'].to_numpy(dtype=float)
-    episodes = log_df['episode'].to_numpy(dtype=int)
+    if not log_df.empty and 'return' in log_df.columns:
+        returns = log_df['return'].to_numpy(dtype=float)
+        episodes = log_df['episode'].to_numpy(dtype=int)
+    else:
+        returns = np.array([], dtype=float)
+        episodes = np.array([], dtype=int)
+        
     n_ep = len(returns)
 
     # --- training-return final window (raw) ---
@@ -559,44 +564,51 @@ def derive_findings(per_config, cfg):
 # Directory walker
 # ===========================================================================
 
-def walk_results(results_dir):
+def walk_results(results_dir, intersect_with=None):
     """Yield (algorithm, lr, update_every, seed, seed_dir) for each complete run.
 
-    Supports two layouts:
-      results/<algo>/lr<LR>_upd<UPD>/seed_<N>/{log,eval_log}.csv   (sweep layout)
-      results/<algo>/seed_<N>/{log,eval_log}.csv                   (flat layout; lr/upd = NaN/1)
+    Recursively finds all eval_log.csv files and uses regex to extract the
+    configuration from the path, making it fully invariant to folder nesting depth.
     """
     root = Path(results_dir)
-    for algo_dir in sorted(root.iterdir()):
-        if not algo_dir.is_dir() or algo_dir.name in ('plots', '_smoke_test'):
-            continue
-        algorithm = algo_dir.name
-        children = sorted(algo_dir.iterdir())
-
-        # Flat layout: algo_dir directly contains seed_* dirs
-        flat_seeds = [d for d in children if d.is_dir() and d.name.startswith('seed_')]
-        if flat_seeds:
-            for seed_dir in flat_seeds:
-                seed = _parse_seed(seed_dir.name)
-                if _complete(seed_dir):
-                    yield algorithm, float('nan'), 1, seed, seed_dir
+    intersect_root = Path(intersect_with) if intersect_with else None
+    
+    # Sort for deterministic yielding
+    root_path = Path(results_dir).resolve()
+    for p in sorted(root_path.rglob('eval_log.csv')):
+        rel_parts = p.relative_to(root_path).parts
+        if any(part in ('_archive', '_smoke_test', 'plots') for part in rel_parts):
             continue
 
-        # Sweep layout: algo_dir contains lr*_upd* config dirs
-        for config_dir in children:
-            if not config_dir.is_dir():
+        seed_dir = p.parent
+        if not _complete(seed_dir, require_log=False):
+            continue
+            
+        path_str = str(seed_dir.relative_to(root_path)) if str(root_path) != '.' else str(seed_dir)
+        
+        # Extract Algorithm (longest match wins to prevent 'reinforce' matching 'reinforce_batch')
+        algos = ['reinforce_batch', 'reinforce_ema', 'reinforce_fixed', 'reinforce', 'ac_mc', 'ac_td']
+        found = [a for a in algos if a in path_str]
+        if not found:
+            continue
+        algorithm = max(found, key=len)
+        
+        # Extract LR, UPD, SEED
+        m_lr = re.search(r'lr([\d.eE+\-]+)', path_str)
+        lr = float(m_lr.group(1)) if m_lr else float('nan')
+        
+        m_upd = re.search(r'upd(\d+)', path_str)
+        upd = int(m_upd.group(1)) if m_upd else 1
+        
+        m_seed = re.search(r'seed_?(\d+)', path_str)
+        seed = int(m_seed.group(1)) if m_seed else -1
+
+        if intersect_root:
+            intersect_rel = seed_dir.relative_to(root_path)
+            if not _complete(intersect_root / intersect_rel, require_log=False):
                 continue
-            m = CONFIG_RE.match(config_dir.name)
-            if not m:
-                continue
-            lr = float(m.group(1))
-            upd = int(m.group(2))
-            for seed_dir in sorted(config_dir.iterdir()):
-                if not seed_dir.is_dir() or not seed_dir.name.startswith('seed_'):
-                    continue
-                seed = _parse_seed(seed_dir.name)
-                if _complete(seed_dir):
-                    yield algorithm, lr, upd, seed, seed_dir
+                
+        yield algorithm, lr, upd, seed, seed_dir
 
 
 def _parse_seed(name):
@@ -606,27 +618,32 @@ def _parse_seed(name):
         return -1
 
 
-def _complete(seed_dir):
-    return (seed_dir / 'log.csv').exists() and (seed_dir / 'eval_log.csv').exists()
+def _complete(seed_dir, require_log=True):
+    if require_log:
+        return (seed_dir / 'log.csv').exists() and (seed_dir / 'eval_log.csv').exists()
+    return (seed_dir / 'summary.json').exists() or (seed_dir / 'eval_log.csv').exists()
 
 
 # ===========================================================================
 # Main assembly
 # ===========================================================================
 
-def generate_summary(results_dir, output_path, cfg):
+def generate_summary(results_dir, output_path, cfg, intersect_with=None):
     per_run = []
     curves_per_run = []
     config_runs = defaultdict(list)
     config_eval_dfs = defaultdict(list)
 
     total = 0
-    for algorithm, lr, upd, seed, seed_dir in walk_results(results_dir):
-        log_df = pd.read_csv(seed_dir / 'log.csv')
+    for algorithm, lr, upd, seed, seed_dir in walk_results(results_dir, intersect_with):
+        try:
+            log_df = pd.read_csv(seed_dir / 'log.csv')
+        except FileNotFoundError:
+            log_df = pd.DataFrame()
+            
         eval_df = pd.read_csv(seed_dir / 'eval_log.csv')
 
-        if len(log_df) == 0 or len(eval_df) == 0:
-            print(f"  [skip empty] {algorithm} lr={lr} upd={upd} seed={seed}")
+        if len(eval_df) == 0:
             continue
 
         metrics = summarize_run(log_df, eval_df, cfg)
@@ -644,8 +661,6 @@ def generate_summary(results_dir, output_path, cfg):
         config_runs[key].append(metrics)
         config_eval_dfs[key].append(eval_df)
         total += 1
-        lr_disp = 'nan' if lr_key is None else f'{lr_key:.4f}'
-        print(f"  {algorithm:<18} lr={lr_disp}  upd={upd}  seed={seed}")
 
     per_config = []
     agg_curves = []
@@ -711,8 +726,10 @@ def main():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     p.add_argument('--results-dir', default='results', help='Root results directory')
+    p.add_argument('--intersect-with', default=None,
+                   help='If provided, only process runs that ALSO exist and are complete in this parallel directory tree')
     p.add_argument('--output', default='summary.json', help='Output JSON path')
-    p.add_argument('--convergence-threshold', type=float, default=100.0,
+    p.add_argument('--convergence-threshold', type=float, default=1200.0,
                    help='Smoothed-return level that counts as converged')
     p.add_argument('--hold-fraction', type=float, default=0.10,
                    help='Crossing must hold for this fraction of remaining episodes')
@@ -730,16 +747,16 @@ def main():
                    help='Improvement < this * return_range over the window => plateau')
     p.add_argument('--curve-points', type=int, default=25,
                    help='Downsampled points per eval curve')
-    p.add_argument('--min-mean-for-cv', type=float, default=30.0,
+    p.add_argument('--min-mean-for-cv', type=float, default=200.0,
                    help='Below this final-eval mean, CV is suppressed (report std instead)')
     p.add_argument('--overlap-sigma', type=float, default=1.0,
                    help='Findings flagged "overlapping" if margin < this many pooled std')
-    p.add_argument('--meaningful-floor', type=float, default=50.0,
+    p.add_argument('--meaningful-floor', type=float, default=200.0,
                    help='Configs below this final-eval excluded from stability findings')
     args = p.parse_args()
 
     cfg = build_config_from_args(args)
-    generate_summary(args.results_dir, args.output, cfg)
+    generate_summary(args.results_dir, args.output, cfg, args.intersect_with)
 
 
 if __name__ == '__main__':
