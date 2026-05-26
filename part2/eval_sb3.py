@@ -34,7 +34,16 @@ def evaluate(model_path: str, algo: str, n_episodes: int, deterministic: bool, r
     # We must wrap the env in a Monitor to use evaluate_policy correctly with dict observations
     env = Monitor(env)
 
+    # For PPO, we must load the VecNormalize statistics if they exist
     if algo.lower() == "ppo":
+        vec_norm_path = os.path.join(os.path.dirname(model_path), "vec_normalize.pkl")
+        if os.path.exists(vec_norm_path):
+            from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+            # VecNormalize requires a vectorized environment
+            env = DummyVecEnv([lambda: env])
+            env = VecNormalize.load(vec_norm_path, env)
+            env.training = False
+            env.norm_reward = False
         model = PPO.load(model_path, env=env)
     elif algo.lower() == "sac":
         model = SAC.load(model_path, env=env)
@@ -55,13 +64,25 @@ def evaluate(model_path: str, algo: str, n_episodes: int, deterministic: bool, r
     # Run a secondary manual loop just to compute the success rate, as evaluate_policy
     # doesn't natively expose the 'info' dict statistics like is_success.
     successes = []
+    is_vec_env = hasattr(env, "num_envs")
     for _ in range(n_episodes):
-        obs, _ = env.reset()
+        if is_vec_env:
+            obs = env.reset()
+        else:
+            obs, _ = env.reset()
+            
         done = False
         while not done:
             action, _ = model.predict(obs, deterministic=deterministic)
-            obs, reward, terminated, truncated, info = env.step(action)
-            done = terminated or truncated
+            
+            if is_vec_env:
+                obs, reward, done_arr, info_arr = env.step(action)
+                done = done_arr[0]
+                info = info_arr[0]
+            else:
+                obs, reward, terminated, truncated, info = env.step(action)
+                done = terminated or truncated
+                
             if done and isinstance(info, dict) and "is_success" in info:
                 successes.append(float(info["is_success"]))
 
@@ -72,10 +93,17 @@ def evaluate(model_path: str, algo: str, n_episodes: int, deterministic: bool, r
     print(f"Mean return: {mean_reward:.3f}")
     print(f"Std return:  {std_reward:.3f}")
 
+    success_rate = 0.0
     if successes:
         success_rate = float(np.mean(successes))
         print(f"Success rate: {success_rate:.2%}")
 
+    return {
+        "mean_return": float(mean_reward),
+        "std_return": float(std_reward),
+        "success_rate": success_rate,
+        "episodes": n_episodes
+    }
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate PPO/SAC on PandaPush-v3")
