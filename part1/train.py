@@ -237,7 +237,7 @@ def main():
     render_mode = 'human' if args.render else None
     env = gym.make('Hopper-v4', render_mode=render_mode)
 
-            state_space = env.observation_space.shape[0]   # 11
+    state_space = env.observation_space.shape[0]   # 11
     action_space = env.action_space.shape[0]       # 3
 
     # ---- policy & agent ----
