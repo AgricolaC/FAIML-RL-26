@@ -209,6 +209,8 @@ def main():
                         help='K trailing checkpoints averaged for final_eval_mean')
     parser.add_argument('--render', action='store_true',
                         help='Render training episodes')
+    parser.add_argument('--no-standardize', action='store_true',
+                        help='Disable return/advantage standardization (or scaling) entirely')
     args = parser.parse_args()
 
     # Apply algorithm-specific LR default when not explicitly passed
@@ -235,19 +237,22 @@ def main():
     render_mode = 'human' if args.render else None
     env = gym.make('Hopper-v4', render_mode=render_mode)
 
-    state_space = env.observation_space.shape[0]   # 11
+            state_space = env.observation_space.shape[0]   # 11
     action_space = env.action_space.shape[0]       # 3
 
     # ---- policy & agent ----
     policy = Policy(state_space, action_space)
-    agent = Agent(policy,
-                  algorithm=args.algorithm,
-                  lr=args.lr,
-                  critic_lr=args.critic_lr,
-                  gamma=args.gamma,
-                  ema_alpha=args.ema_alpha,
-                  fixed_baseline=args.fixed_baseline)
-
+    agent = Agent(
+        policy,
+        algorithm=args.algorithm,
+        device=device,
+        lr=args.lr,
+        critic_lr=args.critic_lr,
+        gamma=args.gamma,
+        ema_alpha=args.ema_alpha,
+        fixed_baseline=args.fixed_baseline,
+        standardize=not args.no_standardize
+    )
     # Prevent provenance hazards: assert the agent has the correct 6-arg store_outcome signature.
     # Older intermediate agent.py generations had a 5-arg signature and will crash here.
     assert len(inspect.signature(agent.store_outcome).parameters) >= 6, \

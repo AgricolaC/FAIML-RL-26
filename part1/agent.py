@@ -134,9 +134,10 @@ class Policy(torch.nn.Module):
 class Agent(object):
     def __init__(self, policy, algorithm='reinforce', device='cpu',
                  lr=1e-3, critic_lr=3e-3, gamma=0.99, ema_alpha=0.05,
-                 fixed_baseline=20.0):
+                 fixed_baseline=20.0, standardize=True):
         self.train_device = device
         self.policy = policy.to(self.train_device)
+        self.standardize = standardize
 
         assert algorithm in VALID_ALGORITHMS, f"Unknown algorithm: {algorithm}"
         self.algorithm = algorithm
@@ -246,7 +247,10 @@ class Agent(object):
         """REINFORCE + per-batch mean baseline."""
         G = discount_rewards(rewards, self.gamma, done)
         baseline = G.mean()
-        advantage = _standardize(G - baseline)
+        if self.standardize:
+            advantage = _standardize(G - baseline)
+        else:
+            advantage = G - baseline
 
         actor_loss = -(action_log_probs * advantage).mean()
 
@@ -270,7 +274,10 @@ class Agent(object):
 
         # Lazy init on first call; standard EMA thereafter.
         baseline = self._update_ema(G.mean().item())
-        advantage = _scale_only(G - baseline)
+        if self.standardize:
+            advantage = _scale_only(G - baseline)
+        else:
+            advantage = G - baseline
 
         actor_loss = -(action_log_probs * advantage).mean()
 
@@ -290,7 +297,10 @@ class Agent(object):
     def _update_reinforce_fixed(self, action_log_probs, rewards, done):
         """REINFORCE + constant baseline (set once at construction)."""
         G = discount_rewards(rewards, self.gamma, done)
-        advantage = _scale_only(G - self.fixed_baseline)
+        if self.standardize:
+            advantage = _scale_only(G - self.fixed_baseline)
+        else:
+            advantage = G - self.fixed_baseline
 
         actor_loss = -(action_log_probs * advantage).mean()
 
@@ -319,7 +329,10 @@ class Agent(object):
         # Advantage — detach so actor update only touches actor params.
         # Standardize for actor loss only (critic target G stays raw); the
         # _standardize helper falls back to mean-centring when std≈0.
-        advantage = _standardize((G - values).detach())
+        if self.standardize:
+            advantage = _standardize((G - values).detach())
+        else:
+            advantage = (G - values).detach()
 
         # Critic update: push V(s) toward Monte-Carlo return G
         critic_loss = F.mse_loss(values, G)
@@ -358,7 +371,10 @@ class Agent(object):
         # Standardize for actor loss only (critic target td_target stays raw);
         # the _standardize helper falls back to mean-centring when std≈0.
         advantage_raw = (td_target - values).detach()
-        advantage = _standardize(advantage_raw)
+        if self.standardize:
+            advantage = _standardize(advantage_raw)
+        else:
+            advantage = advantage_raw
 
         # Critic update: push V(s) toward TD target
         critic_loss = F.mse_loss(values, td_target)

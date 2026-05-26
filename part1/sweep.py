@@ -57,7 +57,7 @@ def _out_dir(results_dir, algorithm, lr, update_every, seed):
     return Path(results_dir) / algorithm / f'lr{lr}_upd{update_every}' / f'seed_{seed}'
 
 
-def run_one(algorithm, lr, update_every, seed, episodes, results_dir, skip_existing):
+def run_one(algorithm, lr, update_every, seed, episodes, results_dir, skip_existing, no_standardize):
     out_dir = _out_dir(results_dir, algorithm, lr, update_every, seed)
     if skip_existing and (out_dir / 'model.pt').exists():
         print(f"  [skip]  {out_dir}")
@@ -76,6 +76,9 @@ def run_one(algorithm, lr, update_every, seed, episodes, results_dir, skip_exist
         '--eval-episodes', '10',
         '--critic-lr',   '1e-3',
     ]
+    if no_standardize:
+        cmd.append('--no-standardize')
+        
     print(f"  [run]   " + ' '.join(cmd[2:]))
     t0 = time.time()
     result = subprocess.run(cmd)
@@ -152,6 +155,8 @@ def main():
                         help='Re-run configs that already have model.pt')
     parser.add_argument('--summary-only', action='store_true',
                         help='Print results table from existing runs and exit')
+    parser.add_argument('--no-standardize', action='store_true',
+                        help='Pass --no-standardize to train.py to disable standardization')
     args = parser.parse_args()
 
     if args.summary_only:
@@ -176,9 +181,12 @@ def main():
 
     for i, (algo, lr, upd, seed) in enumerate(configs, 1):
         print(f"[{i:>3}/{total}]  algo={algo:<18}  lr={lr:.0e}  upd={upd}  seed={seed}")
-        ok = run_one(algo, lr, upd, seed, args.episodes,
-                     args.results_dir, not args.no_skip)
-        if not ok:
+        success = run_one(
+            algo, lr, upd, seed, args.episodes,
+            args.results_dir, not args.no_skip,
+            args.no_standardize
+        )
+        if not success:
             failed.append((algo, lr, upd, seed))
 
     elapsed_total = time.time() - t_sweep
