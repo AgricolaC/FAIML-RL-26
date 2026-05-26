@@ -2,17 +2,15 @@
 
 Design goals
 ------------
-- Every metric uses estimators that are internally consistent (no mixing of a single
-  order statistic like the max with a windowed mean).
-- Variance / sample-efficiency metrics are computed on RAW returns; smoothing is used
-  ONLY where a denoised trajectory is genuinely wanted (curve fingerprints, the
-  *display* curve, and sustained-threshold convergence detection).
-- Convergence requires a SUSTAINED crossing, evaluated only once a full smoothing
-  window of data exists (no min_periods=1 false positives).
-- Scale-dependent thresholds (plateau epsilon) are expressed relative to each run's
-  own return range, so they mean the same thing across algorithms with different scales.
-- Comparative findings carry effect size in pooled-std units and an explicit overlap
-  flag, so a reader can judge whether a "winner" is real or noise.
+- Decomposes episodic return into orthogonal (survival, velocity) axes so that
+  a stander at (1000, 0.0) and a hopper-faller at (174, 1.05) are visibly
+  different behaviors, not just "1000 vs 182."
+- Classifies each (config, seed) endpoint into a behavior taxonomy:
+  collapsed, stander, hopper-faller, sustained-hopper.
+- Convergence is self-relative: t_reach = first episode at 90% of own peak.
+- Stability is drawdown = (peak − final) / peak.
+- Central tendency uses Interquartile Mean (IQM) — robust to bimodal
+  seed distributions where a policy either holds the hop or collapses.
 - All tunables are CLI arguments. Nothing methodological is buried as a module constant.
 
 Tiers
@@ -64,6 +62,10 @@ class SummaryConfig:
         min_mean_for_cv=200.0,          # below this mean, report std instead of CV (avoid blow-up)
         overlap_sigma=1.0,             # how many pooled std's defines "overlapping" in findings
         meaningful_floor=200.0,         # configs below this final_eval excluded from stability findings
+        survival_threshold=900.0,      # steps above this -> "survived" (Hopper truncation ~1000)
+        velocity_threshold=0.5,        # velocity above this -> "hopping" (alive bonus is 1.0)
+        self_relative_frac=0.90,       # t_reach: fraction of own peak for self-relative convergence
+        n_bootstrap=2000,              # bootstrap resamples for IQM confidence intervals
     ):
         self.convergence_threshold = convergence_threshold
         self.hold_fraction = hold_fraction
@@ -77,6 +79,10 @@ class SummaryConfig:
         self.min_mean_for_cv = min_mean_for_cv
         self.overlap_sigma = overlap_sigma
         self.meaningful_floor = meaningful_floor
+        self.survival_threshold = survival_threshold
+        self.velocity_threshold = velocity_threshold
+        self.self_relative_frac = self_relative_frac
+        self.n_bootstrap = n_bootstrap
 
     def as_dict(self):
         return {k: v for k, v in self.__dict__.items()}
@@ -131,6 +137,91 @@ def _rolling_best_window_mean(arr, n):
 
 
 # ===========================================================================
+# IQM and bootstrap helpers
+# ===========================================================================
+
+def _iqm(values):
+    """Interquartile mean: drop the bottom and top quartile, average the rest.
+
+    For N=5 seeds this drops the min and max, averages the middle 3.
+    Falls back to plain mean for N<=2.
+    """
+    a = np.sort(values)
+    n = len(a)
+    if n <= 2:
+        return float(np.mean(a))
+    q1_idx = int(np.floor(n * 0.25))
+    q3_idx = int(np.ceil(n * 0.75))
+    if q3_idx <= q1_idx:
+        return float(np.mean(a))
+    return float(np.mean(a[q1_idx:q3_idx]))
+
+
+def _bootstrap_iqm_ci(values, n_bootstrap=2000, alpha=0.05):
+    """Stratified bootstrap confidence interval around the IQM.
+
+    Returns (iqm, ci_low, ci_high).  For N<=2 returns (mean, mean, mean).
+    """
+    values = np.asarray(values, dtype=float)
+    n = len(values)
+    if n <= 2:
+        m = float(np.mean(values))
+        return m, m, m
+    rng = np.random.default_rng(42)  # deterministic for reproducibility
+    boot_iqms = np.empty(n_bootstrap)
+    for i in range(n_bootstrap):
+        sample = rng.choice(values, size=n, replace=True)
+        boot_iqms[i] = _iqm(sample)
+    lo = float(np.percentile(boot_iqms, 100 * alpha / 2))
+    hi = float(np.percentile(boot_iqms, 100 * (1 - alpha / 2)))
+    return _iqm(values), lo, hi
+
+
+# ===========================================================================
+# Behavior taxonomy
+# ===========================================================================
+
+BEHAVIOR_LABELS = ('collapsed', 'stander', 'hopper-faller', 'sustained-hopper')
+
+
+def _classify_behavior(survival, velocity, cfg):
+    """Classify a single (config, seed) endpoint into a behavior quadrant.
+
+    survival: mean episode length in final eval window (steps)
+    velocity: mean forward velocity in final eval window (return/step − 1)
+    """
+    survived = survival >= cfg.survival_threshold
+    hopping = velocity >= cfg.velocity_threshold
+    if survived and hopping:
+        return 'sustained-hopper'
+    if survived and not hopping:
+        return 'stander'
+    if not survived and hopping:
+        return 'hopper-faller'
+    return 'collapsed'
+
+
+def _self_relative_t_reach(smoothed, episodes, frac):
+    """First episode where the smoothed curve reaches `frac` of its own peak.
+
+    Ignores NaN warm-up region.  Returns None if no valid data.
+    """
+    valid_mask = ~np.isnan(smoothed)
+    if not np.any(valid_mask):
+        return None
+    peak = float(np.nanmax(smoothed))
+    if peak <= 0:
+        return None
+    target = frac * peak
+    for i in range(len(smoothed)):
+        if np.isnan(smoothed[i]):
+            continue
+        if smoothed[i] >= target:
+            return int(episodes[i])
+    return None
+
+
+# ===========================================================================
 # Tier 1 — per-run metrics
 # ===========================================================================
 
@@ -158,10 +249,40 @@ def summarize_run(log_df, eval_df, cfg):
     fe_n = min(cfg.final_eval_checkpoints, len(eval_returns))
     final_eval_std = float(np.std(eval_returns[-fe_n:])) if fe_n else None
 
-    # Calculate average return per step (Return / Length) to track jumping speed
+    # --- behavior-plane decomposition: (survival, velocity) ---
+    # return = survival × (1 + velocity), so:
+    #   survival = eval_mean_length  (steps before termination)
+    #   velocity = (return / length) - 1  (forward speed, stripped of alive bonus)
     eval_lengths = eval_df['eval_mean_length'].to_numpy(dtype=float) if 'eval_mean_length' in eval_df.columns else np.ones_like(eval_returns)
     eval_avg_per_step = eval_returns / np.maximum(eval_lengths, 1.0)
+    eval_velocity = eval_avg_per_step - 1.0  # strip alive bonus
+
     final_eval_avg_per_step = _windowed_mean(eval_avg_per_step, cfg.final_eval_checkpoints, 'tail')
+    final_survival = _windowed_mean(eval_lengths, cfg.final_eval_checkpoints, 'tail')
+    final_velocity = _windowed_mean(eval_velocity, cfg.final_eval_checkpoints, 'tail')
+
+    # Peak velocity and peak survival (independently — they may peak at different times)
+    peak_velocity, peak_vel_idx = _rolling_best_window_mean(
+        eval_velocity, cfg.peak_window_checkpoints)
+    peak_velocity_episode = (
+        int(eval_eps[peak_vel_idx])
+        if peak_vel_idx is not None and 0 <= peak_vel_idx < len(eval_eps)
+        else None
+    )
+    peak_survival, peak_surv_idx = _rolling_best_window_mean(
+        eval_lengths, cfg.peak_window_checkpoints)
+    peak_survival_episode = (
+        int(eval_eps[peak_surv_idx])
+        if peak_surv_idx is not None and 0 <= peak_surv_idx < len(eval_eps)
+        else None
+    )
+
+    # --- behavior taxonomy ---
+    behavior = _classify_behavior(
+        final_survival if final_survival is not None else 0.0,
+        final_velocity if final_velocity is not None else 0.0,
+        cfg,
+    )
 
     peak_eval_mean, peak_center_idx = _rolling_best_window_mean(
         eval_returns, cfg.peak_window_checkpoints
@@ -187,6 +308,15 @@ def summarize_run(log_df, eval_df, cfg):
     convergence_episode = _sustained_crossing(
         smoothed, episodes, cfg.convergence_threshold, cfg.hold_fraction
     )
+
+    # --- self-relative convergence: t_reach = first episode at self_relative_frac
+    #     of the run's own smoothed peak. Threshold-free in absolute terms. ---
+    t_reach = _self_relative_t_reach(smoothed, episodes, cfg.self_relative_frac)
+
+    # --- drawdown: how much of the peak was given back ---
+    drawdown = None
+    if peak_eval_mean is not None and final_eval_mean is not None and peak_eval_mean > 0:
+        drawdown = max(0.0, (peak_eval_mean - final_eval_mean) / peak_eval_mean)
 
     # --- wall time, episode length ---
     wall_time_s = float(log_df['wall_time'].iloc[-1]) if 'wall_time' in log_df else None
@@ -221,6 +351,18 @@ def summarize_run(log_df, eval_df, cfg):
         'final_eval_mean': _round(final_eval_mean),
         'final_eval_std': _round(final_eval_std),
         'final_eval_avg_per_step': _round(final_eval_avg_per_step, 3),
+        # --- behavior-plane axes ---
+        'final_survival': _round(final_survival, 1),
+        'final_velocity': _round(final_velocity, 3),
+        'peak_survival': _round(peak_survival, 1),
+        'peak_survival_episode': peak_survival_episode,
+        'peak_velocity': _round(peak_velocity, 3),
+        'peak_velocity_episode': peak_velocity_episode,
+        'behavior': behavior,
+        # --- convergence triple ---
+        't_reach_90pct': t_reach,
+        'drawdown': _round(drawdown, 3),
+        # --- legacy metrics (preserved) ---
         'peak_eval_mean': _round(peak_eval_mean),
         'peak_eval_episode': peak_eval_episode,
         'convergence_episode': convergence_episode,
@@ -304,6 +446,14 @@ def aggregate_config(run_summaries, cfg):
         std = float(np.std(v, ddof=1)) if len(v) > 1 else 0.0
         return round(float(np.mean(v)), 2), round(std, 2)
 
+    def iqm_ci(key):
+        """IQM with bootstrap 95% CI.  Returns (iqm, ci_lo, ci_hi)."""
+        v = vals(key)
+        if not v:
+            return None, None, None
+        iqm_val, lo, hi = _bootstrap_iqm_ci(np.array(v), cfg.n_bootstrap)
+        return round(iqm_val, 2), round(lo, 2), round(hi, 2)
+
     def median_iqr(key):
         v = vals(key)
         if not v:
@@ -313,12 +463,36 @@ def aggregate_config(run_summaries, cfg):
             round(float(np.percentile(v, 75) - np.percentile(v, 25)), 1),
         )
 
+    # --- legacy mean/std (preserved for backward compat) ---
     mu_final, std_final = mean_std('final_eval_mean')
     mu_avg_step, std_avg_step = mean_std('final_eval_avg_per_step')
     mu_peak, std_peak = mean_std('peak_eval_mean')
     mu_auc, std_auc = mean_std('auc_return')
     conv_med, conv_iqr = median_iqr('convergence_episode')
     final_vals = vals('final_eval_mean')
+
+    # --- IQM aggregation (robust central tendency) ---
+    iqm_return, iqm_return_lo, iqm_return_hi = iqm_ci('final_eval_mean')
+    iqm_velocity, iqm_velocity_lo, iqm_velocity_hi = iqm_ci('final_velocity')
+    iqm_survival, iqm_survival_lo, iqm_survival_hi = iqm_ci('final_survival')
+    iqm_drawdown, iqm_drawdown_lo, iqm_drawdown_hi = iqm_ci('drawdown')
+    iqm_auc, iqm_auc_lo, iqm_auc_hi = iqm_ci('auc_return')
+
+    # --- behavior-plane axes (mean/std for quick reference) ---
+    mu_survival, std_survival = mean_std('final_survival')
+    mu_velocity, std_velocity = mean_std('final_velocity')
+    mu_peak_vel, _ = mean_std('peak_velocity')
+    mu_peak_surv, _ = mean_std('peak_survival')
+    mu_drawdown, std_drawdown = mean_std('drawdown')
+
+    # --- self-relative convergence ---
+    t_reach_med, t_reach_iqr = median_iqr('t_reach_90pct')
+
+    # --- taxonomy distribution ---
+    taxonomy = {label: 0 for label in BEHAVIOR_LABELS}
+    for r in run_summaries:
+        b = r.get('behavior', 'collapsed')
+        taxonomy[b] = taxonomy.get(b, 0) + 1
 
     # Stability: prefer absolute cross-seed std (returns are on a fixed scale here).
     # Report CV ONLY when the mean is large enough that the ratio is meaningful,
@@ -334,6 +508,32 @@ def aggregate_config(run_summaries, cfg):
 
     return {
         'n_seeds': n,
+        # --- IQM aggregation (primary) ---
+        'iqm_return': iqm_return,
+        'iqm_return_ci': [iqm_return_lo, iqm_return_hi],
+        'iqm_velocity': iqm_velocity,
+        'iqm_velocity_ci': [iqm_velocity_lo, iqm_velocity_hi],
+        'iqm_survival': iqm_survival,
+        'iqm_survival_ci': [iqm_survival_lo, iqm_survival_hi],
+        'iqm_drawdown': iqm_drawdown,
+        'iqm_drawdown_ci': [iqm_drawdown_lo, iqm_drawdown_hi],
+        'iqm_auc': iqm_auc,
+        'iqm_auc_ci': [iqm_auc_lo, iqm_auc_hi],
+        # --- behavior-plane (mean/std) ---
+        'final_survival_mean': mu_survival,
+        'final_survival_std': std_survival,
+        'final_velocity_mean': mu_velocity,
+        'final_velocity_std': std_velocity,
+        'peak_velocity_mean': mu_peak_vel,
+        'peak_survival_mean': mu_peak_surv,
+        'drawdown_mean': mu_drawdown,
+        'drawdown_std': std_drawdown,
+        # --- taxonomy distribution ---
+        'taxonomy_distribution': taxonomy,
+        # --- convergence triple ---
+        't_reach_90pct_median': t_reach_med,
+        't_reach_90pct_iqr': t_reach_iqr,
+        # --- legacy metrics (preserved) ---
         'final_eval_mean': mu_final,
         'final_eval_avg_per_step': mu_avg_step,
         'final_eval_std': std_final,                 # absolute cross-seed std (primary stability metric)
@@ -410,21 +610,39 @@ def _pooled_std(a_std, b_std):
 
 
 def _compare(name_a, a, name_b, b, cfg):
-    """Effect-size-aware comparison of two configs' final_eval."""
-    ma, mb = a['final_eval_mean'] or 0.0, b['final_eval_mean'] or 0.0
+    """Effect-size-aware comparison of two configs.
+
+    Uses IQM as central tendency and IQR-based dispersion for overlap detection
+    when IQM CIs are available, falling back to legacy mean/std otherwise.
+    """
+    # Prefer IQM; fall back to mean
+    ma = a.get('iqm_return') or a.get('final_eval_mean') or 0.0
+    mb = b.get('iqm_return') or b.get('final_eval_mean') or 0.0
+
+    # Overlap detection: check if IQM CIs overlap
+    a_ci = a.get('iqm_return_ci', [None, None])
+    b_ci = b.get('iqm_return_ci', [None, None])
+    ci_overlap = None
+    if a_ci[0] is not None and b_ci[0] is not None:
+        ci_overlap = bool(a_ci[0] <= b_ci[1] and b_ci[0] <= a_ci[1])
+
+    # Legacy pooled-std comparison (always computed for backward compat)
     sa, sb = a.get('final_eval_std'), b.get('final_eval_std')
     pooled = _pooled_std(sa, sb)
     margin = ma - mb
     margin_in_std = round(margin / pooled, 2) if pooled > 0 else None
-    overlapping = bool(pooled > 0 and abs(margin) < cfg.overlap_sigma * pooled)
+    overlapping = ci_overlap if ci_overlap is not None else bool(pooled > 0 and abs(margin) < cfg.overlap_sigma * pooled)
+
     return {
         'a': name_a, 'b': name_b,
-        'a_final': round(ma, 2), 'b_final': round(mb, 2),
+        'a_iqm': round(ma, 2), 'b_iqm': round(mb, 2),
+        'a_iqm_ci': a_ci, 'b_iqm_ci': b_ci,
         'a_std': sa, 'b_std': sb,
         'margin': round(margin, 2),
         'pooled_std': round(pooled, 2),
         'margin_in_pooled_std': margin_in_std,
         'winner': name_a if margin >= 0 else name_b,
+        'ci_overlapping': ci_overlap,
         'overlapping_within_1std': overlapping,
         'verdict': 'inconclusive (overlapping)' if overlapping else 'separated',
     }
@@ -436,16 +654,28 @@ def _label(c):
     return f"{c['algorithm']}  lr={lr_str}  upd={c['update_every']}"
 
 
+def _taxonomy_sort_key(c):
+    """Sort configs by: most sustained-hoppers first, then IQM velocity descending."""
+    tax = c.get('taxonomy_distribution', {})
+    n_sustained = tax.get('sustained-hopper', 0)
+    iqm_vel = c.get('iqm_velocity') or 0.0
+    return (-n_sustained, -iqm_vel)
+
+
 def derive_findings(per_config, cfg):
     if not per_config:
         return {}
 
-    ranked = sorted(per_config, key=lambda x: x['final_eval_mean'] or 0, reverse=True)
+    # --- primary ranking: taxonomy (sustained-hoppers) then IQM velocity ---
+    ranked_behavior = sorted(per_config, key=_taxonomy_sort_key)
+    best_behavior = ranked_behavior[0]
+
+    # --- legacy ranking by IQM return (for backward compat and report) ---
+    ranked = sorted(per_config, key=lambda x: x.get('iqm_return') or x.get('final_eval_mean') or 0, reverse=True)
     best = ranked[0]
     runner_up = ranked[1] if len(ranked) > 1 else None
 
-    # D3: gate the headline on statistical separation. If the top two configs
-    # overlap within one pooled std, report a TIE rather than a noisy winner.
+    # D3: gate the headline on statistical separation.
     best_vs_runner = (
         _compare(_label(best), best, _label(runner_up), runner_up, cfg)
         if runner_up is not None else None)
@@ -459,13 +689,20 @@ def derive_findings(per_config, cfg):
         by_algo[c['algorithm']].append(c)
 
     best_per_algo = {
-        algo: max(cfgs, key=lambda x: x['final_eval_mean'] or 0)
+        algo: max(cfgs, key=lambda x: x.get('iqm_return') or x.get('final_eval_mean') or 0)
         for algo, cfgs in by_algo.items()
     }
     best_per_algo_summary = {
         algo: {
             'lr': c['lr'],
             'update_every': c['update_every'],
+            'iqm_return': c.get('iqm_return'),
+            'iqm_return_ci': c.get('iqm_return_ci'),
+            'iqm_velocity': c.get('iqm_velocity'),
+            'iqm_survival': c.get('iqm_survival'),
+            'iqm_drawdown': c.get('iqm_drawdown'),
+            'taxonomy_distribution': c.get('taxonomy_distribution'),
+            't_reach_90pct_median': c.get('t_reach_90pct_median'),
             'final_eval_mean': c['final_eval_mean'],
             'final_eval_std': c['final_eval_std'],
             'auc_mean': c['auc_mean'],
@@ -487,15 +724,28 @@ def derive_findings(per_config, cfg):
     most_stable = min(stable_pool, key=lambda x: x['seed_sensitivity_cv']) if stable_pool else None
     most_unstable = max(stable_pool, key=lambda x: x['seed_sensitivity_cv']) if stable_pool else None
 
+    # Lowest drawdown (best stability) among configs that actually learned something
+    drawdown_pool = [
+        c for c in per_config
+        if not c['single_seed']
+        and (c.get('iqm_velocity') or 0) >= cfg.velocity_threshold * 0.5
+        and c.get('iqm_drawdown') is not None
+    ]
+    lowest_drawdown = min(drawdown_pool, key=lambda x: x['iqm_drawdown']) if drawdown_pool else None
+
     converged = [c for c in per_config if c['convergence_episode_median'] is not None]
     fastest = min(converged, key=lambda x: x['convergence_episode_median']) if converged else None
+
+    # Self-relative convergence: fastest t_reach
+    t_reach_pool = [c for c in per_config if c.get('t_reach_90pct_median') is not None]
+    fastest_t_reach = min(t_reach_pool, key=lambda x: x['t_reach_90pct_median']) if t_reach_pool else None
 
     most_regressed = max(per_config, key=lambda x: x['regressed_fraction'] or 0)
 
     # Class-level bests
     def class_best(algos):
         pool = [c for c in per_config if c['algorithm'] in algos]
-        return max(pool, key=lambda x: x['final_eval_mean'] or 0) if pool else None
+        return max(pool, key=lambda x: x.get('iqm_return') or x.get('final_eval_mean') or 0) if pool else None
 
     reinforce_cfg = class_best({'reinforce'})
     baseline_cfg = class_best({'reinforce_batch', 'reinforce_ema', 'reinforce_fixed'})
@@ -506,7 +756,18 @@ def derive_findings(per_config, cfg):
     findings = {
         'n_configs': len(per_config),
         'n_single_seed_configs': sum(1 for c in per_config if c['single_seed']),
+        # --- behavior-plane ranking (primary) ---
+        'best_behavior': {
+            'config': _label(best_behavior),
+            'taxonomy_distribution': best_behavior.get('taxonomy_distribution'),
+            'iqm_velocity': best_behavior.get('iqm_velocity'),
+            'iqm_survival': best_behavior.get('iqm_survival'),
+            'iqm_drawdown': best_behavior.get('iqm_drawdown'),
+        },
+        # --- IQM return ranking (secondary) ---
         'best_overall': best_overall_label,
+        'best_overall_iqm_return': best.get('iqm_return'),
+        'best_overall_iqm_ci': best.get('iqm_return_ci'),
         'best_overall_final_eval': best['final_eval_mean'],
         'best_overall_std': best['final_eval_std'],
         'best_per_algorithm': best_per_algo_summary,
@@ -516,13 +777,16 @@ def derive_findings(per_config, cfg):
                     'algorithm': algo,
                     'best_lr': d['lr'],
                     'best_upd': d['update_every'],
+                    'iqm_return': d.get('iqm_return'),
+                    'iqm_velocity': d.get('iqm_velocity'),
+                    'taxonomy': d.get('taxonomy_distribution'),
                     'final_eval_mean': d['final_eval_mean'],
                     'final_eval_std': d['final_eval_std'],
                     'seed_cv': d['seed_sensitivity_cv'],
                 }
                 for algo, d in best_per_algo_summary.items()
             ],
-            key=lambda x: x['final_eval_mean'] or 0,
+            key=lambda x: x.get('iqm_return') or x.get('final_eval_mean') or 0,
             reverse=True,
         ),
     }
@@ -539,9 +803,24 @@ def derive_findings(per_config, cfg):
         {'config': _label(most_unstable), 'cv': most_unstable['seed_sensitivity_cv']}
         if most_unstable else None
     )
+    findings['lowest_drawdown'] = (
+        {
+            'config': _label(lowest_drawdown),
+            'iqm_drawdown': lowest_drawdown.get('iqm_drawdown'),
+            'iqm_velocity': lowest_drawdown.get('iqm_velocity'),
+        }
+        if lowest_drawdown else None
+    )
     findings['fastest_convergence'] = (
         {'config': _label(fastest), 'median_episode': fastest['convergence_episode_median']}
         if fastest else None
+    )
+    findings['fastest_t_reach'] = (
+        {
+            'config': _label(fastest_t_reach),
+            't_reach_90pct_median': fastest_t_reach.get('t_reach_90pct_median'),
+        }
+        if fastest_t_reach else None
     )
     findings['most_regressed'] = {
         'config': _label(most_regressed),
@@ -689,12 +968,15 @@ def generate_summary(results_dir, output_path, cfg, intersect_with=None):
             'n_configs': len(per_config),
             'config': cfg.as_dict(),
             'notes': {
+                'behavior_plane': 'return decomposed into survival (episode length) and velocity (return/step - 1); each seed classified as collapsed/stander/hopper-faller/sustained-hopper',
+                'iqm': 'interquartile mean (drop min and max seed, average middle 3) with stratified bootstrap 95% CIs; robust to bimodal seed distributions',
+                'convergence_triple': 't_reach_90pct = first episode at 90% of own peak (self-relative); drawdown = (peak-final)/peak; regressed = drawdown > regress_rel_drop',
                 'auc': 'computed on RAW returns, horizon-normalized',
-                'convergence': 'sustained crossing of smoothed return; warm-up window excluded',
+                'convergence_legacy': 'sustained crossing of smoothed return; warm-up window excluded',
                 'peak_and_final': 'both windowed means (consistent estimators) so regression is not biased by a single lucky checkpoint',
                 'plateau_eps': 'range-relative: plateau_rel_eps * (max-min return) of that run',
                 'stability': 'primary metric is absolute cross-seed std; CV reported only when n_seeds>1 and mean>=min_mean_for_cv',
-                'findings_significance': 'comparisons report margin_in_pooled_std and overlapping_within_1std',
+                'findings_significance': 'comparisons use IQM CI overlap when available, falling back to margin_in_pooled_std',
             },
         },
         'per_run': per_run,
@@ -725,6 +1007,10 @@ def build_config_from_args(args):
         min_mean_for_cv=args.min_mean_for_cv,
         overlap_sigma=args.overlap_sigma,
         meaningful_floor=args.meaningful_floor,
+        survival_threshold=args.survival_threshold,
+        velocity_threshold=args.velocity_threshold,
+        self_relative_frac=args.self_relative_frac,
+        n_bootstrap=args.n_bootstrap,
     )
 
 
@@ -761,6 +1047,14 @@ def main():
                    help='Findings flagged "overlapping" if margin < this many pooled std')
     p.add_argument('--meaningful-floor', type=float, default=200.0,
                    help='Configs below this final-eval excluded from stability findings')
+    p.add_argument('--survival-threshold', type=float, default=900.0,
+                   help='Episode length above this -> "survived" in behavior taxonomy')
+    p.add_argument('--velocity-threshold', type=float, default=0.5,
+                   help='Forward velocity above this -> "hopping" in behavior taxonomy')
+    p.add_argument('--self-relative-frac', type=float, default=0.90,
+                   help='Fraction of own peak for self-relative convergence (t_reach)')
+    p.add_argument('--n-bootstrap', type=int, default=2000,
+                   help='Number of bootstrap resamples for IQM confidence intervals')
     args = p.parse_args()
 
     cfg = build_config_from_args(args)

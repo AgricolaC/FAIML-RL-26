@@ -1,0 +1,184 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<div style="margin-bottom:10px;display:flex;gap:8px;align-items:center;">
+  <button id="btn-post" onclick="switchPhase('post')"
+    style="padding:5px 14px;border:1px solid var(--color-border-secondary,#555);border-radius:4px;
+           cursor:pointer;font-size:13px;color:var(--color-text-secondary,#ccc);
+           background:var(--color-background-secondary,#2a2a2a);">post-standardization</button>
+  <button id="btn-pre" onclick="switchPhase('pre')"
+    style="padding:5px 14px;border:1px solid var(--color-border-secondary,#555);border-radius:4px;
+           cursor:pointer;font-size:13px;color:var(--color-text-secondary,#ccc);
+           background:transparent;">pre-standardization</button>
+  <span style="margin-left:auto;font-size:11px;color:var(--color-text-secondary,#888);">
+    large dot = config centroid · small dot = individual seed</span>
+</div>
+
+<div style="position:relative;height:360px;">
+  <canvas id="behaviorPlane"></canvas>
+</div>
+
+<div id="legend" style="display:flex;flex-wrap:wrap;gap:12px 18px;margin-top:8px;font-size:12px;
+     color:var(--color-text-secondary,#bbb);"></div>
+
+<script>
+const COLORS = {
+  ac_mc:'#378ADD', ac_td:'#BA7517', reinforce_batch:'#1D9E75',
+  reinforce_ema:'#7F77DD', reinforce_fixed:'#D85A30', reinforce:'#888780'
+};
+const ALGO_ORDER = ['ac_mc','ac_td','reinforce_batch','reinforce_ema','reinforce_fixed','reinforce'];
+const DATA = {"post":[{"algorithm":"ac_mc","label":"ac_mc lr=1e-04 upd=1","centroid":[131.8,1.073],"seeds":[[93.2,1.288],[186.7,1.045],[155.5,1.193],[87.3,0.749],[136.2,1.088]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-04 upd=5","centroid":[109.7,1.063],"seeds":[[92.4,1.289],[128.4,0.887],[102.2,1.195],[98.4,0.862],[127.2,1.083]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-03 upd=1","centroid":[264.3,0.798],"seeds":[[77.5,0.865],[941.4,0.009],[109.0,0.9],[111.5,1.236],[82.0,0.981]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-03 upd=5","centroid":[249.2,0.971],"seeds":[[158.9,1.099],[167.2,0.927],[134.9,1.104],[479.4,0.291],[305.6,1.434]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-02 upd=1","centroid":[267.0,-0.042],"seeds":[[57.6,0.407],[719.3,-0.356],[487.0,-0.115],[35.7,-0.307],[35.3,0.161]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-02 upd=5","centroid":[379.2,0.31],"seeds":[[70.4,0.527],[188.0,0.572],[702.3,-0.046],[102.8,0.704],[832.5,-0.205]]},{"algorithm":"ac_td","label":"ac_td lr=1e-04 upd=1","centroid":[259.5,0.41],"seeds":[[212.1,0.281],[217.8,0.198],[84.6,0.937],[280.0,0.508],[502.9,0.127]]},{"algorithm":"ac_td","label":"ac_td lr=1e-04 upd=5","centroid":[73.4,0.991],"seeds":[[82.7,1.087],[65.6,0.961],[91.0,0.956],[43.7,0.748],[83.8,1.201]]},{"algorithm":"ac_td","label":"ac_td lr=1e-03 upd=1","centroid":[101.7,0.696],"seeds":[[82.7,0.958],[35.7,0.65],[290.9,0.316],[27.4,0.665],[72.0,0.892]]},{"algorithm":"ac_td","label":"ac_td lr=1e-03 upd=5","centroid":[72.3,0.841],"seeds":[[88.7,0.991],[20.8,0.621],[86.8,0.966],[79.2,0.675],[85.8,0.951]]},{"algorithm":"ac_td","label":"ac_td lr=1e-02 upd=1","centroid":[74.9,0.754],"seeds":[[59.7,0.783],[76.0,0.837],[63.4,0.761],[97.2,0.538],[78.4,0.852]]},{"algorithm":"ac_td","label":"ac_td lr=1e-02 upd=5","centroid":[61.8,0.707],"seeds":[[90.7,0.859],[18.1,0.429],[77.6,0.521],[60.9,0.849],[61.9,0.879]]},{"algorithm":"reinforce","label":"reinforce lr=1e-04 upd=1","centroid":[122.1,1.011],"seeds":[[87.6,1.247],[168.4,0.854],[90.8,1.3],[134.5,0.704],[129.2,0.952]]},{"algorithm":"reinforce","label":"reinforce lr=1e-04 upd=5","centroid":[100.8,0.955],"seeds":[[91.1,1.284],[102.3,0.759],[84.7,1.246],[101.9,0.783],[123.8,0.702]]},{"algorithm":"reinforce","label":"reinforce lr=1e-03 upd=1","centroid":[134.5,0.262],"seeds":[[42.4,0.583],[37.3,-0.198],[331.1,0.12],[159.0,-0.078],[102.8,0.883]]},{"algorithm":"reinforce","label":"reinforce lr=1e-03 upd=5","centroid":[132.9,0.829],"seeds":[[92.4,1.268],[185.7,0.578],[167.1,0.734],[106.0,0.676],[113.5,0.89]]},{"algorithm":"reinforce","label":"reinforce lr=1e-02 upd=1","centroid":[27.5,-0.443],"seeds":[[21.5,-0.495],[27.6,-0.46],[25.3,-0.634],[7.2,-0.571],[56.0,-0.053]]},{"algorithm":"reinforce","label":"reinforce lr=1e-02 upd=5","centroid":[83.1,0.004],"seeds":[[38.0,0.346],[27.4,-0.533],[205.8,0.161],[88.1,0.28],[56.1,-0.233]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-04 upd=1","centroid":[173.8,1.049],"seeds":[[109.4,1.108],[156.8,1.071],[193.3,1.187],[182.6,0.802],[226.9,1.078]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-04 upd=5","centroid":[127.0,0.931],"seeds":[[91.7,1.288],[140.5,0.844],[147.6,0.834],[94.9,0.914],[160.4,0.777]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-03 upd=1","centroid":[133.1,0.754],"seeds":[[211.8,0.776],[59.8,0.613],[146.6,1.026],[115.6,0.911],[131.9,0.446]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-03 upd=5","centroid":[134.7,1.197],"seeds":[[92.5,1.241],[137.6,1.234],[123.9,1.24],[111.0,0.829],[208.7,1.442]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-02 upd=1","centroid":[32.0,-0.515],"seeds":[[38.1,0.43],[31.5,-0.615],[9.9,-0.716],[45.7,-1.052],[34.7,-0.62]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-02 upd=5","centroid":[63.6,0.376],"seeds":[[33.9,0.396],[96.2,0.679],[80.7,-0.107],[24.6,0.024],[82.4,0.889]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-04 upd=1","centroid":[159.7,1.025],"seeds":[[92.8,1.288],[202.5,0.805],[179.7,1.076],[130.4,0.916],[193.2,1.041]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-04 upd=5","centroid":[117.9,1.004],"seeds":[[92.4,1.285],[115.0,0.929],[127.3,0.945],[94.8,0.901],[159.9,0.958]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-03 upd=1","centroid":[194.8,0.745],"seeds":[[314.8,0.333],[137.1,1.218],[373.4,0.341],[72.8,0.916],[76.0,0.918]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-03 upd=5","centroid":[161.0,0.948],"seeds":[[86.1,1.086],[160.9,1.324],[190.7,0.913],[221.3,0.578],[145.8,0.841]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-02 upd=1","centroid":[90.2,0.116],"seeds":[[56.2,-0.018],[20.3,-0.065],[244.4,0.154],[79.3,0.566],[50.6,-0.056]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-02 upd=5","centroid":[150.9,0.501],"seeds":[[46.1,-0.121],[71.0,0.573],[161.4,1.301],[53.1,0.46],[423.1,0.293]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-04 upd=1","centroid":[119.8,1.049],"seeds":[[85.8,0.978],[105.9,1.263],[92.5,1.288],[105.2,0.92],[209.6,0.796]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-04 upd=5","centroid":[99.3,1.085],"seeds":[[91.3,1.278],[101.1,0.985],[92.9,1.312],[103.2,0.856],[108.0,0.996]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-03 upd=1","centroid":[178.4,0.761],"seeds":[[181.1,0.654],[105.6,1.066],[395.9,0.486],[90.1,0.664],[119.4,0.937]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-03 upd=5","centroid":[185.4,0.682],"seeds":[[262.0,0.403],[177.1,0.801],[227.0,0.541],[98.1,0.683],[162.6,0.984]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-02 upd=1","centroid":[56.6,-0.657],"seeds":[[8.2,-0.892],[103.0,-0.21],[26.5,-2.833],[70.1,0.162],[75.0,0.486]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-02 upd=5","centroid":[196.8,0.228],"seeds":[[810.5,-0.249],[50.8,0.384],[61.0,0.632],[21.9,0.035],[39.8,0.34]]}],"pre":[{"algorithm":"ac_mc","label":"ac_mc lr=1e-04 upd=1","centroid":[167.4,0.931],"seeds":[[113.3,1.101],[194.3,1.0],[166.4,0.804],[204.2,0.733],[158.8,1.019]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-04 upd=5","centroid":[98.9,0.993],"seeds":[[91.2,1.281],[109.8,0.726],[92.3,1.311],[98.1,0.805],[102.9,0.84]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-03 upd=1","centroid":[123.9,0.967],"seeds":[[106.7,1.047],[117.4,1.19],[182.3,0.859],[90.0,0.64],[123.3,1.097]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-03 upd=5","centroid":[123.5,0.976],"seeds":[[97.4,1.254],[120.9,1.056],[127.2,1.149],[106.9,0.842],[165.0,0.577]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-02 upd=1","centroid":[96.0,0.318],"seeds":[[125.2,0.408],[71.7,0.2],[54.1,0.55],[193.9,0.547],[35.1,-0.113]]},{"algorithm":"ac_mc","label":"ac_mc lr=1e-02 upd=5","centroid":[149.6,-0.009],"seeds":[[67.3,0.057],[71.9,0.467],[99.5,-0.295],[14.4,-0.373],[494.7,0.101]]},{"algorithm":"ac_td","label":"ac_td lr=1e-04 upd=1","centroid":[126.2,0.812],"seeds":[[86.6,0.952],[174.3,0.877],[82.3,0.88],[91.0,1.078],[196.6,0.275]]},{"algorithm":"ac_td","label":"ac_td lr=1e-04 upd=5","centroid":[76.3,0.977],"seeds":[[71.9,1.017],[59.4,0.873],[91.0,1.026],[72.7,0.744],[86.7,1.224]]},{"algorithm":"ac_td","label":"ac_td lr=1e-03 upd=1","centroid":[92.6,0.851],"seeds":[[82.6,0.998],[79.9,0.817],[80.3,0.916],[79.9,0.904],[140.4,0.621]]},{"algorithm":"ac_td","label":"ac_td lr=1e-03 upd=5","centroid":[85.9,0.949],"seeds":[[96.0,0.957],[88.0,0.907],[90.6,0.945],[81.6,0.95],[73.2,0.988]]},{"algorithm":"ac_td","label":"ac_td lr=1e-02 upd=1","centroid":[233.1,0.582],"seeds":[[86.0,1.003],[71.1,0.737],[157.5,0.317],[73.0,0.82],[778.1,0.034]]},{"algorithm":"ac_td","label":"ac_td lr=1e-02 upd=5","centroid":[66.7,0.687],"seeds":[[68.3,0.551],[79.3,0.837],[71.9,0.572],[21.9,0.612],[92.0,0.862]]},{"algorithm":"reinforce","label":"reinforce lr=1e-04 upd=1","centroid":[122.1,1.011],"seeds":[[87.6,1.247],[168.4,0.854],[90.8,1.3],[134.5,0.704],[129.2,0.952]]},{"algorithm":"reinforce","label":"reinforce lr=1e-04 upd=5","centroid":[100.8,0.955],"seeds":[[91.1,1.284],[102.3,0.759],[84.7,1.246],[101.9,0.783],[123.8,0.702]]},{"algorithm":"reinforce","label":"reinforce lr=1e-03 upd=1","centroid":[134.5,0.262],"seeds":[[42.4,0.583],[37.3,-0.198],[331.1,0.12],[159.0,-0.078],[102.8,0.883]]},{"algorithm":"reinforce","label":"reinforce lr=1e-03 upd=5","centroid":[132.9,0.829],"seeds":[[92.4,1.268],[185.7,0.578],[167.1,0.734],[106.0,0.676],[113.5,0.89]]},{"algorithm":"reinforce","label":"reinforce lr=1e-02 upd=1","centroid":[27.5,-0.443],"seeds":[[21.5,-0.495],[27.6,-0.46],[25.3,-0.634],[7.2,-0.571],[56.0,-0.053]]},{"algorithm":"reinforce","label":"reinforce lr=1e-02 upd=5","centroid":[44.2,0.116],"seeds":[[38.0,0.346],[27.4,-0.533],[47.5,0.382],[51.8,0.617],[56.1,-0.233]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-04 upd=1","centroid":[165.6,1.074],"seeds":[[97.3,1.207],[177.6,0.84],[147.1,1.293],[147.1,0.864],[258.8,1.164]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-04 upd=5","centroid":[114.8,1.053],"seeds":[[91.7,1.287],[171.7,0.622],[93.0,1.308],[95.4,0.958],[122.1,1.091]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-03 upd=1","centroid":[157.2,0.916],"seeds":[[168.5,0.942],[163.6,0.725],[130.0,1.05],[186.8,0.825],[137.2,1.037]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-03 upd=5","centroid":[166.2,0.974],"seeds":[[142.5,0.749],[169.6,1.226],[213.3,0.551],[143.4,1.136],[162.2,1.207]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-02 upd=1","centroid":[23.7,-0.379],"seeds":[[17.1,-0.033],[7.0,-0.821],[10.1,-1.324],[24.8,-0.22],[59.6,0.505]]},{"algorithm":"reinforce_batch","label":"reinforce_batch lr=1e-02 upd=5","centroid":[98.8,0.686],"seeds":[[105.0,0.821],[69.4,0.151],[166.5,0.725],[76.4,0.821],[76.9,0.914]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-04 upd=1","centroid":[179.8,0.973],"seeds":[[101.9,1.213],[189.0,0.881],[176.7,1.06],[198.6,0.683],[232.7,1.027]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-04 upd=5","centroid":[122.9,0.993],"seeds":[[93.1,1.302],[114.8,0.971],[141.5,0.858],[107.6,0.813],[157.4,1.021]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-03 upd=1","centroid":[113.1,0.891],"seeds":[[132.3,0.96],[93.7,1.199],[95.5,0.676],[113.7,0.644],[130.3,0.975]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-03 upd=5","centroid":[279.0,0.849],"seeds":[[100.3,1.22],[136.5,1.215],[892.5,0.065],[117.4,0.607],[148.2,1.139]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-02 upd=1","centroid":[154.6,0.048],"seeds":[[327.2,-0.4],[320.7,0.476],[35.1,-0.046],[40.1,0.453],[49.9,-0.243]]},{"algorithm":"reinforce_ema","label":"reinforce_ema lr=1e-02 upd=5","centroid":[206.0,0.145],"seeds":[[24.3,-0.366],[91.2,0.182],[718.0,-0.106],[103.2,0.271],[93.1,0.745]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-04 upd=1","centroid":[109.3,1.106],"seeds":[[86.0,0.969],[110.6,1.217],[92.5,1.288],[105.2,0.92],[152.4,1.136]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-04 upd=5","centroid":[113.8,1.01],"seeds":[[91.0,1.276],[106.0,0.891],[92.9,1.312],[95.7,0.953],[183.6,0.618]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-03 upd=1","centroid":[236.3,0.7],"seeds":[[102.1,1.012],[98.8,1.124],[270.4,0.444],[457.5,0.293],[252.9,0.625]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-03 upd=5","centroid":[133.8,0.893],"seeds":[[132.1,0.776],[103.3,1.192],[205.8,0.716],[100.5,0.715],[127.3,1.068]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-02 upd=1","centroid":[31.2,-0.767],"seeds":[[38.0,-0.655],[12.1,-0.706],[14.1,-0.986],[7.1,-1.707],[84.6,0.218]]},{"algorithm":"reinforce_fixed","label":"reinforce_fixed lr=1e-02 upd=5","centroid":[128.9,0.495],"seeds":[[22.1,0.4],[107.5,0.839],[124.2,0.434],[96.9,0.81],[293.8,-0.006]]}]};
+
+let currentPhase = 'post';
+
+function buildDatasets(phase) {
+  const items = DATA[phase];
+  const ds = [];
+  // group by algorithm
+  const byAlgo = {};
+  for (const it of items) {
+    if (!byAlgo[it.algorithm]) byAlgo[it.algorithm] = [];
+    byAlgo[it.algorithm].push(it);
+  }
+  for (const algo of ALGO_ORDER) {
+    const cfgs = byAlgo[algo] || [];
+    const hex = COLORS[algo];
+    // seeds layer
+    const seedPts = [];
+    for (const c of cfgs)
+      for (const s of c.seeds)
+        seedPts.push({x:s[0], y:s[1]});
+    ds.push({
+      label: algo + ' seeds',
+      data: seedPts,
+      backgroundColor: hex + '72',
+      borderColor: hex + '72',
+      pointRadius: 3.5,
+      pointHoverRadius: 5,
+      showLine: false,
+      _algo: algo, _layer: 'seed'
+    });
+    // centroid layer
+    const centPts = cfgs.map(c => ({x:c.centroid[0], y:c.centroid[1], _label:c.label}));
+    ds.push({
+      label: algo + ' centroids',
+      data: centPts,
+      backgroundColor: hex,
+      borderColor: '#ffffff',
+      borderWidth: 1.5,
+      pointRadius: 7,
+      pointHoverRadius: 9,
+      showLine: false,
+      _algo: algo, _layer: 'centroid'
+    });
+  }
+  // reference markers
+  ds.push({
+    label: 'reference',
+    data: [
+      {x:1000, y:0.0, _label:'standing peak  (return ≈ 1000)'},
+      {x:1000, y:1.0, _label:'GOAL: sustained hop  (return ≈ 2000)'}
+    ],
+    backgroundColor: '#A32D2D',
+    borderColor: '#A32D2D',
+    borderWidth: 2.5,
+    pointRadius: 9,
+    pointStyle: 'crossRot',
+    showLine: false,
+    _layer: 'ref'
+  });
+  return ds;
+}
+
+// quadrant plugin
+const quadrantPlugin = {
+  id: 'quadrants',
+  beforeDraw(chart) {
+    const {ctx, chartArea:{left,right,top,bottom}, scales:{x,y}} = chart;
+    const xDiv = x.getPixelForValue(700);
+    const yDiv = y.getPixelForValue(0.4);
+    // background fills
+    const zones = [
+      {x1:left,x2:xDiv, y1:top,   y2:yDiv,   color:'rgba(29,158,117,0.06)', label:'hopper-faller',    lx:8, ly:14},
+      {x1:xDiv,x2:right,y1:top,   y2:yDiv,   color:'rgba(29,158,117,0.14)', label:'sustained hop ★',  lx:-8,ly:14, alignR:true},
+      {x1:left,x2:xDiv, y1:yDiv,  y2:bottom, color:'rgba(162,61,45,0.05)',  label:'collapsed',        lx:8, ly:-8},
+      {x1:xDiv,x2:right,y1:yDiv,  y2:bottom, color:'rgba(186,117,23,0.07)', label:'stander',          lx:-8,ly:-8, alignR:true},
+    ];
+    ctx.save();
+    for (const z of zones) {
+      ctx.fillStyle = z.color;
+      ctx.fillRect(z.x1, z.y1, z.x2-z.x1, z.y2-z.y1);
+      ctx.fillStyle = 'rgba(136,135,128,0.55)';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = z.alignR ? 'right' : 'left';
+      ctx.textBaseline = z.ly > 0 ? 'top' : 'bottom';
+      const tx = z.alignR ? z.x2 + z.lx : z.x1 + z.lx;
+      const ty = z.ly > 0 ? z.y1 + z.ly : z.y2 + z.ly;
+      ctx.fillText(z.label, tx, ty);
+    }
+    // dashed dividers
+    ctx.setLineDash([6,4]);
+    ctx.strokeStyle = 'rgba(136,135,128,0.30)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xDiv,top); ctx.lineTo(xDiv,bottom); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(left,yDiv); ctx.lineTo(right,yDiv); ctx.stroke();
+    ctx.restore();
+  }
+};
+
+const ctx = document.getElementById('behaviorPlane').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'scatter',
+  data: {datasets: buildDatasets('post')},
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {duration: 350},
+    scales: {
+      x: {
+        min: 0, max: 1050,
+        title: {display:true, text:'survival (steps)', color:'#999', font:{size:12}},
+        grid: {color:'rgba(136,135,128,0.12)'},
+        ticks: {color:'#888'}
+      },
+      y: {
+        min: -0.65, max: 1.5,
+        title: {display:true, text:'forward velocity (m/s)', color:'#999', font:{size:12}},
+        grid: {color:'rgba(136,135,128,0.12)'},
+        ticks: {color:'#888'}
+      }
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {
+        callbacks: {
+          label(ctx) {
+            const ds = ctx.dataset;
+            const pt = ctx.raw;
+            if (ds._layer === 'ref') return pt._label;
+            if (ds._layer === 'centroid') return pt._label + '  (' + pt.x.toFixed(0) + ' steps, ' + pt.y.toFixed(2) + ' m/s)';
+            return pt.x.toFixed(0) + ' steps,  ' + pt.y.toFixed(2) + ' m/s';
+          }
+        }
+      }
+    }
+  },
+  plugins: [quadrantPlugin]
+});
+
+// legend
+const leg = document.getElementById('legend');
+for (const algo of ALGO_ORDER) {
+  const name = algo.replace(/_/g, '_');
+  leg.innerHTML += '<span style="display:inline-flex;align-items:center;gap:4px;">' +
+    '<span style="width:9px;height:9px;border-radius:2px;background:'+COLORS[algo]+';display:inline-block;"></span>' +
+    name + '</span>';
+}
+
+function switchPhase(phase) {
+  currentPhase = phase;
+  chart.data.datasets = buildDatasets(phase);
+  chart.update();
+  document.getElementById('btn-post').style.background = phase==='post' ? 'var(--color-background-secondary,#2a2a2a)' : 'transparent';
+  document.getElementById('btn-pre').style.background  = phase==='pre'  ? 'var(--color-background-secondary,#2a2a2a)' : 'transparent';
+}
+</script>
