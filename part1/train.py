@@ -245,7 +245,6 @@ def main():
     agent = Agent(
         policy,
         algorithm=args.algorithm,
-        device=device,
         lr=args.lr,
         critic_lr=args.critic_lr,
         gamma=args.gamma,

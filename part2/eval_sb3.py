@@ -28,8 +28,8 @@ def evaluate(model_path: str, algo: str, n_episodes: int, deterministic: bool, r
     if record_video:
         video_dir = os.path.join("videos", f"{algo}_{env_type}")
         os.makedirs(video_dir, exist_ok=True)
-        # Record every episode during evaluation
-        env = RecordVideo(env, video_folder=video_dir, episode_trigger=lambda x: True)
+        # Record only the first 5 episodes to save disk space
+        env = RecordVideo(env, video_folder=video_dir, episode_trigger=lambda x: x < 5)
     
     # We must wrap the env in a Monitor to use evaluate_policy correctly with dict observations
     env = Monitor(env)

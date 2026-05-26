@@ -1,15 +1,14 @@
 {
   "total_episodes": 2000,
-  "wall_time_s": 898.4,
+  "wall_time_s": 48.1,
   "n_eval_checkpoints": 40,
-  "best_eval_mean": 1029.72,
-  "best_eval_episode": 850,
-  "smoothed_best_eval": 934.87,
-  "smoothed_best_episode": 1550,
+  "best_eval_mean": 331.92,
+  "best_eval_episode": 1850,
+  "smoothed_best_eval": 213.91,
+  "smoothed_best_episode": 1800,
   "smoothing_window": 5,
-  "topk_eval_mean": 991.51,
+  "topk_eval_mean": 276.73,
   "topk_k": 5,
-  "final_eval_mean": 338.65,
-  "final_k": 5,
-  "standardized": false
+  "final_eval_mean": 200.43,
+  "final_k": 5
 }

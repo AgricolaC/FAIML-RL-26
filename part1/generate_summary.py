@@ -158,6 +158,11 @@ def summarize_run(log_df, eval_df, cfg):
     fe_n = min(cfg.final_eval_checkpoints, len(eval_returns))
     final_eval_std = float(np.std(eval_returns[-fe_n:])) if fe_n else None
 
+    # Calculate average return per step (Return / Length) to track jumping speed
+    eval_lengths = eval_df['eval_mean_length'].to_numpy(dtype=float) if 'eval_mean_length' in eval_df.columns else np.ones_like(eval_returns)
+    eval_avg_per_step = eval_returns / np.maximum(eval_lengths, 1.0)
+    final_eval_avg_per_step = _windowed_mean(eval_avg_per_step, cfg.final_eval_checkpoints, 'tail')
+
     peak_eval_mean, peak_center_idx = _rolling_best_window_mean(
         eval_returns, cfg.peak_window_checkpoints
     )
@@ -215,6 +220,7 @@ def summarize_run(log_df, eval_df, cfg):
         'final_return_std': _round(final_return_std),
         'final_eval_mean': _round(final_eval_mean),
         'final_eval_std': _round(final_eval_std),
+        'final_eval_avg_per_step': _round(final_eval_avg_per_step, 3),
         'peak_eval_mean': _round(peak_eval_mean),
         'peak_eval_episode': peak_eval_episode,
         'convergence_episode': convergence_episode,
@@ -308,6 +314,7 @@ def aggregate_config(run_summaries, cfg):
         )
 
     mu_final, std_final = mean_std('final_eval_mean')
+    mu_avg_step, std_avg_step = mean_std('final_eval_avg_per_step')
     mu_peak, std_peak = mean_std('peak_eval_mean')
     mu_auc, std_auc = mean_std('auc_return')
     conv_med, conv_iqr = median_iqr('convergence_episode')
@@ -328,6 +335,7 @@ def aggregate_config(run_summaries, cfg):
     return {
         'n_seeds': n,
         'final_eval_mean': mu_final,
+        'final_eval_avg_per_step': mu_avg_step,
         'final_eval_std': std_final,                 # absolute cross-seed std (primary stability metric)
         'final_eval_min': round(float(min(final_vals)), 2) if final_vals else None,
         'final_eval_max': round(float(max(final_vals)), 2) if final_vals else None,

@@ -55,14 +55,14 @@ def main() -> None:
         "reward_type": "dense",
     }
     
-    # Massive speed optimization for PPO: use 8 parallel environments
+    # Speed optimization for PPO: use 4 parallel environments
     if args.algo == "ppo":
-        env = make_vec_env("PandaPush-v3", n_envs=8, env_kwargs=env_kwargs, vec_env_cls=SubprocVecEnv)
+        env = make_vec_env("PandaPush-v3", n_envs=4, env_kwargs=env_kwargs, vec_env_cls=SubprocVecEnv, seed=args.seed)
     else:
-        env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv)
+        env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed)
     
     # Create evaluation environment (always evaluate on the same type as training for monitoring)
-    eval_env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv)
+    eval_env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed)
 
     # TODO: add randomization wrapper for UDR/ADR here (Phase 2)
     # Note: For VecEnvs, the wrapper should be applied inside the make_vec_env using `wrapper_class` argument
@@ -78,15 +78,15 @@ def main() -> None:
         eval_env,
         best_model_save_path=out_dir,
         log_path=out_dir,
-        eval_freq=10000 // (8 if args.algo == "ppo" else 1), # Adjust freq based on n_envs
+        eval_freq=10000 // (4 if args.algo == "ppo" else 1), # Adjust freq based on n_envs
         deterministic=True,
         render=False
     )
 
     if args.algo == "ppo":
-        model = PPO("MultiInputPolicy", env, verbose=1, tensorboard_log=f"runs/{args.algo}")
+        model = PPO("MultiInputPolicy", env, verbose=1, tensorboard_log=f"runs/{args.algo}", seed=args.seed)
     else:
-        model = SAC("MultiInputPolicy", env, verbose=1, tensorboard_log=f"runs/{args.algo}")
+        model = SAC("MultiInputPolicy", env, verbose=1, tensorboard_log=f"runs/{args.algo}", seed=args.seed)
 
     print(f"Training {args.algo.upper()} on {args.env_type} domain (Strategy: {args.sampling_strategy})...")
     
@@ -99,6 +99,10 @@ def main() -> None:
     # Save final model as well
     model.save(os.path.join(out_dir, "final_model"))
     print(f"Training finished. Best model saved to {out_dir}/best_model.zip")
+    
+    # Paranoid engineering: always close vectorized environments to prevent zombie sub-processes
+    env.close()
+    eval_env.close()
 
 if __name__ == "__main__":
     main()

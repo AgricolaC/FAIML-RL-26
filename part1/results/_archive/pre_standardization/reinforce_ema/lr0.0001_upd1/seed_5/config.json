@@ -7,15 +7,15 @@
   "ema_alpha": 0.05,
   "fixed_baseline": 20.0,
   "seed": 5,
-  "print_every": 50,
+  "print_every": 500,
   "eval_every": 50,
   "eval_episodes": 10,
-  "results_dir": "C:\\Users\\ahmet\\Downloads\\FAIML-RL-26-main\\FAIML-RL-26-main\\part1\\results",
+  "results_dir": "part1/results/_archive/pre_standardization",
   "update_every": 1,
   "lr_schedule": "none",
   "smooth_window": 5,
   "topk": 5,
   "final_k": 5,
   "render": false,
-  "standardized": false
+  "no_standardize": true
 }
