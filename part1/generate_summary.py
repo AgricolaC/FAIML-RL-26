@@ -2,15 +2,11 @@
 
 Design goals
 ------------
-- Decomposes episodic return into orthogonal (survival, velocity) axes so that
-  a stander at (1000, 0.0) and a hopper-faller at (174, 1.05) are visibly
-  different behaviors, not just "1000 vs 182."
-- Classifies each (config, seed) endpoint into a behavior taxonomy:
-  collapsed, stander, hopper-faller, sustained-hopper.
+- Decomposes episodic return into orthogonal (survival, velocity) axes.
+- Classifies each (config, seed) endpoint into a behavior taxonomy.
 - Convergence is self-relative: t_reach = first episode at 90% of own peak.
 - Stability is drawdown = (peak − final) / peak.
-- Central tendency uses Interquartile Mean (IQM) — robust to bimodal
-  seed distributions where a policy either holds the hop or collapses.
+- Central tendency uses Interquartile Mean (IQM) — robust to bimodal seed distributions where a policy either holds the hop or collapses.
 - All tunables are CLI arguments. Nothing methodological is buried as a module constant.
 
 Tiers
@@ -62,8 +58,9 @@ class SummaryConfig:
         min_mean_for_cv=200.0,          # below this mean, report std instead of CV (avoid blow-up)
         overlap_sigma=1.0,             # how many pooled std's defines "overlapping" in findings
         meaningful_floor=200.0,         # configs below this final_eval excluded from stability findings
-        survival_threshold=900.0,      # steps above this -> "survived" (Hopper truncation = 1000)
-        velocity_threshold=0.5,        # velocity above this -> "hopping" (alive bonus is 1.0)
+        survivor_threshold=500.0,
+        collapser_threshold=100.0,
+        velocity_threshold=1.3,        # velocity above this -> "hopping" (alive bonus is 1.0)
         self_relative_frac=0.90,       # t_reach: fraction of own peak for self-relative convergence
         n_bootstrap=2000,              # bootstrap resamples for IQM confidence intervals
     ):
@@ -79,7 +76,8 @@ class SummaryConfig:
         self.min_mean_for_cv = min_mean_for_cv
         self.overlap_sigma = overlap_sigma
         self.meaningful_floor = meaningful_floor
-        self.survival_threshold = survival_threshold
+        self.survivor_threshold = survivor_threshold
+        self.collapser_threshold = collapser_threshold
         self.velocity_threshold = velocity_threshold
         self.self_relative_frac = self_relative_frac
         self.n_bootstrap = n_bootstrap
@@ -181,7 +179,11 @@ def _bootstrap_iqm_ci(values, n_bootstrap=2000, alpha=0.05):
 # Behavior taxonomy
 # ===========================================================================
 
-BEHAVIOR_LABELS = ('collapsed', 'stander', 'hopper-faller', 'sustained-hopper')
+BEHAVIOR_LABELS = [
+    'collapsed', 'leap-crasher',
+    'stutterer', 'hopper-faller',
+    'stander', 'sustained-hopper'
+]
 
 
 def _classify_behavior(survival, velocity, cfg):
@@ -190,15 +192,15 @@ def _classify_behavior(survival, velocity, cfg):
     survival: mean episode length in final eval window (steps)
     velocity: mean forward velocity in final eval window (return/step − 1)
     """
-    survived = survival >= cfg.survival_threshold
-    hopping = velocity >= cfg.velocity_threshold
-    if survived and hopping:
-        return 'sustained-hopper'
-    if survived and not hopping:
-        return 'stander'
-    if not survived and hopping:
-        return 'hopper-faller'
-    return 'collapsed'
+    is_survivor = survival >= cfg.survivor_threshold
+    is_collapser = survival < cfg.collapser_threshold
+    is_hopping = velocity >= cfg.velocity_threshold
+    
+    if is_survivor:
+        return 'sustained-hopper' if is_hopping else 'stander'
+    if is_collapser:
+        return 'collapsed' if not is_hopping else 'leap-crasher'
+    return 'hopper-faller' if is_hopping else 'stutterer'
 
 
 def _self_relative_t_reach(smoothed, episodes, frac):
@@ -278,9 +280,15 @@ def summarize_run(log_df, eval_df, cfg):
     )
 
     # --- behavior taxonomy ---
-    behavior = _classify_behavior(
+    behavior_at_final = _classify_behavior(
         final_survival if final_survival is not None else 0.0,
         final_velocity if final_velocity is not None else 0.0,
+        cfg,
+    )
+    
+    behavior_at_best = _classify_behavior(
+        peak_survival if peak_survival is not None else 0.0,
+        peak_velocity if peak_velocity is not None else 0.0,
         cfg,
     )
 
@@ -358,7 +366,8 @@ def summarize_run(log_df, eval_df, cfg):
         'peak_survival_episode': peak_survival_episode,
         'peak_velocity': _round(peak_velocity, 3),
         'peak_velocity_episode': peak_velocity_episode,
-        'behavior': behavior,
+        'behavior_at_final': behavior_at_final,
+        'behavior_at_best': behavior_at_best,
         # --- convergence triple ---
         't_reach_90pct': t_reach,
         'drawdown': _round(drawdown, 3),
@@ -489,10 +498,13 @@ def aggregate_config(run_summaries, cfg):
     t_reach_med, t_reach_iqr = median_iqr('t_reach_90pct')
 
     # --- taxonomy distribution ---
-    taxonomy = {label: 0 for label in BEHAVIOR_LABELS}
+    taxonomy_at_final = {label: 0 for label in BEHAVIOR_LABELS}
+    taxonomy_at_best = {label: 0 for label in BEHAVIOR_LABELS}
     for r in run_summaries:
-        b = r.get('behavior', 'collapsed')
-        taxonomy[b] = taxonomy.get(b, 0) + 1
+        bf = r.get('behavior_at_final', 'collapsed')
+        bb = r.get('behavior_at_best', 'collapsed')
+        taxonomy_at_final[bf] = taxonomy_at_final.get(bf, 0) + 1
+        taxonomy_at_best[bb] = taxonomy_at_best.get(bb, 0) + 1
 
     # Stability: prefer absolute cross-seed std (returns are on a fixed scale here).
     # Report CV ONLY when the mean is large enough that the ratio is meaningful,
@@ -529,7 +541,8 @@ def aggregate_config(run_summaries, cfg):
         'drawdown_mean': mu_drawdown,
         'drawdown_std': std_drawdown,
         # --- taxonomy distribution ---
-        'taxonomy_distribution': taxonomy,
+        'taxonomy_at_final': taxonomy_at_final,
+        'taxonomy_at_best': taxonomy_at_best,
         # --- convergence triple ---
         't_reach_90pct_median': t_reach_med,
         't_reach_90pct_iqr': t_reach_iqr,
@@ -656,7 +669,7 @@ def _label(c):
 
 def _taxonomy_sort_key(c):
     """Sort configs by: most sustained-hoppers first, then IQM velocity descending."""
-    tax = c.get('taxonomy_distribution', {})
+    tax = c.get('taxonomy_at_best', {})
     n_sustained = tax.get('sustained-hopper', 0)
     iqm_vel = c.get('iqm_velocity') or 0.0
     return (-n_sustained, -iqm_vel)
@@ -701,7 +714,8 @@ def derive_findings(per_config, cfg):
             'iqm_velocity': c.get('iqm_velocity'),
             'iqm_survival': c.get('iqm_survival'),
             'iqm_drawdown': c.get('iqm_drawdown'),
-            'taxonomy_distribution': c.get('taxonomy_distribution'),
+            'taxonomy_at_final': c.get('taxonomy_at_final'),
+            'taxonomy_at_best': c.get('taxonomy_at_best'),
             't_reach_90pct_median': c.get('t_reach_90pct_median'),
             'final_eval_mean': c['final_eval_mean'],
             'final_eval_std': c['final_eval_std'],
@@ -759,7 +773,8 @@ def derive_findings(per_config, cfg):
         # --- behavior-plane ranking (primary) ---
         'best_behavior': {
             'config': _label(best_behavior),
-            'taxonomy_distribution': best_behavior.get('taxonomy_distribution'),
+            'taxonomy_at_final': best_behavior.get('taxonomy_at_final'),
+            'taxonomy_at_best': best_behavior.get('taxonomy_at_best'),
             'iqm_velocity': best_behavior.get('iqm_velocity'),
             'iqm_survival': best_behavior.get('iqm_survival'),
             'iqm_drawdown': best_behavior.get('iqm_drawdown'),
@@ -779,7 +794,8 @@ def derive_findings(per_config, cfg):
                     'best_upd': d['update_every'],
                     'iqm_return': d.get('iqm_return'),
                     'iqm_velocity': d.get('iqm_velocity'),
-                    'taxonomy': d.get('taxonomy_distribution'),
+                    'taxonomy_at_best': d.get('taxonomy_at_best'),
+                    'taxonomy_at_final': d.get('taxonomy_at_final'),
                     'final_eval_mean': d['final_eval_mean'],
                     'final_eval_std': d['final_eval_std'],
                     'seed_cv': d['seed_sensitivity_cv'],
@@ -1007,7 +1023,8 @@ def build_config_from_args(args):
         min_mean_for_cv=args.min_mean_for_cv,
         overlap_sigma=args.overlap_sigma,
         meaningful_floor=args.meaningful_floor,
-        survival_threshold=args.survival_threshold,
+        survivor_threshold=args.survivor_threshold,
+        collapser_threshold=args.collapser_threshold,
         velocity_threshold=args.velocity_threshold,
         self_relative_frac=args.self_relative_frac,
         n_bootstrap=args.n_bootstrap,
@@ -1047,10 +1064,12 @@ def main():
                    help='Findings flagged "overlapping" if margin < this many pooled std')
     p.add_argument('--meaningful-floor', type=float, default=200.0,
                    help='Configs below this final-eval excluded from stability findings')
-    p.add_argument('--survival-threshold', type=float, default=900.0,
-                   help='Episode length above this -> "survived" in behavior taxonomy')
-    p.add_argument('--velocity-threshold', type=float, default=0.5,
-                   help='Forward velocity above this -> "hopping" in behavior taxonomy')
+    p.add_argument('--survivor-threshold', type=float, default=500.0,
+                   help='Episode length above this -> "survivor" in behavior taxonomy')
+    p.add_argument('--collapser-threshold', type=float, default=100.0,
+                   help='Episode length below this -> "collapser" in behavior taxonomy')
+    p.add_argument('--velocity-threshold', type=float, default=1.3,
+                   help='Velocity above this -> "hopping" in behavior taxonomy')
     p.add_argument('--self-relative-frac', type=float, default=0.90,
                    help='Fraction of own peak for self-relative convergence (t_reach)')
     p.add_argument('--n-bootstrap', type=int, default=2000,
