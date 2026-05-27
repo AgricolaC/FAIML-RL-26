@@ -64,7 +64,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--timesteps",
         type=int,
-        default=300_000,
+        default=500_000,
         help="Number of training timesteps",
     )
     parser.add_argument(
@@ -98,7 +98,7 @@ def main() -> None:
         "reward_type": "dense",
     }
     
-    # Speed optimization: use 4 parallel environments for both algorithms
+    # Speed optimization: use 4 parallel environments for PPO
     if args.algo == "ppo":
         env = make_vec_env("PandaPush-v3", n_envs=4, env_kwargs=env_kwargs, vec_env_cls=SubprocVecEnv, seed=args.seed)
         env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.)
@@ -107,7 +107,7 @@ def main() -> None:
         eval_env = VecNormalize(eval_env, norm_obs=True, norm_reward=False, clip_obs=10.)
         eval_env.training = False
     else:
-        env = make_vec_env("PandaPush-v3", n_envs=4, env_kwargs=env_kwargs, vec_env_cls=SubprocVecEnv, seed=args.seed)
+        env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed)
         eval_env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed)
 
     # TODO: add randomization wrapper for UDR/ADR here (Phase 2)
@@ -140,16 +140,14 @@ def main() -> None:
     if args.algo == "ppo":
         model = PPO("MultiInputPolicy", env, verbose=1, tensorboard_log=f"runs/{args.algo}", seed=args.seed)
     else:
-        # train_freq=16 steps of n_envs=4 means updates happen every 64 collected transitions.
-        # gradient_steps=64 performs 64 updates per training phase to keep the step:update ratio exactly 1:1.
+        # SAC relies on off-policy immediate gradient updates.
+        # Vectorized batching degrades performance, so we fall back to SB3 defaults.
         model = SAC(
             "MultiInputPolicy",
             env,
             verbose=1,
             tensorboard_log=f"runs/{args.algo}",
-            seed=args.seed,
-            train_freq=16,
-            gradient_steps=64
+            seed=args.seed
         )
 
     timesteps = args.timesteps
