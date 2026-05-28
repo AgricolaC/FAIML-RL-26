@@ -1,13 +1,14 @@
 import argparse
 import os
 import time
+import multiprocessing
 import gymnasium as gym
 import panda_gym
 from stable_baselines3 import PPO, SAC
 from stable_baselines3.common.callbacks import EvalCallback, BaseCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv, VecNormalize
-from rand_wrapper import RandomizationWrapper # Will be implemented later
+from rand_wrapper import RandomizationWrapper
 
 class SyncVecNormalizeCallback(BaseCallback):
     """Callback to sync VecNormalize stats from training env to eval env."""
@@ -17,6 +18,18 @@ class SyncVecNormalizeCallback(BaseCallback):
     def _on_step(self) -> bool:
         if self.training_env is not None and hasattr(self.training_env, "obs_rms"):
             self.eval_env.obs_rms = self.training_env.obs_rms
+        return True
+
+class SaveVecNormalizeCallback(BaseCallback):
+    """Callback to save VecNormalize stats when a new best model is found."""
+    def __init__(self, save_path: str):
+        super().__init__()
+        self.save_path = save_path
+
+    def _on_step(self) -> bool:
+        vec_norm = self.model.get_vec_normalize_env()
+        if vec_norm is not None:
+            vec_norm.save(os.path.join(self.save_path, "vec_normalize.pkl"))
         return True
 
 class TimeLimitCallback(BaseCallback):
@@ -55,6 +68,18 @@ def parse_args() -> argparse.Namespace:
         help="Sampling strategy for the object mass",
     )
     parser.add_argument(
+        "--mass-min",
+        type=float,
+        default=0.1,
+        help="Minimum mass limit for UDR/ADR",
+    )
+    parser.add_argument(
+        "--mass-max",
+        type=float,
+        default=10.0,
+        help="Maximum mass limit for UDR/ADR",
+    )
+    parser.add_argument(
         "--env-type",
         type=str,
         default="source",
@@ -86,6 +111,12 @@ def parse_args() -> argparse.Namespace:
         default=600.0,
         help="Wall-clock time limit in seconds for eqtime mode",
     )
+    parser.add_argument(
+        "--learning-rate",
+        type=float,
+        default=None,
+        help="Override learning rate (default: use SB3 algorithm default)",
+    )
     return parser.parse_args()
 
 def main() -> None:
@@ -98,37 +129,51 @@ def main() -> None:
         "reward_type": "dense",
     }
     
+    vec_env_kwargs = {}
+    if args.sampling_strategy != "none":
+        wrapper_kwargs = {
+            "mode": args.sampling_strategy,
+            "mass_range": (args.mass_min, args.mass_max)
+        }
+        if args.sampling_strategy == "adr":
+            wrapper_kwargs["shared_phi_L"] = multiprocessing.Value('f', 1.0)
+            wrapper_kwargs["shared_phi_H"] = multiprocessing.Value('f', 1.0)
+        vec_env_kwargs["wrapper_class"] = RandomizationWrapper
+        vec_env_kwargs["wrapper_kwargs"] = wrapper_kwargs
+
     # Speed optimization: use 4 parallel environments for PPO
     if args.algo == "ppo":
-        env = make_vec_env("PandaPush-v3", n_envs=4, env_kwargs=env_kwargs, vec_env_cls=SubprocVecEnv, seed=args.seed)
+        env = make_vec_env("PandaPush-v3", n_envs=4, env_kwargs=env_kwargs, vec_env_cls=SubprocVecEnv, seed=args.seed, **vec_env_kwargs)
         env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.)
         
         eval_env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed)
         eval_env = VecNormalize(eval_env, norm_obs=True, norm_reward=False, clip_obs=10.)
         eval_env.training = False
     else:
-        env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed)
+        env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed, **vec_env_kwargs)
         eval_env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed)
 
-    # TODO: add randomization wrapper for UDR/ADR here (Phase 2)
-    # Note: For VecEnvs, the wrapper should be applied inside the make_vec_env using `wrapper_class` argument
-    # if args.sampling_strategy != "none":
-    #     env_kwargs["strategy"] = args.sampling_strategy
-    #     wrapper_class = RandomizationWrapper
-
     suffix = f"_{args.comparison_mode}" if args.comparison_mode != "eqsteps" else ""
-    out_dir = f"results/{args.algo}_{args.env_type}_{args.sampling_strategy}_seed{args.seed}{suffix}"
+    mass_suffix = ""
+    if args.sampling_strategy != "none":
+        mass_suffix = f"_{args.mass_min}-{args.mass_max}"
+    out_dir = f"results/{args.algo}_{args.env_type}_{args.sampling_strategy}{mass_suffix}_seed{args.seed}{suffix}"
+    
     os.makedirs(out_dir, exist_ok=True)
 
     # Setup evaluation callback
     eval_freq = 10000 // (env.num_envs if hasattr(env, "num_envs") else 1)
+    
+    save_vec_normalize = SaveVecNormalizeCallback(save_path=out_dir) if args.algo == "ppo" else None
+    
     eval_callback = EvalCallback(
         eval_env,
         best_model_save_path=out_dir,
         log_path=out_dir,
         eval_freq=eval_freq,
         deterministic=True,
-        render=False
+        render=False,
+        callback_on_new_best=save_vec_normalize
     )
     
     callbacks = [eval_callback]
@@ -142,13 +187,14 @@ def main() -> None:
     else:
         # SAC relies on off-policy immediate gradient updates.
         # Vectorized batching degrades performance, so we fall back to SB3 defaults.
-        model = SAC(
-            "MultiInputPolicy",
-            env,
-            verbose=1,
-            tensorboard_log=f"runs/{args.algo}",
-            seed=args.seed
-        )
+        sac_kwargs = {
+            "verbose": 1,
+            "tensorboard_log": f"runs/{args.algo}",
+            "seed": args.seed,
+        }
+        if args.learning_rate is not None:
+            sac_kwargs["learning_rate"] = args.learning_rate
+        model = SAC("MultiInputPolicy", env, **sac_kwargs)
 
     timesteps = args.timesteps
     if args.comparison_mode == "eqtime":

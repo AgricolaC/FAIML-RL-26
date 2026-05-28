@@ -1,4 +1,4 @@
-
+import numpy as np
 import gymnasium as gym
 
 class RandomizationWrapper(gym.Wrapper):
@@ -10,6 +10,8 @@ class RandomizationWrapper(gym.Wrapper):
         env,
         mass_range=(1.0, 1.0),
         mode="none",
+        shared_phi_L=None,
+        shared_phi_H=None,
     ):
         super().__init__(env)
 
@@ -18,25 +20,106 @@ class RandomizationWrapper(gym.Wrapper):
 
         # global limits
         self.mass_min_limit, self.mass_max_limit = mass_range
+        
+        # ADR specific state
+        self.p_b = 0.5
+        self.m = 10
+        self.t_H = 0.7
+        self.t_L = 0.3
+        self.delta = 0.1
+        
+        self.shared_phi_L = shared_phi_L
+        self.shared_phi_H = shared_phi_H
+        
+        # We need local buffers for performance tracking
+        self.buffer_L = []
+        self.buffer_H = []
+        self.last_sample_type = "train"
+        self.current_mass = None
+
+    @property
+    def phi_L(self):
+        return self.shared_phi_L.value if self.shared_phi_L else 1.0
+        
+    @phi_L.setter
+    def phi_L(self, value):
+        if self.shared_phi_L:
+            with self.shared_phi_L.get_lock():
+                self.shared_phi_L.value = float(value)
+
+    @property
+    def phi_H(self):
+        return self.shared_phi_H.value if self.shared_phi_H else 1.0
+        
+    @phi_H.setter
+    def phi_H(self, value):
+        if self.shared_phi_H:
+            with self.shared_phi_H.get_lock():
+                self.shared_phi_H.value = float(value)
 
     # -----------------------
     # Mass Sampling
     # -----------------------
 
     def _sample_mass(self):
-
         if self.mode == "none":
+            self.last_sample_type = "none"
             return None
+            
+        elif self.mode == "udr":
+            self.last_sample_type = "udr"
+            return np.random.uniform(self.mass_min_limit, self.mass_max_limit)
+            
+        elif self.mode == "adr":
+            if np.random.rand() < self.p_b:
+                if np.random.rand() < 0.5:
+                    self.last_sample_type = "boundary_L"
+                    return self.phi_L
+                else:
+                    self.last_sample_type = "boundary_H"
+                    return self.phi_H
+            else:
+                self.last_sample_type = "train"
+                return np.random.uniform(self.phi_L, self.phi_H)
         else:
             raise NotImplementedError(f"Sampling strategy '{self.mode}' is not implemented yet.")
 
     def step(self, action):
-
         obs, reward, terminated, truncated, info = self.env.step(action)
-
         done = terminated or truncated
 
-        # Optionally, you can add here extra logic
+        if done and self.mode == "adr" and self.last_sample_type in ["boundary_L", "boundary_H"]:
+            perf = float(info.get("is_success", 0))
+            if self.last_sample_type == "boundary_L":
+                self.buffer_L.append(perf)
+                if len(self.buffer_L) >= self.m:
+                    mean_perf = sum(self.buffer_L) / len(self.buffer_L)
+                    if mean_perf >= self.t_H:
+                        new_phi_L = max(self.mass_min_limit, self.phi_L - self.delta)
+                        if new_phi_L != self.phi_L:
+                            print(f"[ADR] Expanded lower bound: {self.phi_L:.2f} -> {new_phi_L:.2f} (perf: {mean_perf:.2f})")
+                            self.phi_L = new_phi_L
+                    elif mean_perf <= self.t_L:
+                        new_phi_L = min(self.phi_H, self.phi_L + self.delta)
+                        if new_phi_L != self.phi_L:
+                            print(f"[ADR] Contracted lower bound: {self.phi_L:.2f} -> {new_phi_L:.2f} (perf: {mean_perf:.2f})")
+                            self.phi_L = new_phi_L
+                    self.buffer_L.clear()
+            elif self.last_sample_type == "boundary_H":
+                self.buffer_H.append(perf)
+                if len(self.buffer_H) >= self.m:
+                    mean_perf = sum(self.buffer_H) / len(self.buffer_H)
+                    if mean_perf >= self.t_H:
+                        new_phi_H = min(self.mass_max_limit, self.phi_H + self.delta)
+                        if new_phi_H != self.phi_H:
+                            print(f"[ADR] Expanded upper bound: {self.phi_H:.2f} -> {new_phi_H:.2f} (perf: {mean_perf:.2f})")
+                            self.phi_H = new_phi_H
+                    elif mean_perf <= self.t_L:
+                        new_phi_H = max(self.phi_L, self.phi_H - self.delta)
+                        if new_phi_H != self.phi_H:
+                            print(f"[ADR] Contracted upper bound: {self.phi_H:.2f} -> {new_phi_H:.2f} (perf: {mean_perf:.2f})")
+                            self.phi_H = new_phi_H
+                    self.buffer_H.clear()
 
         return obs, reward, terminated, truncated, info
 
@@ -45,11 +128,10 @@ class RandomizationWrapper(gym.Wrapper):
     # -----------------------
 
     def reset(self, **kwargs):
-
-        new_mass = ... #TODO: sample new mass
+        new_mass = self._sample_mass()
+        self.current_mass = new_mass
 
         if new_mass is not None:
-
             sim = self.env.unwrapped.task.sim
             object_body_id = sim._bodies_idx["object"]
 
@@ -57,12 +139,6 @@ class RandomizationWrapper(gym.Wrapper):
                 bodyUniqueId=object_body_id,
                 linkIndex=-1,
                 mass=float(new_mass),
-            )
-
-            print(
-                f"[{self.mode}] mass={new_mass:.2f} "
-                f"range=[{self.mass_min:.2f},{self.mass_max:.2f}] "
-                f"type={self.last_sample_type}"
             )
 
         return super().reset(**kwargs)
