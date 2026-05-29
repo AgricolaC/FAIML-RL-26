@@ -161,7 +161,10 @@ def run_dr(seeds):
                 mass_max=m_max,
                 lr=1e-3
             )
-            model_path = os.path.join(out_dir, "best_model.zip")
+            # We report final_model for DR conditions because EvalCallback selection 
+            # on a fixed-mass eval env would bias selection toward source-mass 
+            # performance, defeating the robustness objective of DR.
+            model_path = os.path.join(out_dir, "final_model.zip")
             print(f"\n--- Evaluating {strategy}_{m_min}-{m_max} (Seed {seed}) on SOURCE ---")
             evaluate(model_path, "sac", "source")
             print(f"\n--- Evaluating {strategy}_{m_min}-{m_max} (Seed {seed}) on TARGET ---")
