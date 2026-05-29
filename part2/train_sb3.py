@@ -127,7 +127,8 @@ def main() -> None:
     if args.sampling_strategy != "none":
         mass_suffix = f"_{args.mass_min}-{args.mass_max}"
     
-    run_name = f"{args.algo}_{args.env_type}_{args.sampling_strategy}{mass_suffix}_seed{args.seed}{suffix}"
+    lr_suffix = f"_lr{args.learning_rate}" if args.learning_rate is not None else ""
+    run_name = f"{args.algo}_{args.env_type}_{args.sampling_strategy}{mass_suffix}{lr_suffix}_seed{args.seed}{suffix}"
     out_dir = f"results/{run_name}"
     
     os.makedirs(out_dir, exist_ok=True)

@@ -53,7 +53,8 @@ def train(algo, env_type, strategy, seed, comp_mode, timesteps=500000,
     if strategy != "none" and mass_min is not None and mass_max is not None:
         mass_suffix = f"_{mass_min}-{mass_max}"
         
-    out_dir = f"results/{algo}_{env_type}_{strategy}{mass_suffix}_seed{seed}{suffix}"
+    lr_suffix = f"_lr{lr}" if lr is not None else ""
+    out_dir = f"results/{algo}_{env_type}_{strategy}{mass_suffix}{lr_suffix}_seed{seed}{suffix}"
     
     # Check if already trained
     if os.path.exists(os.path.join(out_dir, "best_model.zip")):

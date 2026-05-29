@@ -5,47 +5,39 @@ import numpy as np
 from collections import defaultdict
 from eval_sb3 import evaluate
 
+import re
+
 def parse_run_name(dir_name):
-    # Phase 2 Sweep format: sweep_{algo}_{lr}_{seed}
+    # Handle sweep_ prefix (hyperparameter sweep runs)
     if dir_name.startswith("sweep_"):
         parts = dir_name.split('_')
         if len(parts) >= 4:
             algo = parts[1]
-            env_type = "source"  # Hyperparameter sweeps were done on source
-            strategy = parts[2]  # e.g., lr1e-3
+            env_type = "source"
+            strategy = parts[2]
             seed_str = parts[-1].replace('seed', '')
             try:
                 seed = int(seed_str)
             except ValueError:
                 seed = -1
-            comp_mode = "eqsteps"
-            return algo, env_type, strategy, seed, comp_mode
+            return algo, env_type, strategy, seed, "eqsteps"
 
-    # Standard / Phase 3 formats
-    parts = dir_name.split('_')
-    if len(parts) >= 4:
-        algo = parts[0]
-        env_type = parts[1]
-        
-        # Check if it has mass range (e.g. ppo_source_udr_0.5-2.0_seed1)
-        if "seed" in parts[3]:
-            strategy = parts[2]
-            seed_idx = 3
-        elif len(parts) >= 5 and "seed" in parts[4]:
-            strategy = f"{parts[2]}_{parts[3]}"
-            seed_idx = 4
-        else:
-            return None, None, None, None, None
-            
-        seed_str = parts[seed_idx].replace('seed', '')
-        try:
-            seed = int(seed_str)
-        except ValueError:
-            seed = -1
-            
-        comp_mode = parts[seed_idx + 1] if len(parts) > seed_idx + 1 else "eqsteps"
-        return algo, env_type, strategy, seed, comp_mode
-        
+    # Standard format:
+    # {algo}_{env}_{strategy}[_{mass_range}][_lr{lr}]_seed{N}[_{mode}]
+    m = re.match(
+        r'^(ppo|sac)_(source|target)_(none|udr|adr)'
+        r'(?:_([\d.]+-[\d.]+))?'      # optional: mass range e.g. 0.5-5.5
+        r'(?:_lr([\de.\-]+))?'        # optional: lr e.g. 3e-4, 1e-3
+        r'_seed(\d+)'
+        r'(?:_(eqtime|eqsteps))?$',   # optional: comparison mode
+        dir_name
+    )
+    if m:
+        algo, env_type, base_strategy, mass_range, lr, seed_str, mode = m.groups()
+        strategy = f"{base_strategy}_{mass_range}" if mass_range else base_strategy
+        comp_mode = mode if mode else "eqsteps"
+        return algo, env_type, strategy, int(seed_str), comp_mode
+
     return None, None, None, None, None
 
 def main():
