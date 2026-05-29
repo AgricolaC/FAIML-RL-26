@@ -147,8 +147,8 @@ def main() -> None:
             "mass_range": (args.mass_min, args.mass_max)
         }
         if args.sampling_strategy == "adr":
-            wrapper_kwargs["shared_phi_L"] = multiprocessing.Value('f', 1.0)
-            wrapper_kwargs["shared_phi_H"] = multiprocessing.Value('f', 1.0)
+            wrapper_kwargs["shared_phi_L"] = multiprocessing.Value('f', 0.9)
+            wrapper_kwargs["shared_phi_H"] = multiprocessing.Value('f', 1.1)
             wrapper_kwargs["log_path"] = os.path.join(out_dir, "adr_boundaries.csv")
             wrapper_kwargs["tb_log_dir"] = tb_log_dir
         vec_env_kwargs["wrapper_class"] = RandomizationWrapper

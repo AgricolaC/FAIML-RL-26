@@ -29,7 +29,7 @@ class RandomizationWrapper(gym.Wrapper):
         self.p_b = 0.5
         self.m = 50
         self.t_H = 0.7
-        self.t_L = 0.3
+        self.t_L = 0.2
         self.delta = 0.1
         
         self.shared_phi_L = shared_phi_L
@@ -51,7 +51,7 @@ class RandomizationWrapper(gym.Wrapper):
 
     @property
     def phi_L(self):
-        return self.shared_phi_L.value if self.shared_phi_L else 1.0
+        return self.shared_phi_L.value if self.shared_phi_L else 0.9
         
     @phi_L.setter
     def phi_L(self, value):
@@ -61,7 +61,7 @@ class RandomizationWrapper(gym.Wrapper):
 
     @property
     def phi_H(self):
-        return self.shared_phi_H.value if self.shared_phi_H else 1.0
+        return self.shared_phi_H.value if self.shared_phi_H else 1.1
         
     @phi_H.setter
     def phi_H(self, value):
@@ -110,13 +110,13 @@ class RandomizationWrapper(gym.Wrapper):
                     mean_perf = sum(self.buffer_L) / len(self.buffer_L)
                     if mean_perf >= self.t_H:
                         new_phi_L = max(self.mass_min_limit, self.phi_L - self.delta)
-                        if new_phi_L != self.phi_L:
+                        if abs(new_phi_L - self.phi_L) > 1e-6:
                             print(f"[ADR] Expanded lower bound: {self.phi_L:.2f} -> {new_phi_L:.2f} (perf: {mean_perf:.2f})")
                             self.phi_L = new_phi_L
                             self._log_boundary(mean_perf, "L")
                     elif mean_perf <= self.t_L:
                         new_phi_L = min(self.phi_H - MIN_RANGE, self.phi_L + self.delta)
-                        if new_phi_L != self.phi_L:
+                        if abs(new_phi_L - self.phi_L) > 1e-6:
                             print(f"[ADR] Contracted lower bound: {self.phi_L:.2f} -> {new_phi_L:.2f} (perf: {mean_perf:.2f})")
                             self.phi_L = new_phi_L
                             self._log_boundary(mean_perf, "L")
@@ -127,13 +127,13 @@ class RandomizationWrapper(gym.Wrapper):
                     mean_perf = sum(self.buffer_H) / len(self.buffer_H)
                     if mean_perf >= self.t_H:
                         new_phi_H = min(self.mass_max_limit, self.phi_H + self.delta)
-                        if new_phi_H != self.phi_H:
+                        if abs(new_phi_H - self.phi_H) > 1e-6:
                             print(f"[ADR] Expanded upper bound: {self.phi_H:.2f} -> {new_phi_H:.2f} (perf: {mean_perf:.2f})")
                             self.phi_H = new_phi_H
                             self._log_boundary(mean_perf, "H")
                     elif mean_perf <= self.t_L:
                         new_phi_H = max(self.phi_L + MIN_RANGE, self.phi_H - self.delta)
-                        if new_phi_H != self.phi_H:
+                        if abs(new_phi_H - self.phi_H) > 1e-6:
                             print(f"[ADR] Contracted upper bound: {self.phi_H:.2f} -> {new_phi_H:.2f} (perf: {mean_perf:.2f})")
                             self.phi_H = new_phi_H
                             self._log_boundary(mean_perf, "H")
