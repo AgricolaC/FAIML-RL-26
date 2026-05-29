@@ -131,6 +131,7 @@ def main() -> None:
     out_dir = f"results/{run_name}"
     
     os.makedirs(out_dir, exist_ok=True)
+    tb_log_dir = f"runs/{args.algo}/{run_name}"
 
     # Create training environment
     env_kwargs = {
@@ -149,6 +150,7 @@ def main() -> None:
             wrapper_kwargs["shared_phi_L"] = multiprocessing.Value('f', 1.0)
             wrapper_kwargs["shared_phi_H"] = multiprocessing.Value('f', 1.0)
             wrapper_kwargs["log_path"] = os.path.join(out_dir, "adr_boundaries.csv")
+            wrapper_kwargs["tb_log_dir"] = tb_log_dir
         vec_env_kwargs["wrapper_class"] = RandomizationWrapper
         vec_env_kwargs["wrapper_kwargs"] = wrapper_kwargs
 
@@ -188,13 +190,13 @@ def main() -> None:
         callbacks.append(TimeLimitCallback(args.time_limit))
 
     if args.algo == "ppo":
-        model = PPO("MultiInputPolicy", env, verbose=1, tensorboard_log=f"runs/{args.algo}", seed=args.seed)
+        model = PPO("MultiInputPolicy", env, verbose=1, tensorboard_log=tb_log_dir, seed=args.seed)
     else:
         # SAC relies on off-policy immediate gradient updates.
         # Vectorized batching degrades performance, so we fall back to SB3 defaults.
         sac_kwargs = {
             "verbose": 1,
-            "tensorboard_log": f"runs/{args.algo}",
+            "tensorboard_log": tb_log_dir,
             "seed": args.seed,
         }
         if args.learning_rate is not None:
@@ -211,7 +213,7 @@ def main() -> None:
     model.learn(
         total_timesteps=timesteps,
         callback=callbacks,
-        tb_log_name=run_name
+        tb_log_name="sb3"
     )
 
     # Save final model as well

@@ -1,5 +1,7 @@
 import numpy as np
 import gymnasium as gym
+import os
+from torch.utils.tensorboard import SummaryWriter
 
 class RandomizationWrapper(gym.Wrapper):
     """
@@ -13,6 +15,7 @@ class RandomizationWrapper(gym.Wrapper):
         shared_phi_L=None,
         shared_phi_H=None,
         log_path=None,
+        tb_log_dir=None,
     ):
         super().__init__(env)
 
@@ -43,6 +46,8 @@ class RandomizationWrapper(gym.Wrapper):
         if self.log_path is not None and not os.path.exists(self.log_path):
             with open(self.log_path, "w") as f:
                 f.write("step,phi_L,phi_H,perf,bound_updated\n")
+                
+        self.writer = SummaryWriter(log_dir=tb_log_dir) if tb_log_dir else None
 
     @property
     def phi_L(self):
@@ -140,6 +145,12 @@ class RandomizationWrapper(gym.Wrapper):
         if self.log_path is not None:
             with open(self.log_path, "a") as f:
                 f.write(f"{self.total_steps},{self.phi_L:.3f},{self.phi_H:.3f},{mean_perf:.2f},{bound_updated}\n")
+                
+        if self.writer is not None:
+            self.writer.add_scalar("adr/phi_L", self.phi_L, self.total_steps)
+            self.writer.add_scalar("adr/phi_H", self.phi_H, self.total_steps)
+            self.writer.add_scalar("adr/range_width", self.phi_H - self.phi_L, self.total_steps)
+            self.writer.add_scalar(f"adr/buf_{bound_updated}_perf", mean_perf, self.total_steps)
 
     # -----------------------
     # Reset
