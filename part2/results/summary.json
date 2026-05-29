@@ -1,0 +1,1537 @@
+{
+  "per_run": [
+    {
+      "run_name": "ppo_source_none_seed1",
+      "algorithm": "ppo",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6817484400000007,
+          "std_return": 1.6169843356238076,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.6817484400000007,
+          "std_return": 1.6169843356238076,
+          "success_rate": 0.2,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_source_none_seed1_eqtime",
+      "algorithm": "ppo",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 1,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6817484400000007,
+          "std_return": 1.6169843356238076,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.6817484400000007,
+          "std_return": 1.6169843356238076,
+          "success_rate": 0.2,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_source_none_seed2",
+      "algorithm": "ppo",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6283803599999995,
+          "std_return": 2.040533425098945,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.6283803599999995,
+          "std_return": 2.040533425098945,
+          "success_rate": 0.2,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_source_none_seed2_eqtime",
+      "algorithm": "ppo",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 2,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6283803599999995,
+          "std_return": 2.040533425098945,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.6283803599999995,
+          "std_return": 2.040533425098945,
+          "success_rate": 0.2,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_source_none_seed3",
+      "algorithm": "ppo",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.08524404,
+          "std_return": 1.917909961066754,
+          "success_rate": 0.3,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.08524404,
+          "std_return": 1.917909961066754,
+          "success_rate": 0.3,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_source_none_seed3_eqtime",
+      "algorithm": "ppo",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 3,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.08524404,
+          "std_return": 1.917909961066754,
+          "success_rate": 0.3,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.08524404,
+          "std_return": 1.917909961066754,
+          "success_rate": 0.3,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_target_none_seed1",
+      "algorithm": "ppo",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6817484400000007,
+          "std_return": 1.6169843356238076,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.6817484400000007,
+          "std_return": 1.6169843356238076,
+          "success_rate": 0.2,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_target_none_seed1_eqtime",
+      "algorithm": "ppo",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 1,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6817484400000007,
+          "std_return": 1.6169843356238076,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.6817484400000007,
+          "std_return": 1.6169843356238076,
+          "success_rate": 0.2,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_target_none_seed2",
+      "algorithm": "ppo",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6283803599999995,
+          "std_return": 2.040533425098945,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.6283803599999995,
+          "std_return": 2.040533425098945,
+          "success_rate": 0.2,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_target_none_seed2_eqtime",
+      "algorithm": "ppo",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 2,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6283803599999995,
+          "std_return": 2.040533425098945,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.6283803599999995,
+          "std_return": 2.040533425098945,
+          "success_rate": 0.2,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_target_none_seed3",
+      "algorithm": "ppo",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.08524404,
+          "std_return": 1.917909961066754,
+          "success_rate": 0.3,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.08524404,
+          "std_return": 1.917909961066754,
+          "success_rate": 0.3,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "ppo_target_none_seed3_eqtime",
+      "algorithm": "ppo",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 3,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.08524404,
+          "std_return": 1.917909961066754,
+          "success_rate": 0.3,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.08524404,
+          "std_return": 1.917909961066754,
+          "success_rate": 0.3,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_adr_0.1-15.0_seed1",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "adr_0.1-15.0",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -0.7673460400000001,
+          "std_return": 0.8172388396396234,
+          "success_rate": 0.94,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -0.71162984,
+          "std_return": 0.6272876073445213,
+          "success_rate": 0.94,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_none_seed1",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -2.8313058200000008,
+          "std_return": 1.9221542876830122,
+          "success_rate": 0.5,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -2.6586891400000003,
+          "std_return": 1.8828000713222954,
+          "success_rate": 0.38,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_none_seed1_eqtime",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 1,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.57575252,
+          "std_return": 2.032900768477933,
+          "success_rate": 0.16,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -4.05373602,
+          "std_return": 1.8199119474808938,
+          "success_rate": 0.18,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_none_seed2",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -1.9883722400000001,
+          "std_return": 2.3405653611541766,
+          "success_rate": 0.66,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -2.36419514,
+          "std_return": 1.9319450416468893,
+          "success_rate": 0.62,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_none_seed2_eqtime",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 2,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.6404167199999993,
+          "std_return": 1.9145264187475923,
+          "success_rate": 0.26,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.13260898,
+          "std_return": 2.0474400708128235,
+          "success_rate": 0.3,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_none_seed3",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -2.74403376,
+          "std_return": 2.0316966336632993,
+          "success_rate": 0.32,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -2.864919600000001,
+          "std_return": 2.0257479988636593,
+          "success_rate": 0.28,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_none_seed3_eqtime",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "none",
+      "seed": 3,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.2595999,
+          "std_return": 1.9949078721236753,
+          "success_rate": 0.22,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.4665777799999997,
+          "std_return": 1.8182725496514902,
+          "success_rate": 0.28,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.1-15.0_seed1",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.1-15.0",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -5.120545999999999,
+          "std_return": 4.212389588525216,
+          "success_rate": 0.14,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -4.533923880000001,
+          "std_return": 3.682725282656542,
+          "success_rate": 0.14,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.1-15.0_seed2",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.1-15.0",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -0.5128887799999999,
+          "std_return": 0.5201327590946868,
+          "success_rate": 0.98,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -0.47462424,
+          "std_return": 0.3497288466867759,
+          "success_rate": 0.98,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.1-15.0_seed3",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.1-15.0",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -1.6412192399999999,
+          "std_return": 2.4334919255461895,
+          "success_rate": 0.76,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -1.3680300599999997,
+          "std_return": 1.5018054919774186,
+          "success_rate": 0.9,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.5-2.0_seed1",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.5-2.0",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.2954160399999997,
+          "std_return": 2.062548710088864,
+          "success_rate": 0.48,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.2230577,
+          "std_return": 2.0806027807548584,
+          "success_rate": 0.36,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.5-2.0_seed2",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.5-2.0",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -2.1276592400000003,
+          "std_return": 2.496599044223694,
+          "success_rate": 0.76,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -2.18155704,
+          "std_return": 2.0994026595786806,
+          "success_rate": 0.54,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.5-2.0_seed3",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.5-2.0",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.7116392,
+          "std_return": 1.8832141407187553,
+          "success_rate": 0.16,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.2058627200000003,
+          "std_return": 2.003501661633591,
+          "success_rate": 0.18,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.5-5.5_seed1",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.5-5.5",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -0.6410843800000001,
+          "std_return": 1.182542014201946,
+          "success_rate": 0.98,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -0.7145052599999999,
+          "std_return": 0.6969069778697817,
+          "success_rate": 1.0,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.5-5.5_seed2",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.5-5.5",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -0.5236746800000001,
+          "std_return": 0.47876557824448657,
+          "success_rate": 1.0,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -0.61305,
+          "std_return": 0.3491348297266831,
+          "success_rate": 1.0,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_source_udr_0.5-5.5_seed3",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.5-5.5",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -0.45139236,
+          "std_return": 0.2795629637084111,
+          "success_rate": 1.0,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -0.5986163,
+          "std_return": 0.43733731573129,
+          "success_rate": 1.0,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_target_none_seed1",
+      "algorithm": "sac",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -0.7544875999999999,
+          "std_return": 0.902392819908359,
+          "success_rate": 0.92,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -0.9265115200000001,
+          "std_return": 1.0793683376306948,
+          "success_rate": 0.94,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_target_none_seed1_eqtime",
+      "algorithm": "sac",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 1,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.15366502,
+          "std_return": 2.0709623186794635,
+          "success_rate": 0.34,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.3601313800000003,
+          "std_return": 2.0819559712381612,
+          "success_rate": 0.18,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_target_none_seed2",
+      "algorithm": "sac",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -1.8806321199999996,
+          "std_return": 1.9848578918883806,
+          "success_rate": 0.68,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -1.6504674799999999,
+          "std_return": 1.8952743088104294,
+          "success_rate": 0.66,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_target_none_seed2_eqtime",
+      "algorithm": "sac",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 2,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.7755131200000007,
+          "std_return": 2.034117479900703,
+          "success_rate": 0.26,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.32138856,
+          "std_return": 2.1197041357316277,
+          "success_rate": 0.16,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_target_none_seed3",
+      "algorithm": "sac",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -1.88285066,
+          "std_return": 2.0744041425177553,
+          "success_rate": 0.64,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -2.0473622999999996,
+          "std_return": 1.93206893129201,
+          "success_rate": 0.64,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sac_target_none_seed3_eqtime",
+      "algorithm": "sac",
+      "train_env": "target",
+      "strategy": "none",
+      "seed": 3,
+      "comparison_mode": "eqtime",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.8925553399999995,
+          "std_return": 1.7972932700066688,
+          "success_rate": 0.1,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.2641864199999997,
+          "std_return": 1.7837058878669108,
+          "success_rate": 0.26,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr1e-3_seed1",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr1e-3",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -1.42584294,
+          "std_return": 2.038529971186192,
+          "success_rate": 0.82,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -1.5997004799999999,
+          "std_return": 1.7715128744649442,
+          "success_rate": 0.68,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr1e-3_seed2",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr1e-3",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -1.52559808,
+          "std_return": 2.23340595733561,
+          "success_rate": 0.82,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -1.44820232,
+          "std_return": 1.6328577028416829,
+          "success_rate": 0.86,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr1e-3_seed3",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr1e-3",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -0.48671053999999997,
+          "std_return": 0.44787243509679,
+          "success_rate": 1.0,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -0.90185124,
+          "std_return": 1.1548208184294664,
+          "success_rate": 0.92,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr1e-4_seed1",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr1e-4",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.508186619999999,
+          "std_return": 1.8474094594350856,
+          "success_rate": 0.24,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.8187323400000004,
+          "std_return": 1.8163791620186311,
+          "success_rate": 0.14,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr1e-4_seed2",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr1e-4",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -4.0173017799999995,
+          "std_return": 1.7087178603433426,
+          "success_rate": 0.18,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -4.06177086,
+          "std_return": 1.6746507203685908,
+          "success_rate": 0.12,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr1e-4_seed3",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr1e-4",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.21338188,
+          "std_return": 1.9117057634502506,
+          "success_rate": 0.2,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.8255797400000002,
+          "std_return": 1.8897806759727733,
+          "success_rate": 0.36,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr3e-4_default_seed1",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr3e-4",
+      "seed": 1,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -2.9365218,
+          "std_return": 2.0108748523678144,
+          "success_rate": 0.46,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -2.95437518,
+          "std_return": 1.9170254951180559,
+          "success_rate": 0.38,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr3e-4_default_seed2",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr3e-4",
+      "seed": 2,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -1.4375327799999997,
+          "std_return": 1.6615555435238305,
+          "success_rate": 0.66,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -2.06509316,
+          "std_return": 2.17227181304872,
+          "success_rate": 0.62,
+          "episodes": 50
+        }
+      }
+    },
+    {
+      "run_name": "sweep_sac_lr3e-4_default_seed3",
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr3e-4",
+      "seed": 3,
+      "comparison_mode": "eqsteps",
+      "evaluations": {
+        "source": {
+          "mean_return": -3.1408342800000004,
+          "std_return": 2.2527743598248184,
+          "success_rate": 0.4,
+          "episodes": 50
+        },
+        "target": {
+          "mean_return": -3.44342836,
+          "std_return": 1.9516144718025306,
+          "success_rate": 0.32,
+          "episodes": 50
+        }
+      }
+    }
+  ],
+  "per_config": [
+    {
+      "algorithm": "ppo",
+      "train_env": "source",
+      "strategy": "none",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -3.46512428,
+          "std": 0.3300663350715502,
+          "median": -3.6283803599999995,
+          "min": -3.6817484400000007,
+          "max": -3.08524404
+        },
+        "success_rate": {
+          "mean": 0.2333333333333333,
+          "std": 0.05773502691896256,
+          "median": 0.2,
+          "min": 0.2,
+          "max": 0.3
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -3.46512428,
+          "std": 0.3300663350715502,
+          "median": -3.6283803599999995,
+          "min": -3.6817484400000007,
+          "max": -3.08524404
+        },
+        "success_rate": {
+          "mean": 0.2333333333333333,
+          "std": 0.05773502691896256,
+          "median": 0.2,
+          "min": 0.2,
+          "max": 0.3
+        }
+      }
+    },
+    {
+      "algorithm": "ppo",
+      "train_env": "source",
+      "strategy": "none",
+      "comparison_mode": "eqtime",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -3.46512428,
+          "std": 0.3300663350715502,
+          "median": -3.6283803599999995,
+          "min": -3.6817484400000007,
+          "max": -3.08524404
+        },
+        "success_rate": {
+          "mean": 0.2333333333333333,
+          "std": 0.05773502691896256,
+          "median": 0.2,
+          "min": 0.2,
+          "max": 0.3
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -3.46512428,
+          "std": 0.3300663350715502,
+          "median": -3.6283803599999995,
+          "min": -3.6817484400000007,
+          "max": -3.08524404
+        },
+        "success_rate": {
+          "mean": 0.2333333333333333,
+          "std": 0.05773502691896256,
+          "median": 0.2,
+          "min": 0.2,
+          "max": 0.3
+        }
+      }
+    },
+    {
+      "algorithm": "ppo",
+      "train_env": "target",
+      "strategy": "none",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -3.46512428,
+          "std": 0.3300663350715502,
+          "median": -3.6283803599999995,
+          "min": -3.6817484400000007,
+          "max": -3.08524404
+        },
+        "success_rate": {
+          "mean": 0.2333333333333333,
+          "std": 0.05773502691896256,
+          "median": 0.2,
+          "min": 0.2,
+          "max": 0.3
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -3.46512428,
+          "std": 0.3300663350715502,
+          "median": -3.6283803599999995,
+          "min": -3.6817484400000007,
+          "max": -3.08524404
+        },
+        "success_rate": {
+          "mean": 0.2333333333333333,
+          "std": 0.05773502691896256,
+          "median": 0.2,
+          "min": 0.2,
+          "max": 0.3
+        }
+      }
+    },
+    {
+      "algorithm": "ppo",
+      "train_env": "target",
+      "strategy": "none",
+      "comparison_mode": "eqtime",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -3.46512428,
+          "std": 0.3300663350715502,
+          "median": -3.6283803599999995,
+          "min": -3.6817484400000007,
+          "max": -3.08524404
+        },
+        "success_rate": {
+          "mean": 0.2333333333333333,
+          "std": 0.05773502691896256,
+          "median": 0.2,
+          "min": 0.2,
+          "max": 0.3
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -3.46512428,
+          "std": 0.3300663350715502,
+          "median": -3.6283803599999995,
+          "min": -3.6817484400000007,
+          "max": -3.08524404
+        },
+        "success_rate": {
+          "mean": 0.2333333333333333,
+          "std": 0.05773502691896256,
+          "median": 0.2,
+          "min": 0.2,
+          "max": 0.3
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "adr_0.1-15.0",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 1,
+      "source_eval": {
+        "return": {
+          "mean": -0.7673460400000001,
+          "std": 0.0,
+          "median": -0.7673460400000001,
+          "min": -0.7673460400000001,
+          "max": -0.7673460400000001
+        },
+        "success_rate": {
+          "mean": 0.94,
+          "std": 0.0,
+          "median": 0.94,
+          "min": 0.94,
+          "max": 0.94
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -0.71162984,
+          "std": 0.0,
+          "median": -0.71162984,
+          "min": -0.71162984,
+          "max": -0.71162984
+        },
+        "success_rate": {
+          "mean": 0.94,
+          "std": 0.0,
+          "median": 0.94,
+          "min": 0.94,
+          "max": 0.94
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "none",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -2.521237273333334,
+          "std": 0.46353312818628395,
+          "median": -2.74403376,
+          "min": -2.8313058200000008,
+          "max": -1.9883722400000001
+        },
+        "success_rate": {
+          "mean": 0.4933333333333334,
+          "std": 0.17009801096230767,
+          "median": 0.5,
+          "min": 0.32,
+          "max": 0.66
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -2.6292679600000004,
+          "std": 0.2516554203370501,
+          "median": -2.6586891400000003,
+          "min": -2.864919600000001,
+          "max": -2.36419514
+        },
+        "success_rate": {
+          "mean": 0.4266666666666667,
+          "std": 0.17473789896108208,
+          "median": 0.38,
+          "min": 0.28,
+          "max": 0.62
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "none",
+      "comparison_mode": "eqtime",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -3.4919230466666664,
+          "std": 0.2037790422203324,
+          "median": -3.57575252,
+          "min": -3.6404167199999993,
+          "max": -3.2595999
+        },
+        "success_rate": {
+          "mean": 0.21333333333333335,
+          "std": 0.050332229568471665,
+          "median": 0.22,
+          "min": 0.16,
+          "max": 0.26
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -3.55097426,
+          "std": 0.4663269564716188,
+          "median": -3.4665777799999997,
+          "min": -4.05373602,
+          "max": -3.13260898
+        },
+        "success_rate": {
+          "mean": 0.25333333333333335,
+          "std": 0.06429100507328638,
+          "median": 0.28,
+          "min": 0.18,
+          "max": 0.3
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.1-15.0",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -2.424884673333333,
+          "std": 2.4017129091141745,
+          "median": -1.6412192399999999,
+          "min": -5.120545999999999,
+          "max": -0.5128887799999999
+        },
+        "success_rate": {
+          "mean": 0.6266666666666667,
+          "std": 0.43558389930452357,
+          "median": 0.76,
+          "min": 0.14,
+          "max": 0.98
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -2.12552606,
+          "std": 2.1330327082203953,
+          "median": -1.3680300599999997,
+          "min": -4.533923880000001,
+          "max": -0.47462424
+        },
+        "success_rate": {
+          "mean": 0.6733333333333333,
+          "std": 0.4636090306856989,
+          "median": 0.9,
+          "min": 0.14,
+          "max": 0.98
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.5-2.0",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -3.0449048266666665,
+          "std": 0.8211668706327017,
+          "median": -3.2954160399999997,
+          "min": -3.7116392,
+          "max": -2.1276592400000003
+        },
+        "success_rate": {
+          "mean": 0.4666666666666666,
+          "std": 0.3002221399786054,
+          "median": 0.48,
+          "min": 0.16,
+          "max": 0.76
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -2.8701591533333333,
+          "std": 0.5964088947187574,
+          "median": -3.2058627200000003,
+          "min": -3.2230577,
+          "max": -2.18155704
+        },
+        "success_rate": {
+          "mean": 0.36000000000000004,
+          "std": 0.18000000000000002,
+          "median": 0.36,
+          "min": 0.18,
+          "max": 0.54
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "udr_0.5-5.5",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -0.53871714,
+          "std": 0.09573647327460319,
+          "median": -0.5236746800000001,
+          "min": -0.6410843800000001,
+          "max": -0.45139236
+        },
+        "success_rate": {
+          "mean": 0.9933333333333333,
+          "std": 0.011547005383792525,
+          "median": 1.0,
+          "min": 0.98,
+          "max": 1.0
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -0.6420571866666667,
+          "std": 0.06315556524334595,
+          "median": -0.61305,
+          "min": -0.7145052599999999,
+          "max": -0.5986163
+        },
+        "success_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "median": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "target",
+      "strategy": "none",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -1.5059901266666664,
+          "std": 0.6508212244308884,
+          "median": -1.8806321199999996,
+          "min": -1.88285066,
+          "max": -0.7544875999999999
+        },
+        "success_rate": {
+          "mean": 0.7466666666666667,
+          "std": 0.1514375558880073,
+          "median": 0.68,
+          "min": 0.64,
+          "max": 0.92
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -1.5414470999999998,
+          "std": 0.5683227077973922,
+          "median": -1.6504674799999999,
+          "min": -2.0473622999999996,
+          "max": -0.9265115200000001
+        },
+        "success_rate": {
+          "mean": 0.7466666666666667,
+          "std": 0.16772994167212163,
+          "median": 0.66,
+          "min": 0.64,
+          "max": 0.94
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "target",
+      "strategy": "none",
+      "comparison_mode": "eqtime",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -3.6072444933333334,
+          "std": 0.3971466659656607,
+          "median": -3.7755131200000007,
+          "min": -3.8925553399999995,
+          "max": -3.15366502
+        },
+        "success_rate": {
+          "mean": 0.23333333333333336,
+          "std": 0.12220201853215575,
+          "median": 0.26,
+          "min": 0.1,
+          "max": 0.34
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -3.315235453333333,
+          "std": 0.04826752923642314,
+          "median": -3.32138856,
+          "min": -3.3601313800000003,
+          "max": -3.2641864199999997
+        },
+        "success_rate": {
+          "mean": 0.19999999999999998,
+          "std": 0.052915026221291815,
+          "median": 0.18,
+          "min": 0.16,
+          "max": 0.26
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr1e-3",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -1.14605052,
+          "std": 0.5731794473887782,
+          "median": -1.42584294,
+          "min": -1.52559808,
+          "max": -0.48671053999999997
+        },
+        "success_rate": {
+          "mean": 0.8799999999999999,
+          "std": 0.10392304845413267,
+          "median": 0.82,
+          "min": 0.82,
+          "max": 1.0
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -1.31658468,
+          "std": 0.3670705556313684,
+          "median": -1.44820232,
+          "min": -1.5997004799999999,
+          "max": -0.90185124
+        },
+        "success_rate": {
+          "mean": 0.82,
+          "std": 0.12489995996796795,
+          "median": 0.86,
+          "min": 0.68,
+          "max": 0.92
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr1e-4",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -3.579623426666666,
+          "std": 0.4066930223326316,
+          "median": -3.508186619999999,
+          "min": -4.0173017799999995,
+          "max": -3.21338188
+        },
+        "success_rate": {
+          "mean": 0.20666666666666667,
+          "std": 0.03055050463303893,
+          "median": 0.2,
+          "min": 0.18,
+          "max": 0.24
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -3.9020276466666672,
+          "std": 0.13838403945626865,
+          "median": -3.8255797400000002,
+          "min": -4.06177086,
+          "max": -3.8187323400000004
+        },
+        "success_rate": {
+          "mean": 0.20666666666666667,
+          "std": 0.13316656236958785,
+          "median": 0.14,
+          "min": 0.12,
+          "max": 0.36
+        }
+      }
+    },
+    {
+      "algorithm": "sac",
+      "train_env": "source",
+      "strategy": "lr3e-4",
+      "comparison_mode": "eqsteps",
+      "n_seeds": 3,
+      "source_eval": {
+        "return": {
+          "mean": -2.504962953333333,
+          "std": 0.9300490732094521,
+          "median": -2.9365218,
+          "min": -3.1408342800000004,
+          "max": -1.4375327799999997
+        },
+        "success_rate": {
+          "mean": 0.5066666666666667,
+          "std": 0.1361371857110809,
+          "median": 0.46,
+          "min": 0.4,
+          "max": 0.66
+        }
+      },
+      "target_eval": {
+        "return": {
+          "mean": -2.8209655666666666,
+          "std": 0.6987850703807803,
+          "median": -2.95437518,
+          "min": -3.44342836,
+          "max": -2.06509316
+        },
+        "success_rate": {
+          "mean": 0.44,
+          "std": 0.15874507866387544,
+          "median": 0.38,
+          "min": 0.32,
+          "max": 0.62
+        }
+      }
+    }
+  ]
+}
