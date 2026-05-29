@@ -157,7 +157,9 @@ def main() -> None:
     mass_suffix = ""
     if args.sampling_strategy != "none":
         mass_suffix = f"_{args.mass_min}-{args.mass_max}"
-    out_dir = f"results/{args.algo}_{args.env_type}_{args.sampling_strategy}{mass_suffix}_seed{args.seed}{suffix}"
+    
+    run_name = f"{args.algo}_{args.env_type}_{args.sampling_strategy}{mass_suffix}_seed{args.seed}{suffix}"
+    out_dir = f"results/{run_name}"
     
     os.makedirs(out_dir, exist_ok=True)
 
@@ -206,7 +208,7 @@ def main() -> None:
     model.learn(
         total_timesteps=timesteps,
         callback=callbacks,
-        tb_log_name=f"{args.env_type}_{args.sampling_strategy}_seed{args.seed}{suffix}"
+        tb_log_name=run_name
     )
 
     # Save final model as well
