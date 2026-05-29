@@ -53,7 +53,13 @@ def train(algo, env_type, strategy, seed, comp_mode, timesteps=500000,
     if strategy != "none" and mass_min is not None and mass_max is not None:
         mass_suffix = f"_{mass_min}-{mass_max}"
         
-    lr_suffix = f"_lr{lr}" if lr is not None else ""
+    lr_str = ""
+    if lr is not None:
+        if lr == 0.001: lr_str = "1e-3"
+        elif lr == 0.0003: lr_str = "3e-4"
+        elif lr == 0.0001: lr_str = "1e-4"
+        else: lr_str = str(lr)
+    lr_suffix = f"_lr{lr_str}" if lr is not None else ""
     out_dir = f"results/{algo}_{env_type}_{strategy}{mass_suffix}{lr_suffix}_seed{seed}{suffix}"
     
     # Check if already trained

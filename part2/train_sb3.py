@@ -127,7 +127,13 @@ def main() -> None:
     if args.sampling_strategy != "none":
         mass_suffix = f"_{args.mass_min}-{args.mass_max}"
     
-    lr_suffix = f"_lr{args.learning_rate}" if args.learning_rate is not None else ""
+    lr_str = ""
+    if args.learning_rate is not None:
+        if args.learning_rate == 0.001: lr_str = "1e-3"
+        elif args.learning_rate == 0.0003: lr_str = "3e-4"
+        elif args.learning_rate == 0.0001: lr_str = "1e-4"
+        else: lr_str = str(args.learning_rate)
+    lr_suffix = f"_lr{lr_str}" if args.learning_rate is not None else ""
     run_name = f"{args.algo}_{args.env_type}_{args.sampling_strategy}{mass_suffix}{lr_suffix}_seed{args.seed}{suffix}"
     out_dir = f"results/{run_name}"
     
