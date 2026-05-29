@@ -122,6 +122,16 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
+    suffix = f"_{args.comparison_mode}" if args.comparison_mode != "eqsteps" else ""
+    mass_suffix = ""
+    if args.sampling_strategy != "none":
+        mass_suffix = f"_{args.mass_min}-{args.mass_max}"
+    
+    run_name = f"{args.algo}_{args.env_type}_{args.sampling_strategy}{mass_suffix}_seed{args.seed}{suffix}"
+    out_dir = f"results/{run_name}"
+    
+    os.makedirs(out_dir, exist_ok=True)
+
     # Create training environment
     env_kwargs = {
         "render_mode": "rgb_array", # panda-gym requires 'rgb_array' or 'human'
@@ -138,6 +148,7 @@ def main() -> None:
         if args.sampling_strategy == "adr":
             wrapper_kwargs["shared_phi_L"] = multiprocessing.Value('f', 1.0)
             wrapper_kwargs["shared_phi_H"] = multiprocessing.Value('f', 1.0)
+            wrapper_kwargs["log_path"] = os.path.join(out_dir, "adr_boundaries.csv")
         vec_env_kwargs["wrapper_class"] = RandomizationWrapper
         vec_env_kwargs["wrapper_kwargs"] = wrapper_kwargs
 
@@ -153,15 +164,7 @@ def main() -> None:
         env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed, **vec_env_kwargs)
         eval_env = make_vec_env("PandaPush-v3", n_envs=1, env_kwargs=env_kwargs, vec_env_cls=DummyVecEnv, seed=args.seed)
 
-    suffix = f"_{args.comparison_mode}" if args.comparison_mode != "eqsteps" else ""
-    mass_suffix = ""
-    if args.sampling_strategy != "none":
-        mass_suffix = f"_{args.mass_min}-{args.mass_max}"
-    
-    run_name = f"{args.algo}_{args.env_type}_{args.sampling_strategy}{mass_suffix}_seed{args.seed}{suffix}"
-    out_dir = f"results/{run_name}"
-    
-    os.makedirs(out_dir, exist_ok=True)
+
 
     # Setup evaluation callback
     eval_freq = 10000 // (env.num_envs if hasattr(env, "num_envs") else 1)

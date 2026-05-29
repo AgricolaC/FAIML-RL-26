@@ -52,13 +52,27 @@ def main():
     results_dir = "results"
     output_path = os.path.join(results_dir, "summary.json")
     
-    # We will evaluate for 100 episodes as done in Phase 1
-    eval_episodes = 100
+    # We will evaluate for 50 episodes
+    eval_episodes = 50
     
     summary = []
     
-    # Find all best models
-    model_paths = glob.glob(os.path.join(results_dir, "*", "best_model.zip"))
+    model_paths = []
+    for d in glob.glob(os.path.join(results_dir, "*")):
+        if not os.path.isdir(d):
+            continue
+        dir_name = os.path.basename(d)
+        
+        # We report final_model for DR conditions because EvalCallback selection 
+        # on a fixed-mass eval env would bias selection toward source-mass 
+        # performance, defeating the robustness objective of DR.
+        if "udr" in dir_name or "adr" in dir_name:
+            model_file = os.path.join(d, "final_model.zip")
+        else:
+            model_file = os.path.join(d, "best_model.zip")
+            
+        if os.path.exists(model_file):
+            model_paths.append(model_file)
     
     print(f"Found {len(model_paths)} models. Evaluating each on 'source' and 'target'...")
     
