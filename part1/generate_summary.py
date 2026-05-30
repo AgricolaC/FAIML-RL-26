@@ -263,35 +263,6 @@ def summarize_run(log_df, eval_df, cfg):
     final_survival = _windowed_mean(eval_lengths, cfg.final_eval_checkpoints, 'tail')
     final_velocity = _windowed_mean(eval_velocity, cfg.final_eval_checkpoints, 'tail')
 
-    # Peak velocity and peak survival (independently — they may peak at different times)
-    peak_velocity, peak_vel_idx = _rolling_best_window_mean(
-        eval_velocity, cfg.peak_window_checkpoints)
-    peak_velocity_episode = (
-        int(eval_eps[peak_vel_idx])
-        if peak_vel_idx is not None and 0 <= peak_vel_idx < len(eval_eps)
-        else None
-    )
-    peak_survival, peak_surv_idx = _rolling_best_window_mean(
-        eval_lengths, cfg.peak_window_checkpoints)
-    peak_survival_episode = (
-        int(eval_eps[peak_surv_idx])
-        if peak_surv_idx is not None and 0 <= peak_surv_idx < len(eval_eps)
-        else None
-    )
-
-    # --- behavior taxonomy ---
-    behavior_at_final = _classify_behavior(
-        final_survival if final_survival is not None else 0.0,
-        final_velocity if final_velocity is not None else 0.0,
-        cfg,
-    )
-    
-    behavior_at_best = _classify_behavior(
-        peak_survival if peak_survival is not None else 0.0,
-        peak_velocity if peak_velocity is not None else 0.0,
-        cfg,
-    )
-
     peak_eval_mean, peak_center_idx = _rolling_best_window_mean(
         eval_returns, cfg.peak_window_checkpoints
     )
@@ -300,6 +271,21 @@ def summarize_run(log_df, eval_df, cfg):
         if peak_center_idx is not None and 0 <= peak_center_idx < len(eval_eps)
         else None
     )
+
+    if peak_center_idx is not None:
+        half_w = cfg.peak_window_checkpoints // 2
+        start_idx = max(0, peak_center_idx - half_w)
+        end_idx = min(len(eval_returns), peak_center_idx + half_w + 1)
+        
+        peak_velocity = float(np.mean(eval_velocity[start_idx:end_idx]))
+        peak_survival = float(np.mean(eval_lengths[start_idx:end_idx]))
+        peak_velocity_episode = peak_eval_episode
+        peak_survival_episode = peak_eval_episode
+    else:
+        peak_velocity, peak_survival = None, None
+        peak_velocity_episode, peak_survival_episode = None, None
+
+
 
     # --- AUC on RAW returns (integrating denoises on its own; smoothing first
     #     would discard the very signal AUC summarizes). Normalized by horizon
@@ -366,8 +352,8 @@ def summarize_run(log_df, eval_df, cfg):
         'peak_survival_episode': peak_survival_episode,
         'peak_velocity': _round(peak_velocity, 3),
         'peak_velocity_episode': peak_velocity_episode,
-        'behavior_at_final': behavior_at_final,
-        'behavior_at_best': behavior_at_best,
+        'behavior_at_final': _classify_behavior(final_survival, final_velocity, cfg),
+        'behavior_at_best': _classify_behavior(peak_survival, peak_velocity, cfg),
         # --- convergence triple ---
         't_reach_90pct': t_reach,
         'drawdown': _round(drawdown, 3),
@@ -964,6 +950,9 @@ def generate_summary(results_dir, output_path, cfg, intersect_with=None):
         config_runs[key].append(metrics)
         config_eval_dfs[key].append(eval_df)
         total += 1
+
+
+
 
     per_config = []
     agg_curves = []
