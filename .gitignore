@@ -12,9 +12,10 @@ __pycache__/
 # Part 1 results — allow lightweight metadata, exclude binaries and large logs
 part1/results/plots/
 
-# Part 2 results — exclude large model subdirectories, TensorBoard logs, and videos
-# (This keeps the lightweight results/summary.json tracked by Git)
-part2/results/*/
+# Part 2 results — exclude large model files, TensorBoard logs, and videos
+# (This keeps the lightweight metrics files tracked by Git)
+part2/results/**/*.zip
+part2/results/**/*.pt
 part2/runs/
 part2/videos/
 
