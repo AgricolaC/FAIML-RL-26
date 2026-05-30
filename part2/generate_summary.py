@@ -20,7 +20,7 @@ def parse_run_name(dir_name):
                 seed = int(seed_str)
             except ValueError:
                 seed = -1
-            return algo, env_type, strategy, seed, "eqsteps"
+            return algo, env_type, strategy, seed, "eqsteps", "default"
 
     # Standard format:
     # {algo}_{env}_{strategy}[_{mass_range}][_lr{lr}]_seed{N}[_{mode}]
@@ -36,9 +36,10 @@ def parse_run_name(dir_name):
         algo, env_type, base_strategy, mass_range, lr, seed_str, mode = m.groups()
         strategy = f"{base_strategy}_{mass_range}" if mass_range else base_strategy
         comp_mode = mode if mode else "eqsteps"
-        return algo, env_type, strategy, int(seed_str), comp_mode
+        lr_val = lr if lr else "default"
+        return algo, env_type, strategy, int(seed_str), comp_mode, lr_val
 
-    return None, None, None, None, None
+    return None, None, None, None, None, None
 
 def main():
     results_dir = "results"
@@ -70,7 +71,7 @@ def main():
     
     for model_path in sorted(model_paths):
         dir_name = os.path.basename(os.path.dirname(model_path))
-        algo, train_env, strategy, seed, comp_mode = parse_run_name(dir_name)
+        algo, train_env, strategy, seed, comp_mode, lr = parse_run_name(dir_name)
         
         if not algo:
             print(f"Skipping {dir_name}: could not parse naming format.")
@@ -112,6 +113,7 @@ def main():
             "strategy": strategy,
             "seed": seed,
             "comparison_mode": comp_mode,
+            "lr": lr,
             "evaluations": {
                 "source": src_metrics,
                 "target": tgt_metrics
@@ -121,12 +123,12 @@ def main():
     # Aggregate across seeds
     by_config = defaultdict(list)
     for run in summary:
-        cfg_key = (run["algorithm"], run["train_env"], run["strategy"], run["comparison_mode"])
+        cfg_key = (run["algorithm"], run["train_env"], run["strategy"], run["comparison_mode"], run["lr"])
         by_config[cfg_key].append(run)
         
     per_config = []
     for cfg_key, runs in by_config.items():
-        algo, train_env, strategy, comp_mode = cfg_key
+        algo, train_env, strategy, comp_mode, lr = cfg_key
         
         src_returns = [r["evaluations"]["source"]["mean_return"] for r in runs]
         src_success = [r["evaluations"]["source"]["success_rate"] for r in runs]
@@ -150,6 +152,7 @@ def main():
             "train_env": train_env,
             "strategy": strategy,
             "comparison_mode": comp_mode,
+            "lr": lr,
             "n_seeds": n_seeds,
             "source_eval": {
                 "return": agg_stats(src_returns),
